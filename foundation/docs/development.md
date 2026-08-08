@@ -49,3 +49,11 @@ to `main` and on pull requests when Foundation files change.
 
 Copy `.env.example` to `.env` for development. The sample JWT secret and admin
 password are local defaults only and must be replaced for shared environments.
+
+## Persistence Migrations
+
+Foundation uses a small SQLite migration runner in code. Migrations are applied
+when the database initializes and tracked in `foundation_schema_migrations`.
+
+This keeps the MVP local-first and dependency-light. If the schema becomes more
+complex, the project can revisit a dedicated migration tool through an ADR.

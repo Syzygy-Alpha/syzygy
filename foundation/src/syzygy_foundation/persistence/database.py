@@ -2,30 +2,20 @@ import sqlite3
 from pathlib import Path
 from urllib.parse import urlparse
 
+from syzygy_foundation.persistence.migrations import MigrationRunner
+
 
 class Database:
-    def __init__(self, database_url: str) -> None:
+    def __init__(self, database_url: str, migration_runner: MigrationRunner | None = None) -> None:
         self.database_url = database_url
         self.path = self._sqlite_path(database_url)
+        self.migration_runner = migration_runner or MigrationRunner()
 
     def initialize(self) -> None:
         if self.path != Path(":memory:"):
             self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.connect() as connection:
-            connection.execute(
-                """
-                CREATE TABLE IF NOT EXISTS foundation_metadata (
-                    key TEXT PRIMARY KEY,
-                    value TEXT NOT NULL
-                )
-                """
-            )
-            connection.execute(
-                """
-                INSERT OR REPLACE INTO foundation_metadata (key, value)
-                VALUES ('schema_version', '1')
-                """
-            )
+            self.migration_runner.apply(connection)
 
     def connect(self) -> sqlite3.Connection:
         connection = sqlite3.connect(self.path)
@@ -36,6 +26,10 @@ class Database:
         with self.connect() as connection:
             row = connection.execute("SELECT 1 AS ok").fetchone()
         return bool(row and row["ok"] == 1)
+
+    def schema_version(self) -> int:
+        with self.connect() as connection:
+            return self.migration_runner.current_version(connection)
 
     @staticmethod
     def _sqlite_path(database_url: str) -> Path:
