@@ -23,6 +23,28 @@ MIGRATIONS: tuple[Migration, ...] = (
         );
         """,
     ),
+    Migration(
+        version=2,
+        name="forge_command_runs",
+        sql="""
+        CREATE TABLE IF NOT EXISTS forge_command_runs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            project TEXT NOT NULL,
+            command_name TEXT NOT NULL,
+            command TEXT NOT NULL,
+            cwd TEXT NOT NULL,
+            allowed INTEGER NOT NULL,
+            reason TEXT NOT NULL,
+            returncode INTEGER,
+            timed_out INTEGER NOT NULL,
+            started_at TEXT NOT NULL,
+            completed_at TEXT NOT NULL
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_forge_command_runs_project
+        ON forge_command_runs (project, id DESC);
+        """,
+    ),
 )
 
 

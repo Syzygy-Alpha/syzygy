@@ -37,6 +37,7 @@ POST /projects/create
 GET /projects/{name}/commands
 GET /projects/{name}/commands/{command_name}/plan
 POST /projects/{name}/commands/{command_name}/runs
+GET /projects/{name}/command-runs
 GET /projects/{name}
 ```
 
@@ -89,3 +90,7 @@ execute anything.
 `POST /projects/{name}/commands/{command_name}/runs` executes an allowed command
 only when the request includes `confirm=true`. Commands are executed without a
 shell, inside the registered project path, and with a bounded timeout.
+
+`GET /projects/{name}/command-runs` lists persisted command run metadata for a
+registered project. Forge stores command, cwd, allow/deny state, return code,
+timeout state, and timestamps, but it does not persist stdout or stderr.

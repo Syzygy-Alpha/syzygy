@@ -9,6 +9,10 @@ from syzygy_forge.config import Settings, get_settings
 from syzygy_forge.database import Database
 from syzygy_forge.foundation_client import FoundationClient
 from syzygy_forge.module import ModuleDescriptor, forge_descriptor
+from syzygy_forge.project_command_history import (
+    ProjectCommandHistory,
+    ProjectCommandRunRecord,
+)
 from syzygy_forge.project_command_planner import ProjectCommandPlan, ProjectCommandPlanner
 from syzygy_forge.project_command_runner import (
     ProjectCommandExecutionError,
@@ -56,6 +60,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     project_manifest_reader = ProjectManifestReader()
     project_command_planner = ProjectCommandPlanner()
     project_command_runner = ProjectCommandRunner()
+    project_command_history = ProjectCommandHistory(database)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -83,6 +88,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.project_manifest_reader = project_manifest_reader
     app.state.project_command_planner = project_command_planner
     app.state.project_command_runner = project_command_runner
+    app.state.project_command_history = project_command_history
 
     @app.get("/")
     def root() -> dict[str, str]:
@@ -172,9 +178,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
         plan = project_command_planner.plan(record, command_set, command_name)
         try:
-            return project_command_runner.run(plan, request)
+            result = project_command_runner.run(plan, request)
         except ProjectCommandExecutionError as exc:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+        run_record = project_command_history.record(result)
+        return result.model_copy(update={"run_id": run_record.id})
+
+    @app.get("/projects/{name}/command-runs")
+    def list_project_command_runs(name: str) -> list[ProjectCommandRunRecord]:
+        if project_registry.get(name) is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        return project_command_history.list_for_project(name)
 
     @app.get("/projects/{name}")
     def get_project(name: str) -> ProjectDetails:

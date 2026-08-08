@@ -17,7 +17,7 @@ implementation.
 
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
-- Persist Forge command run history and prepare command lifecycle events.
+- Prepare Forge command lifecycle events for Foundation integration.
 
 ## Later
 

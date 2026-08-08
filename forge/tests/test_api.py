@@ -172,9 +172,17 @@ hello = 'python -c "print(123)"'
             "/projects/plain/commands/hello/runs",
             json={"confirm": True, "timeout_seconds": 5},
         )
+        history = client.get("/projects/plain/command-runs")
 
     assert response.status_code == 201
     payload = response.json()
+    assert payload["run_id"] == 1
     assert payload["returncode"] == 0
     assert payload["stdout"].strip() == "123"
     assert payload["timed_out"] is False
+    assert history.status_code == 200
+    history_payload = history.json()
+    assert len(history_payload) == 1
+    assert history_payload[0]["id"] == 1
+    assert history_payload[0]["project"] == "plain"
+    assert history_payload[0]["command_name"] == "hello"
