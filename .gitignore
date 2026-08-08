@@ -1,0 +1,13 @@
+# Runtime state
+data/
+**/data/*.db
+**/data/*.db-*
+
+# Python caches
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.tmp/
+.pytest-tmp/
+pytest-cache-files-*/
