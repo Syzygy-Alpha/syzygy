@@ -17,7 +17,7 @@ implementation.
 
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
-- Define the safety contract for executing Forge project commands.
+- Add explicit user-approved execution for allowed Forge project commands.
 
 ## Later
 

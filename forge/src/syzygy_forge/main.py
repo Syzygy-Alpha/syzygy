@@ -9,6 +9,7 @@ from syzygy_forge.config import Settings, get_settings
 from syzygy_forge.database import Database
 from syzygy_forge.foundation_client import FoundationClient
 from syzygy_forge.module import ModuleDescriptor, forge_descriptor
+from syzygy_forge.project_command_planner import ProjectCommandPlan, ProjectCommandPlanner
 from syzygy_forge.project_creator import (
     ProjectCreationError,
     ProjectCreationRequest,
@@ -47,6 +48,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     project_registry = ProjectRegistry(database)
     project_creator = ProjectCreator(app_settings.workspace_root, project_registry)
     project_manifest_reader = ProjectManifestReader()
+    project_command_planner = ProjectCommandPlanner()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -72,6 +74,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.project_registry = project_registry
     app.state.project_creator = project_creator
     app.state.project_manifest_reader = project_manifest_reader
+    app.state.project_command_planner = project_command_planner
 
     @app.get("/")
     def root() -> dict[str, str]:
@@ -134,6 +137,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             return project_manifest_reader.commands_for(record)
         except ProjectManifestError as exc:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+    @app.get("/projects/{name}/commands/{command_name}/plan")
+    def plan_project_command(name: str, command_name: str) -> ProjectCommandPlan:
+        record = project_registry.get(name)
+        if record is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        try:
+            command_set = project_manifest_reader.commands_for(record)
+        except ProjectManifestError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+        return project_command_planner.plan(record, command_set, command_name)
 
     @app.get("/projects/{name}")
     def get_project(name: str) -> ProjectDetails:

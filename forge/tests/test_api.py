@@ -39,6 +39,7 @@ def test_capabilities_expose_forge_descriptor() -> None:
     assert payload["dependencies"] == ["foundation"]
     assert "git" in payload["capabilities"]
     assert "project_creation" in payload["capabilities"]
+    assert "project_command_planning" in payload["capabilities"]
 
 
 def test_current_project_endpoint_reports_configured_workspace(tmp_path: Path) -> None:
@@ -98,6 +99,7 @@ def test_create_project_endpoint_creates_and_registers_project(tmp_path: Path) -
         )
         listed = client.get("/projects")
         commands = client.get("/projects/hello-tool/commands")
+        plan = client.get("/projects/hello-tool/commands/test/plan")
 
     assert created.status_code == 201
     payload = created.json()
@@ -110,6 +112,9 @@ def test_create_project_endpoint_creates_and_registers_project(tmp_path: Path) -
     assert [project["name"] for project in listed.json()] == ["hello-tool"]
     assert commands.status_code == 200
     assert [command["name"] for command in commands.json()["commands"]] == ["lint", "run", "test"]
+    assert plan.status_code == 200
+    assert plan.json()["allowed"] is True
+    assert plan.json()["argv"] == ["python", "-m", "pytest"]
 
 
 def test_create_project_endpoint_rejects_invalid_name(tmp_path: Path) -> None:

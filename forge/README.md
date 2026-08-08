@@ -35,6 +35,7 @@ GET /projects
 POST /projects
 POST /projects/create
 GET /projects/{name}/commands
+GET /projects/{name}/commands/{command_name}/plan
 GET /projects/{name}
 ```
 
@@ -78,3 +79,8 @@ strings.
 Forge does not execute these commands yet. This endpoint is intentionally
 read-only so future command execution can be designed with explicit safety
 rules.
+
+`GET /projects/{name}/commands/{command_name}/plan` validates one declared
+command against the current safety policy and returns the planned working
+directory, parsed arguments, allow/deny status, and reason. It also does not
+execute anything.
