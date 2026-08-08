@@ -17,7 +17,7 @@ implementation.
 
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
-- Prepare Forge command lifecycle events for Foundation integration.
+- Wire Forge command lifecycle events to the SYZYGY event infrastructure.
 
 ## Later
 

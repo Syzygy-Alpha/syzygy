@@ -18,6 +18,7 @@ class ModuleDescriptor(BaseModel):
 FORGE_CAPABILITIES = [
     "git",
     "project_command_execution",
+    "project_command_events",
     "project_command_planning",
     "project_creation",
     "project_inspection",

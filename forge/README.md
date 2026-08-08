@@ -94,3 +94,9 @@ shell, inside the registered project path, and with a bounded timeout.
 `GET /projects/{name}/command-runs` lists persisted command run metadata for a
 registered project. Forge stores command, cwd, allow/deny state, return code,
 timeout state, and timestamps, but it does not persist stdout or stderr.
+
+## Events
+
+Forge defines command lifecycle event contracts in `forge/docs/events.md` for
+future publication through the SYZYGY event infrastructure. Current Forge code
+does not publish those events yet.
