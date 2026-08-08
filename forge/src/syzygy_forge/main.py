@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from syzygy_forge.config import Settings, get_settings
 from syzygy_forge.foundation_client import FoundationClient
 from syzygy_forge.module import ModuleDescriptor, forge_descriptor
+from syzygy_forge.project_inspector import ProjectInspection, ProjectInspector
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +17,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     logging.basicConfig(level=app_settings.log_level.upper())
 
     descriptor = forge_descriptor(app_settings.version)
+    project_inspector = ProjectInspector()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -35,6 +37,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app = FastAPI(title="SYZYGY Forge", version=app_settings.version, lifespan=lifespan)
     app.state.settings = app_settings
     app.state.descriptor = descriptor
+    app.state.project_inspector = project_inspector
 
     @app.get("/")
     def root() -> dict[str, str]:
@@ -52,8 +55,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def capabilities() -> ModuleDescriptor:
         return descriptor
 
+    @app.get("/projects/current")
+    def current_project() -> ProjectInspection:
+        return project_inspector.inspect(app_settings.workspace_root)
+
     return app
 
 
 app = create_app()
-

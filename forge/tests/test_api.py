@@ -1,11 +1,16 @@
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 from syzygy_forge.config import Settings
 from syzygy_forge.main import create_app
 
 
-def build_client() -> TestClient:
-    settings = Settings(register_with_foundation=False)
+def build_client(workspace_root: Path | None = None) -> TestClient:
+    settings = Settings(
+        register_with_foundation=False,
+        workspace_root=workspace_root or Path("."),
+    )
     return TestClient(create_app(settings))
 
 
@@ -30,3 +35,12 @@ def test_capabilities_expose_forge_descriptor() -> None:
     assert payload["dependencies"] == ["foundation"]
     assert "git" in payload["capabilities"]
 
+
+def test_current_project_endpoint_reports_configured_workspace(tmp_path: Path) -> None:
+    with build_client(workspace_root=tmp_path) as client:
+        response = client.get("/projects/current")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["path"] == str(tmp_path.resolve())
+    assert payload["exists"] is True

@@ -17,9 +17,8 @@ implementation.
 
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
-- Add the first real Forge project inspection command.
-- Decide how Forge should represent local projects before adding build or commit
-  automation.
+- Decide how Forge should persist local project records before adding build or
+  commit automation.
 
 ## Later
 

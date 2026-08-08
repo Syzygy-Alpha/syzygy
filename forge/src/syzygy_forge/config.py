@@ -1,4 +1,5 @@
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -20,10 +21,10 @@ class Settings(BaseSettings):
     register_with_foundation: bool = Field(default=False)
     foundation_username: str = Field(default="admin")
     foundation_password: SecretStr = Field(default=SecretStr("change-me"))
+    workspace_root: Path = Field(default=Path("."))
     log_level: str = Field(default="INFO")
 
 
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-
