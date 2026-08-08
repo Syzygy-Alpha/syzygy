@@ -9,6 +9,12 @@ from syzygy_forge.config import Settings, get_settings
 from syzygy_forge.database import Database
 from syzygy_forge.foundation_client import FoundationClient
 from syzygy_forge.module import ModuleDescriptor, forge_descriptor
+from syzygy_forge.project_creator import (
+    ProjectCreationError,
+    ProjectCreationRequest,
+    ProjectCreationResult,
+    ProjectCreator,
+)
 from syzygy_forge.project_inspector import ProjectInspection, ProjectInspector
 from syzygy_forge.project_registry import (
     ProjectDetails,
@@ -16,6 +22,11 @@ from syzygy_forge.project_registry import (
     ProjectRecord,
     ProjectRegistrationRequest,
     ProjectRegistry,
+)
+from syzygy_forge.project_templates import (
+    ProjectTemplate,
+    get_project_template,
+    list_project_templates,
 )
 
 logger = logging.getLogger(__name__)
@@ -29,6 +40,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     database = Database(app_settings.database_url)
     project_inspector = ProjectInspector()
     project_registry = ProjectRegistry(database)
+    project_creator = ProjectCreator(app_settings.workspace_root, project_registry)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -52,6 +64,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.database = database
     app.state.project_inspector = project_inspector
     app.state.project_registry = project_registry
+    app.state.project_creator = project_creator
 
     @app.get("/")
     def root() -> dict[str, str]:
@@ -73,6 +86,20 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     def current_project() -> ProjectInspection:
         return project_inspector.inspect(app_settings.workspace_root)
 
+    @app.get("/project-templates")
+    def project_templates() -> list[ProjectTemplate]:
+        return list_project_templates()
+
+    @app.get("/project-templates/{name}")
+    def get_template(name: str) -> ProjectTemplate:
+        template = get_project_template(name)
+        if template is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Project template not found",
+            )
+        return template
+
     @app.post("/projects", status_code=status.HTTP_201_CREATED)
     def register_project(request: ProjectRegistrationRequest) -> ProjectRecord:
         try:
@@ -83,6 +110,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/projects")
     def list_projects() -> list[ProjectRecord]:
         return project_registry.list_projects()
+
+    @app.post("/projects/create", status_code=status.HTTP_201_CREATED)
+    def create_project(request: ProjectCreationRequest) -> ProjectCreationResult:
+        try:
+            return project_creator.create(request)
+        except ProjectCreationError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
     @app.get("/projects/{name}")
     def get_project(name: str) -> ProjectDetails:

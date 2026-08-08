@@ -17,8 +17,7 @@ implementation.
 
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
-- Add the first read-only Forge project detail operations that can support
-  later build or commit automation.
+- Add safe Forge project command discovery from `syzygy.project.toml`.
 
 ## Later
 

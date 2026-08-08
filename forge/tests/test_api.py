@@ -38,6 +38,7 @@ def test_capabilities_expose_forge_descriptor() -> None:
     assert payload["name"] == "forge"
     assert payload["dependencies"] == ["foundation"]
     assert "git" in payload["capabilities"]
+    assert "project_creation" in payload["capabilities"]
 
 
 def test_current_project_endpoint_reports_configured_workspace(tmp_path: Path) -> None:
@@ -73,6 +74,46 @@ def test_project_registry_endpoint_rejects_missing_path(tmp_path: Path) -> None:
         response = client.post(
             "/projects",
             json={"name": "missing", "path": str(tmp_path / "missing")},
+        )
+
+    assert response.status_code == 400
+
+
+def test_project_template_endpoints() -> None:
+    with build_client() as client:
+        listed = client.get("/project-templates")
+        fetched = client.get("/project-templates/python-cli")
+
+    assert listed.status_code == 200
+    assert [template["name"] for template in listed.json()] == ["python-cli"]
+    assert fetched.status_code == 200
+    assert fetched.json()["name"] == "python-cli"
+
+
+def test_create_project_endpoint_creates_and_registers_project(tmp_path: Path) -> None:
+    with build_client(workspace_root=tmp_path) as client:
+        created = client.post(
+            "/projects/create",
+            json={"name": "hello-tool", "template": "python-cli"},
+        )
+        listed = client.get("/projects")
+
+    assert created.status_code == 201
+    payload = created.json()
+    assert payload["record"]["name"] == "hello-tool"
+    assert payload["template"] == "python-cli"
+    assert payload["git_initialized"] is False
+    assert "src/hello_tool/main.py" in payload["files"]
+    assert (tmp_path / "hello-tool" / "syzygy.project.toml").exists()
+    assert listed.status_code == 200
+    assert [project["name"] for project in listed.json()] == ["hello-tool"]
+
+
+def test_create_project_endpoint_rejects_invalid_name(tmp_path: Path) -> None:
+    with build_client(workspace_root=tmp_path) as client:
+        response = client.post(
+            "/projects/create",
+            json={"name": "../outside", "template": "python-cli"},
         )
 
     assert response.status_code == 400

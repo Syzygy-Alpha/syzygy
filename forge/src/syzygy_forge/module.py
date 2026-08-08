@@ -15,7 +15,13 @@ class ModuleDescriptor(BaseModel):
     dependencies: list[str] = Field(default_factory=list)
 
 
-FORGE_CAPABILITIES = ["git", "project_inspection", "local_workflows"]
+FORGE_CAPABILITIES = [
+    "git",
+    "project_creation",
+    "project_inspection",
+    "project_templates",
+    "local_workflows",
+]
 
 
 def forge_descriptor(version: str, status: str = "online") -> ModuleDescriptor:
@@ -27,4 +33,3 @@ def forge_descriptor(version: str, status: str = "online") -> ModuleDescriptor:
         capabilities=FORGE_CAPABILITIES,
         dependencies=["foundation"],
     )
-
