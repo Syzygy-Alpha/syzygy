@@ -17,7 +17,7 @@ implementation.
 
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
-- Add explicit user-approved execution for allowed Forge project commands.
+- Persist Forge command run history and prepare command lifecycle events.
 
 ## Later
 

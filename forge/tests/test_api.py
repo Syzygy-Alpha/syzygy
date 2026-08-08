@@ -38,6 +38,7 @@ def test_capabilities_expose_forge_descriptor() -> None:
     assert payload["name"] == "forge"
     assert payload["dependencies"] == ["foundation"]
     assert "git" in payload["capabilities"]
+    assert "project_command_execution" in payload["capabilities"]
     assert "project_creation" in payload["capabilities"]
     assert "project_command_planning" in payload["capabilities"]
 
@@ -133,3 +134,47 @@ def test_project_commands_endpoint_rejects_project_without_manifest(tmp_path: Pa
         response = client.get("/projects/plain/commands")
 
     assert response.status_code == 400
+
+
+def test_project_command_run_endpoint_requires_confirmation(tmp_path: Path) -> None:
+    (tmp_path / "syzygy.project.toml").write_text(
+        """
+name = "plain"
+
+[commands]
+hello = 'python -c "print(123)"'
+""",
+        encoding="utf-8",
+    )
+    with build_client() as client:
+        client.post("/projects", json={"name": "plain", "path": str(tmp_path)})
+        response = client.post(
+            "/projects/plain/commands/hello/runs",
+            json={"confirm": False, "timeout_seconds": 5},
+        )
+
+    assert response.status_code == 400
+
+
+def test_project_command_run_endpoint_executes_confirmed_allowed_command(tmp_path: Path) -> None:
+    (tmp_path / "syzygy.project.toml").write_text(
+        """
+name = "plain"
+
+[commands]
+hello = 'python -c "print(123)"'
+""",
+        encoding="utf-8",
+    )
+    with build_client() as client:
+        client.post("/projects", json={"name": "plain", "path": str(tmp_path)})
+        response = client.post(
+            "/projects/plain/commands/hello/runs",
+            json={"confirm": True, "timeout_seconds": 5},
+        )
+
+    assert response.status_code == 201
+    payload = response.json()
+    assert payload["returncode"] == 0
+    assert payload["stdout"].strip() == "123"
+    assert payload["timed_out"] is False

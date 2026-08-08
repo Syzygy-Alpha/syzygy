@@ -36,6 +36,7 @@ POST /projects
 POST /projects/create
 GET /projects/{name}/commands
 GET /projects/{name}/commands/{command_name}/plan
+POST /projects/{name}/commands/{command_name}/runs
 GET /projects/{name}
 ```
 
@@ -84,3 +85,7 @@ rules.
 command against the current safety policy and returns the planned working
 directory, parsed arguments, allow/deny status, and reason. It also does not
 execute anything.
+
+`POST /projects/{name}/commands/{command_name}/runs` executes an allowed command
+only when the request includes `confirm=true`. Commands are executed without a
+shell, inside the registered project path, and with a bounded timeout.
