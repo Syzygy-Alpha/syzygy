@@ -1,0 +1,35 @@
+services:
+  foundation:
+    build:
+      context: .
+    environment:
+      SYZYGY_ENV: ${SYZYGY_ENV:-development}
+      SYZYGY_SERVICE_NAME: ${SYZYGY_SERVICE_NAME:-syzygy-foundation}
+      SYZYGY_VERSION: ${SYZYGY_VERSION:-0.1.0}
+      SYZYGY_HOST: ${SYZYGY_HOST:-0.0.0.0}
+      SYZYGY_PORT: ${SYZYGY_PORT:-8000}
+      SYZYGY_DATABASE_URL: ${SYZYGY_DATABASE_URL:-sqlite:///./data/foundation.db}
+      SYZYGY_NATS_URL: ${SYZYGY_NATS_URL:-nats://nats:4222}
+      SYZYGY_JWT_SECRET: ${SYZYGY_JWT_SECRET:-change-me-for-local-development}
+      SYZYGY_JWT_ALGORITHM: ${SYZYGY_JWT_ALGORITHM:-HS256}
+      SYZYGY_JWT_EXPIRES_MINUTES: ${SYZYGY_JWT_EXPIRES_MINUTES:-60}
+      SYZYGY_ADMIN_USERNAME: ${SYZYGY_ADMIN_USERNAME:-admin}
+      SYZYGY_ADMIN_PASSWORD: ${SYZYGY_ADMIN_PASSWORD:-change-me}
+      SYZYGY_LOG_LEVEL: ${SYZYGY_LOG_LEVEL:-INFO}
+    ports:
+      - "8000:8000"
+    volumes:
+      - foundation-data:/app/data
+    depends_on:
+      nats:
+        condition: service_started
+
+  nats:
+    image: nats:2.10-alpine
+    command: ["-js"]
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+
+volumes:
+  foundation-data:
