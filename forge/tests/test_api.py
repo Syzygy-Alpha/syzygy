@@ -97,6 +97,7 @@ def test_create_project_endpoint_creates_and_registers_project(tmp_path: Path) -
             json={"name": "hello-tool", "template": "python-cli"},
         )
         listed = client.get("/projects")
+        commands = client.get("/projects/hello-tool/commands")
 
     assert created.status_code == 201
     payload = created.json()
@@ -107,6 +108,8 @@ def test_create_project_endpoint_creates_and_registers_project(tmp_path: Path) -
     assert (tmp_path / "hello-tool" / "syzygy.project.toml").exists()
     assert listed.status_code == 200
     assert [project["name"] for project in listed.json()] == ["hello-tool"]
+    assert commands.status_code == 200
+    assert [command["name"] for command in commands.json()["commands"]] == ["lint", "run", "test"]
 
 
 def test_create_project_endpoint_rejects_invalid_name(tmp_path: Path) -> None:
@@ -115,5 +118,13 @@ def test_create_project_endpoint_rejects_invalid_name(tmp_path: Path) -> None:
             "/projects/create",
             json={"name": "../outside", "template": "python-cli"},
         )
+
+    assert response.status_code == 400
+
+
+def test_project_commands_endpoint_rejects_project_without_manifest(tmp_path: Path) -> None:
+    with build_client() as client:
+        client.post("/projects", json={"name": "plain", "path": str(tmp_path)})
+        response = client.get("/projects/plain/commands")
 
     assert response.status_code == 400

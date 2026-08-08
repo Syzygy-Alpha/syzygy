@@ -34,6 +34,7 @@ GET /project-templates/{name}
 GET /projects
 POST /projects
 POST /projects/create
+GET /projects/{name}/commands
 GET /projects/{name}
 ```
 
@@ -67,3 +68,13 @@ project registry.
 The first supported template is `python-cli`. Project creation writes local
 files only inside the configured workspace root. Git initialization is opt-in
 through the request payload and does not create commits or push to remotes.
+
+## Command Discovery
+
+`GET /projects/{name}/commands` reads `syzygy.project.toml` from a registered
+project and returns the `[commands]` table as declarative command names and
+strings.
+
+Forge does not execute these commands yet. This endpoint is intentionally
+read-only so future command execution can be designed with explicit safety
+rules.

@@ -17,7 +17,7 @@ implementation.
 
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
-- Add safe Forge project command discovery from `syzygy.project.toml`.
+- Define the safety contract for executing Forge project commands.
 
 ## Later
 

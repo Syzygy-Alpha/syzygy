@@ -16,6 +16,11 @@ from syzygy_forge.project_creator import (
     ProjectCreator,
 )
 from syzygy_forge.project_inspector import ProjectInspection, ProjectInspector
+from syzygy_forge.project_manifest import (
+    ProjectCommandSet,
+    ProjectManifestError,
+    ProjectManifestReader,
+)
 from syzygy_forge.project_registry import (
     ProjectDetails,
     ProjectPathError,
@@ -41,6 +46,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     project_inspector = ProjectInspector()
     project_registry = ProjectRegistry(database)
     project_creator = ProjectCreator(app_settings.workspace_root, project_registry)
+    project_manifest_reader = ProjectManifestReader()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -65,6 +71,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.project_inspector = project_inspector
     app.state.project_registry = project_registry
     app.state.project_creator = project_creator
+    app.state.project_manifest_reader = project_manifest_reader
 
     @app.get("/")
     def root() -> dict[str, str]:
@@ -116,6 +123,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         try:
             return project_creator.create(request)
         except ProjectCreationError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+    @app.get("/projects/{name}/commands")
+    def get_project_commands(name: str) -> ProjectCommandSet:
+        record = project_registry.get(name)
+        if record is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        try:
+            return project_manifest_reader.commands_for(record)
+        except ProjectManifestError as exc:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
     @app.get("/projects/{name}")
