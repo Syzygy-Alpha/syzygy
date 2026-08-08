@@ -18,6 +18,10 @@ The first functional implementation is the Foundation module:
 - [Event Catalog](foundation/docs/events.md)
 - [Development Guide](foundation/docs/development.md)
 
+The second module phase starts with Forge:
+
+- [Forge README](forge/README.md)
+
 Project activity is tracked in:
 
 - [Activity Log](docs/activity-log/README.md)

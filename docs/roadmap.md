@@ -11,13 +11,15 @@ implementation.
 - Avoid implementing future modules before their contracts are clear.
 - Use the Foundation module registry as the first integration contract for
   future modules.
+- Bootstrap Forge as the first module that integrates with Foundation.
 
 ## Next
 
-- Improve Foundation persistence migrations.
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
-- Start Forge only when development automation becomes the next concrete need.
+- Add the first real Forge project inspection command.
+- Decide how Forge should represent local projects before adding build or commit
+  automation.
 
 ## Later
 

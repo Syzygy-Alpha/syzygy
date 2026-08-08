@@ -88,6 +88,12 @@ MVP direction:
 - Git integration
 - local build and development workflows
 
+Current status:
+
+- Forge bootstrap exists as a standalone module.
+- It exposes health, version, and capabilities.
+- It can register itself with Foundation through the module registry API.
+
 ## Observatory
 
 Purpose: observability center.
@@ -129,4 +135,3 @@ Purpose: isolated security lab.
 MVP direction:
 
 - reproducible and controlled lab organization
-
