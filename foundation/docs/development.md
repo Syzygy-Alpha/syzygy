@@ -40,8 +40,12 @@ ruff format .
 mypy src tests
 ```
 
+## CI
+
+GitHub Actions runs the Foundation test, lint, and type-check commands on pushes
+to `main` and on pull requests when Foundation files change.
+
 ## Environment
 
 Copy `.env.example` to `.env` for development. The sample JWT secret and admin
 password are local defaults only and must be replaced for shared environments.
-
