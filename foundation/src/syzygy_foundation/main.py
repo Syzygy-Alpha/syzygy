@@ -23,7 +23,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         NatsEventBus(app_settings.nats_url) if app_settings.nats_enabled else InMemoryEventBus()
     )
     scheduler = Scheduler()
-    module_registry = ModuleRegistry()
+    module_registry = ModuleRegistry(database)
     foundation_capabilities = [
         "configuration",
         "health",
@@ -39,21 +39,20 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         "nats" if app_settings.nats_enabled else "in_memory_event_bus",
     ]
 
-    module_registry.register(
-        ModuleDescriptor(
-            name="foundation",
-            version=app_settings.version,
-            status=ModuleStatus.STARTING,
-            health=ModuleHealth(status="starting"),
-            capabilities=foundation_capabilities,
-            dependencies=foundation_dependencies,
-        )
-    )
-
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         logger.info("foundation_starting")
         database.initialize()
+        module_registry.register(
+            ModuleDescriptor(
+                name="foundation",
+                version=app_settings.version,
+                status=ModuleStatus.STARTING,
+                health=ModuleHealth(status="starting"),
+                capabilities=foundation_capabilities,
+                dependencies=foundation_dependencies,
+            )
+        )
         try:
             await event_bus.connect()
         except Exception:

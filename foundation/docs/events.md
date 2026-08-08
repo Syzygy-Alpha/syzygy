@@ -9,14 +9,16 @@ syzygy.foundation.<EventName>
 
 ## ModuleStarted
 
-- Producer: Foundation or future module lifecycle manager
+- Producer: Foundation module registry
 - Consumers: Observatory, NERV, future audit components
 - Payload:
 
 ```json
 {
   "module": "foundation",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "status": "online",
+  "health": "ok"
 }
 ```
 
@@ -25,13 +27,16 @@ syzygy.foundation.<EventName>
 
 ## ModuleStopped
 
-- Producer: Foundation or future module lifecycle manager
+- Producer: Foundation module registry
 - Consumers: Observatory, NERV, future audit components
 - Payload:
 
 ```json
 {
-  "module": "foundation"
+  "module": "foundation",
+  "version": "0.1.0",
+  "status": "stopped",
+  "health": "ok"
 }
 ```
 
@@ -55,17 +60,24 @@ syzygy.foundation.<EventName>
 
 ## HealthChanged
 
-- Producer: Foundation health service or future module health reporters
+- Producer: Foundation health service or Foundation module registry
 - Consumers: Observatory, NERV
 - Payload:
 
 ```json
 {
   "module": "foundation",
-  "status": "degraded"
+  "version": "0.1.0",
+  "status": "degraded",
+  "health": "error"
 }
 ```
 
 - Purpose: Announce a health state transition.
 - Version: `1.0`
 
+## Current Routing
+
+Foundation publishes module lifecycle events through the EventBus when the bus is
+connected. If NATS is unavailable in local development, module API operations
+still persist state, but event publication is skipped.

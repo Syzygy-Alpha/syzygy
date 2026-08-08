@@ -6,4 +6,4 @@
 - Add FastAPI health, version, auth, and module endpoints.
 - Add typed configuration, SQLite persistence, EventBus abstraction, NATS adapter,
   scheduler, Docker development runtime, tests, and architecture docs.
-
+- Add SQLite-backed module registry API with authenticated lifecycle endpoints.

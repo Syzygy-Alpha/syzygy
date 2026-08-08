@@ -16,7 +16,7 @@ def test_database_initializes_and_pings(
 
     assert database.ping() is True
     assert (tmp_path / "foundation.db").exists()
-    assert database.schema_version() == 1
+    assert database.schema_version() == 2
 
 
 def test_database_tracks_applied_migrations(
@@ -34,4 +34,7 @@ def test_database_tracks_applied_migrations(
             "SELECT version, name FROM foundation_schema_migrations"
         ).fetchall()
 
-    assert [dict(row) for row in rows] == [{"version": 1, "name": "foundation_metadata"}]
+    assert [dict(row) for row in rows] == [
+        {"version": 1, "name": "foundation_metadata"},
+        {"version": 2, "name": "foundation_modules"},
+    ]

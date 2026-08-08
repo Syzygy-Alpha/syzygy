@@ -23,8 +23,15 @@ GET  /
 GET  /health
 GET  /version
 POST /auth/token
+GET  /auth/me
+POST /modules/register
 GET  /modules
+GET  /modules/{name}
+PATCH /modules/{name}/status
+PATCH /modules/{name}/health
 ```
+
+Module registry endpoints require a bearer token from `/auth/token`.
 
 ## Docker
 

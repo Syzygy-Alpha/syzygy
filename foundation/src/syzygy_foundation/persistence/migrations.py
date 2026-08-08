@@ -24,6 +24,26 @@ MIGRATIONS: tuple[Migration, ...] = (
         VALUES ('schema_version', '1');
         """,
     ),
+    Migration(
+        version=2,
+        name="foundation_modules",
+        sql="""
+        CREATE TABLE IF NOT EXISTS foundation_modules (
+            name TEXT PRIMARY KEY,
+            version TEXT NOT NULL,
+            status TEXT NOT NULL,
+            health TEXT NOT NULL,
+            capabilities TEXT NOT NULL,
+            dependencies TEXT NOT NULL,
+            last_seen_at TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        );
+
+        INSERT OR REPLACE INTO foundation_metadata (key, value)
+        VALUES ('schema_version', '2');
+        """,
+    ),
 )
 
 
@@ -69,4 +89,3 @@ class MigrationRunner:
     def _applied_versions(self, connection: sqlite3.Connection) -> set[int]:
         rows = connection.execute("SELECT version FROM foundation_schema_migrations").fetchall()
         return {int(row["version"]) for row in rows}
-

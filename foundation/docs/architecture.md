@@ -55,12 +55,12 @@ Future modules are represented by:
 }
 ```
 
-Foundation currently stores this contract in memory. Durable service discovery
-is intentionally deferred.
+Foundation persists this contract through the SQLite-backed registry API.
+Network discovery, heartbeats, and distributed service discovery are
+intentionally deferred.
 
 ## Dependency Direction
 
 Other SYZYGY modules should depend on Foundation contracts. Foundation should not
 depend on future modules such as Mycelium, Coppermind, MAGI, NERV, Tungsten, or
 Bastion.
-

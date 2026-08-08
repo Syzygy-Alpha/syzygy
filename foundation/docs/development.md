@@ -57,3 +57,19 @@ when the database initializes and tracked in `foundation_schema_migrations`.
 
 This keeps the MVP local-first and dependency-light. If the schema becomes more
 complex, the project can revisit a dedicated migration tool through an ADR.
+
+## Module Registry
+
+Foundation persists module descriptors in SQLite. The registry is the current
+contract for future modules to declare their version, status, health,
+capabilities, dependencies, and latest known activity.
+
+Authenticated module endpoints:
+
+```text
+POST  /modules/register
+GET   /modules
+GET   /modules/{name}
+PATCH /modules/{name}/status
+PATCH /modules/{name}/health
+```

@@ -10,6 +10,7 @@ class Database:
         self.database_url = database_url
         self.path = self._sqlite_path(database_url)
         self.migration_runner = migration_runner or MigrationRunner()
+        self._memory_connection: sqlite3.Connection | None = None
 
     def initialize(self) -> None:
         if self.path != Path(":memory:"):
@@ -18,6 +19,11 @@ class Database:
             self.migration_runner.apply(connection)
 
     def connect(self) -> sqlite3.Connection:
+        if self.path == Path(":memory:"):
+            if self._memory_connection is None:
+                self._memory_connection = sqlite3.connect(":memory:", check_same_thread=False)
+                self._memory_connection.row_factory = sqlite3.Row
+            return self._memory_connection
         connection = sqlite3.connect(self.path)
         connection.row_factory = sqlite3.Row
         return connection

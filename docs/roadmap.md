@@ -9,12 +9,13 @@ implementation.
 - Stabilize Foundation v0.1.
 - Keep tests, lint, type checks, and activity logs current.
 - Avoid implementing future modules before their contracts are clear.
+- Use the Foundation module registry as the first integration contract for
+  future modules.
 
 ## Next
 
 - Improve Foundation persistence migrations.
 - Add basic configuration update events.
-- Add a minimal module registration API if a real consumer needs it.
 - Validate Docker locally once Docker is available.
 - Start Forge only when development automation becomes the next concrete need.
 
@@ -37,4 +38,3 @@ implementation.
 - Do not add AI where it is not needed.
 - Do not move responsibilities between modules silently.
 - Do not implement large cross-module flows before their contracts exist.
-
