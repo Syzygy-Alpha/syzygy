@@ -44,6 +44,17 @@ from syzygy_forge.project_creator import (
     ProjectCreationResult,
     ProjectCreator,
 )
+from syzygy_forge.project_git import (
+    GitAutomationError,
+    GitBranchCreateRequest,
+    GitBranchListResult,
+    GitBranchOperationResult,
+    GitBranchSwitchRequest,
+    GitCommitRequest,
+    GitCommitResult,
+    ProjectGitAutomation,
+    ProjectGitStatus,
+)
 from syzygy_forge.project_inspector import ProjectInspection, ProjectInspector
 from syzygy_forge.project_manifest import (
     ProjectCommandSet,
@@ -75,6 +86,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     project_inspector = ProjectInspector()
     project_registry = ProjectRegistry(database)
     project_creator = ProjectCreator(app_settings.workspace_root, project_registry)
+    project_git = ProjectGitAutomation()
     project_manifest_reader = ProjectManifestReader()
     project_command_planner = ProjectCommandPlanner()
     project_command_runner = ProjectCommandRunner()
@@ -110,6 +122,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.project_inspector = project_inspector
     app.state.project_registry = project_registry
     app.state.project_creator = project_creator
+    app.state.project_git = project_git
     app.state.project_manifest_reader = project_manifest_reader
     app.state.project_command_planner = project_command_planner
     app.state.project_command_runner = project_command_runner
@@ -179,6 +192,62 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         try:
             return project_manifest_reader.commands_for(record)
         except ProjectManifestError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+    @app.get("/projects/{name}/git/status")
+    def project_git_status(name: str) -> ProjectGitStatus:
+        record = project_registry.get(name)
+        if record is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        return project_git.status(record)
+
+    @app.get("/projects/{name}/git/branches")
+    def project_git_branches(name: str) -> GitBranchListResult:
+        record = project_registry.get(name)
+        if record is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        try:
+            return project_git.branches(record)
+        except GitAutomationError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+    @app.post("/projects/{name}/git/branches")
+    def create_project_git_branch(
+        name: str,
+        request: GitBranchCreateRequest,
+    ) -> GitBranchOperationResult:
+        record = project_registry.get(name)
+        if record is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        try:
+            return project_git.create_branch(record, request)
+        except GitAutomationError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+    @app.post("/projects/{name}/git/branches/switch")
+    def switch_project_git_branch(
+        name: str,
+        request: GitBranchSwitchRequest,
+    ) -> GitBranchOperationResult:
+        record = project_registry.get(name)
+        if record is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        try:
+            return project_git.switch_branch(record, request)
+        except GitAutomationError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+    @app.post("/projects/{name}/git/commits")
+    def commit_project_git_changes(
+        name: str,
+        request: GitCommitRequest,
+    ) -> GitCommitResult:
+        record = project_registry.get(name)
+        if record is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+        try:
+            return project_git.commit(record, request)
+        except GitAutomationError as exc:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
     @app.get("/projects/{name}/commands/{command_name}/plan")

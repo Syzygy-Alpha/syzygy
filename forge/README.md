@@ -46,6 +46,11 @@ GET /projects/{name}/commands
 GET /projects/{name}/commands/{command_name}/plan
 POST /projects/{name}/commands/{command_name}/runs
 GET /projects/{name}/command-runs
+GET /projects/{name}/git/status
+GET /projects/{name}/git/branches
+POST /projects/{name}/git/branches
+POST /projects/{name}/git/branches/switch
+POST /projects/{name}/git/commits
 GET /projects/{name}
 ```
 
@@ -127,3 +132,9 @@ Failed deliveries can be requeued manually with
 `POST /events/outbox/requeue-failed`. Both operations require `confirm=true`.
 Requeue returns failed events to `pending`, preserves the attempt count, and
 clears the last error.
+
+## Git Automation
+
+Forge can inspect Git status, list branches, create/switch branches, and create
+local commits for registered projects. Mutating Git operations require
+`confirm=true`. Forge does not push to remotes.

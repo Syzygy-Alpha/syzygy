@@ -6,3 +6,4 @@
 - [Forge Event Summary](forge-event-summary.md)
 - [Forge Practical Usage Guide](forge-practical-usage-guide.md)
 - [Forge Project Templates](forge-project-templates.md)
+- [Forge Git Automation](forge-git-automation.md)

@@ -17,6 +17,9 @@ class ModuleDescriptor(BaseModel):
 
 FORGE_CAPABILITIES = [
     "git",
+    "git_branch_workflow",
+    "git_commit",
+    "git_status",
     "event_outbox",
     "event_outbox_publishing",
     "event_outbox_requeue",

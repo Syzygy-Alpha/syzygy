@@ -42,6 +42,9 @@ def test_capabilities_expose_forge_descriptor() -> None:
     assert payload["name"] == "forge"
     assert payload["dependencies"] == ["foundation"]
     assert "git" in payload["capabilities"]
+    assert "git_branch_workflow" in payload["capabilities"]
+    assert "git_commit" in payload["capabilities"]
+    assert "git_status" in payload["capabilities"]
     assert "event_outbox" in payload["capabilities"]
     assert "event_outbox_publishing" in payload["capabilities"]
     assert "event_outbox_requeue" in payload["capabilities"]
@@ -146,6 +149,40 @@ def test_project_commands_endpoint_rejects_project_without_manifest(tmp_path: Pa
         response = client.get("/projects/plain/commands")
 
     assert response.status_code == 400
+
+
+def test_project_git_status_endpoint_reports_status_contract(tmp_path: Path) -> None:
+    with build_client() as client:
+        client.post("/projects", json={"name": "plain", "path": str(tmp_path)})
+        response = client.get("/projects/plain/git/status")
+
+    assert response.status_code == 200
+    assert isinstance(response.json()["is_repository"], bool)
+    assert isinstance(response.json()["dirty"], bool)
+
+
+def test_project_git_commit_endpoint_requires_confirmation(tmp_path: Path) -> None:
+    with build_client() as client:
+        client.post("/projects", json={"name": "plain", "path": str(tmp_path)})
+        response = client.post(
+            "/projects/plain/git/commits",
+            json={"message": "docs: update readme", "confirm": False},
+        )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Git commit requires confirm=true"
+
+
+def test_project_git_branch_endpoint_requires_confirmation(tmp_path: Path) -> None:
+    with build_client() as client:
+        client.post("/projects", json={"name": "plain", "path": str(tmp_path)})
+        response = client.post(
+            "/projects/plain/git/branches",
+            json={"name": "feature/demo", "confirm": False},
+        )
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Git branch creation requires confirm=true"
 
 
 def test_project_command_run_endpoint_requires_confirmation(tmp_path: Path) -> None:

@@ -86,6 +86,42 @@ Check command history:
 curl http://127.0.0.1:8010/projects/hello-tool/command-runs
 ```
 
+## Use Git Automation
+
+Inspect local Git state:
+
+```bash
+curl http://127.0.0.1:8010/projects/hello-tool/git/status
+curl http://127.0.0.1:8010/projects/hello-tool/git/branches
+```
+
+Create and switch to a feature branch:
+
+```bash
+curl -X POST http://127.0.0.1:8010/projects/hello-tool/git/branches ^
+  -H "Content-Type: application/json" ^
+  -d "{\"name\":\"feature/readme\",\"checkout\":true,\"confirm\":true}"
+```
+
+Create an assisted local commit. Use `paths` for specific files or
+`stage_all=true` for all local changes:
+
+```bash
+curl -X POST http://127.0.0.1:8010/projects/hello-tool/git/commits ^
+  -H "Content-Type: application/json" ^
+  -d "{\"message\":\"docs: update readme\",\"paths\":[\"README.md\"],\"confirm\":true}"
+```
+
+Switch back to an existing branch:
+
+```bash
+curl -X POST http://127.0.0.1:8010/projects/hello-tool/git/branches/switch ^
+  -H "Content-Type: application/json" ^
+  -d "{\"name\":\"main\",\"confirm\":true}"
+```
+
+Forge does not run `git push`.
+
 ## Inspect Events
 
 Confirmed command runs create local outbox events.
