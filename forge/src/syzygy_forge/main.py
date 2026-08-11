@@ -7,7 +7,15 @@ from fastapi import FastAPI, HTTPException, status
 
 from syzygy_forge.config import Settings, get_settings
 from syzygy_forge.database import Database
-from syzygy_forge.event_outbox import ForgeEventOutbox, ForgeEventOutboxRecord
+from syzygy_forge.event_outbox import (
+    EventOutboxRecordNotFoundError,
+    EventOutboxStatusError,
+    EventRequeueFailedRequest,
+    EventRequeueRequest,
+    EventRequeueResult,
+    ForgeEventOutbox,
+    ForgeEventOutboxRecord,
+)
 from syzygy_forge.event_publisher import (
     EventOutboxPublisher,
     EventPublishingError,
@@ -224,6 +232,33 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         try:
             return await event_outbox_publisher.publish_pending(request)
         except EventPublishingError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+    @app.post("/events/outbox/requeue-failed")
+    def requeue_failed_event_outbox(request: EventRequeueFailedRequest) -> EventRequeueResult:
+        if not request.confirm:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Event requeue requires confirm=true",
+            )
+        records = event_outbox.requeue_failed(request.limit)
+        return EventRequeueResult(requeued=len(records), events=records)
+
+    @app.post("/events/outbox/{record_id}/requeue")
+    def requeue_event_outbox_record(
+        record_id: int,
+        request: EventRequeueRequest,
+    ) -> ForgeEventOutboxRecord:
+        if not request.confirm:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Event requeue requires confirm=true",
+            )
+        try:
+            return event_outbox.requeue(record_id)
+        except EventOutboxRecordNotFoundError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc)) from exc
+        except EventOutboxStatusError as exc:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
     @app.get("/projects/{name}/command-runs")

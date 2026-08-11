@@ -17,7 +17,7 @@ implementation.
 
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
-- Add retry or requeue operations for failed Forge outbox events.
+- Add operational summaries for Forge outbox status and delivery health.
 
 ## Later
 

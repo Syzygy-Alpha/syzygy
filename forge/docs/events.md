@@ -86,10 +86,21 @@ The request must include `confirm=true`. Successful delivery marks events as
 `published_at`. Failed delivery marks events as `failed`, increments
 `attempts`, and stores `last_error`.
 
+Failed records can be requeued manually with:
+
+```text
+POST /events/outbox/{record_id}/requeue
+POST /events/outbox/requeue-failed
+```
+
+Both requests must include `confirm=true`. Requeue only accepts records with
+status `failed`; it changes them back to `pending`, preserves `attempts`, clears
+`last_error`, and clears `published_at`.
+
 Supported transports:
 
 - `memory`: local test transport that records publish attempts in process.
 - `nats`: publishes the event envelope to the record subject.
 
 Failed events are not retried automatically yet. A future increment should add
-explicit retry or requeue operations.
+operational summaries or scheduled retry policy after the manual path is stable.

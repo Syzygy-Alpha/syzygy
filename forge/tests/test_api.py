@@ -1,5 +1,7 @@
 from pathlib import Path
+from typing import cast
 
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from syzygy_forge.config import Settings
@@ -42,6 +44,7 @@ def test_capabilities_expose_forge_descriptor() -> None:
     assert "git" in payload["capabilities"]
     assert "event_outbox" in payload["capabilities"]
     assert "event_outbox_publishing" in payload["capabilities"]
+    assert "event_outbox_requeue" in payload["capabilities"]
     assert "project_command_execution" in payload["capabilities"]
     assert "project_creation" in payload["capabilities"]
     assert "project_command_planning" in payload["capabilities"]
@@ -237,3 +240,97 @@ hello = 'python -c "print(123)"'
     }
     assert [event["status"] for event in outbox.json()] == ["published", "published"]
     assert [event["attempts"] for event in outbox.json()] == [1, 1]
+
+
+def test_event_outbox_requeue_endpoint_requires_confirmation() -> None:
+    with build_client() as client:
+        response = client.post("/events/outbox/1/requeue", json={"confirm": False})
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Event requeue requires confirm=true"
+
+
+def test_event_outbox_requeue_endpoint_requeues_failed_event(tmp_path: Path) -> None:
+    (tmp_path / "syzygy.project.toml").write_text(
+        """
+name = "plain"
+
+[commands]
+hello = 'python -c "print(123)"'
+""",
+        encoding="utf-8",
+    )
+    with build_client() as client:
+        client.post("/projects", json={"name": "plain", "path": str(tmp_path)})
+        client.post(
+            "/projects/plain/commands/hello/runs",
+            json={"confirm": True, "timeout_seconds": 5},
+        )
+        cast(FastAPI, client.app).state.event_outbox.mark_failed(1, "transport unavailable")
+        response = client.post("/events/outbox/1/requeue", json={"confirm": True})
+        outbox = client.get("/events/outbox")
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "pending"
+    assert response.json()["attempts"] == 1
+    assert response.json()["last_error"] is None
+    assert [event["status"] for event in outbox.json()] == ["pending", "pending"]
+
+
+def test_event_outbox_requeue_endpoint_rejects_non_failed_event(tmp_path: Path) -> None:
+    (tmp_path / "syzygy.project.toml").write_text(
+        """
+name = "plain"
+
+[commands]
+hello = 'python -c "print(123)"'
+""",
+        encoding="utf-8",
+    )
+    with build_client() as client:
+        client.post("/projects", json={"name": "plain", "path": str(tmp_path)})
+        client.post(
+            "/projects/plain/commands/hello/runs",
+            json={"confirm": True, "timeout_seconds": 5},
+        )
+        response = client.post("/events/outbox/1/requeue", json={"confirm": True})
+
+    assert response.status_code == 400
+    assert "Only failed event outbox records can be requeued" in response.json()["detail"]
+
+
+def test_event_outbox_requeue_endpoint_reports_missing_event() -> None:
+    with build_client() as client:
+        response = client.post("/events/outbox/404/requeue", json={"confirm": True})
+
+    assert response.status_code == 404
+    assert "404" in response.json()["detail"]
+
+
+def test_event_outbox_requeue_failed_endpoint_requeues_failed_events(tmp_path: Path) -> None:
+    (tmp_path / "syzygy.project.toml").write_text(
+        """
+name = "plain"
+
+[commands]
+hello = 'python -c "print(123)"'
+""",
+        encoding="utf-8",
+    )
+    with build_client() as client:
+        client.post("/projects", json={"name": "plain", "path": str(tmp_path)})
+        client.post(
+            "/projects/plain/commands/hello/runs",
+            json={"confirm": True, "timeout_seconds": 5},
+        )
+        cast(FastAPI, client.app).state.event_outbox.mark_failed(1, "transport unavailable")
+        response = client.post(
+            "/events/outbox/requeue-failed",
+            json={"confirm": True, "limit": 10},
+        )
+        outbox = client.get("/events/outbox")
+
+    assert response.status_code == 200
+    assert response.json()["requeued"] == 1
+    assert [event["id"] for event in response.json()["events"]] == [1]
+    assert [event["status"] for event in outbox.json()] == ["pending", "pending"]

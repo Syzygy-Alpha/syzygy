@@ -3,10 +3,22 @@ import sqlite3
 from datetime import UTC, datetime
 from typing import Any
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from syzygy_forge.database import Database
 from syzygy_forge.events import ForgeEvent
+
+
+class EventOutboxError(ValueError):
+    pass
+
+
+class EventOutboxRecordNotFoundError(EventOutboxError):
+    pass
+
+
+class EventOutboxStatusError(EventOutboxError):
+    pass
 
 
 class ForgeEventOutboxRecord(BaseModel):
@@ -23,6 +35,19 @@ class ForgeEventOutboxRecord(BaseModel):
     last_error: str | None = None
     published_at: datetime | None = None
     created_at: datetime
+
+
+class EventRequeueRequest(BaseModel):
+    confirm: bool = Field(default=False)
+
+
+class EventRequeueFailedRequest(EventRequeueRequest):
+    limit: int = Field(default=100, ge=1, le=500)
+
+
+class EventRequeueResult(BaseModel):
+    requeued: int
+    events: list[ForgeEventOutboxRecord] = Field(default_factory=list)
 
 
 class ForgeEventOutbox:
@@ -103,6 +128,19 @@ class ForgeEventOutbox:
             ).fetchall()
         return [self._from_row(row) for row in rows]
 
+    def failed(self, limit: int = 100) -> list[ForgeEventOutboxRecord]:
+        with self.database.connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT * FROM forge_event_outbox
+                WHERE status = 'failed'
+                ORDER BY id
+                LIMIT ?
+                """,
+                (limit,),
+            ).fetchall()
+        return [self._from_row(row) for row in rows]
+
     def mark_published(self, record_id: int) -> ForgeEventOutboxRecord:
         published_at = datetime.now(UTC)
         with self.database.connect() as connection:
@@ -131,7 +169,8 @@ class ForgeEventOutbox:
                 UPDATE forge_event_outbox
                 SET status = 'failed',
                     attempts = attempts + 1,
-                    last_error = ?
+                    last_error = ?,
+                    published_at = NULL
                 WHERE id = ?
                 """,
                 (error, record_id),
@@ -150,6 +189,36 @@ class ForgeEventOutbox:
                 (record_id,),
             ).fetchone()
         return self._from_row(row) if row else None
+
+    def requeue(self, record_id: int) -> ForgeEventOutboxRecord:
+        record = self.get(record_id)
+        if record is None:
+            msg = f"Event outbox record not found: {record_id}"
+            raise EventOutboxRecordNotFoundError(msg)
+        if record.status != "failed":
+            msg = f"Only failed event outbox records can be requeued: {record_id}"
+            raise EventOutboxStatusError(msg)
+
+        with self.database.connect() as connection:
+            connection.execute(
+                """
+                UPDATE forge_event_outbox
+                SET status = 'pending',
+                    last_error = NULL,
+                    published_at = NULL
+                WHERE id = ?
+                """,
+                (record_id,),
+            )
+            connection.commit()
+        requeued = self.get(record_id)
+        if requeued is None:
+            msg = f"Event outbox record not found after requeue: {record_id}"
+            raise RuntimeError(msg)
+        return requeued
+
+    def requeue_failed(self, limit: int = 100) -> list[ForgeEventOutboxRecord]:
+        return [self.requeue(record.id) for record in self.failed(limit)]
 
     def list_events(self, status: str | None = None) -> list[ForgeEventOutboxRecord]:
         with self.database.connect() as connection:

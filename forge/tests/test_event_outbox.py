@@ -1,7 +1,13 @@
 from datetime import UTC, datetime
 
+import pytest
+
 from syzygy_forge.database import Database
-from syzygy_forge.event_outbox import ForgeEventOutbox
+from syzygy_forge.event_outbox import (
+    EventOutboxRecordNotFoundError,
+    EventOutboxStatusError,
+    ForgeEventOutbox,
+)
 from syzygy_forge.events import CommandRunEventFactory
 from syzygy_forge.project_command_history import ProjectCommandRunRecord
 
@@ -85,3 +91,55 @@ def test_event_outbox_tracks_publish_failure() -> None:
     assert failed.last_error == "transport unavailable"
     assert failed.published_at is None
     assert outbox.pending() == []
+
+
+def test_event_outbox_requeues_failed_event() -> None:
+    outbox = build_outbox()
+    event = CommandRunEventFactory().started(build_command_run_record())
+    record = outbox.enqueue(event)
+    outbox.mark_failed(record.id, "transport unavailable")
+
+    requeued = outbox.requeue(record.id)
+
+    assert requeued.status == "pending"
+    assert requeued.attempts == 1
+    assert requeued.last_error is None
+    assert requeued.published_at is None
+    assert [event.id for event in outbox.pending()] == [record.id]
+
+
+def test_event_outbox_requeues_failed_events_with_limit() -> None:
+    outbox = build_outbox()
+    factory = CommandRunEventFactory()
+    run_record = build_command_run_record()
+    first, second = outbox.enqueue_many(
+        [factory.started(run_record), factory.completed(run_record)]
+    )
+    outbox.mark_failed(first.id, "first failure")
+    outbox.mark_failed(second.id, "second failure")
+
+    requeued = outbox.requeue_failed(limit=1)
+
+    assert [record.id for record in requeued] == [first.id]
+    assert [record.id for record in outbox.failed()] == [second.id]
+    assert [record.id for record in outbox.pending()] == [first.id]
+
+
+def test_event_outbox_requeue_rejects_missing_event() -> None:
+    outbox = build_outbox()
+
+    with pytest.raises(EventOutboxRecordNotFoundError) as exc_info:
+        outbox.requeue(404)
+
+    assert "404" in str(exc_info.value)
+
+
+def test_event_outbox_requeue_rejects_non_failed_event() -> None:
+    outbox = build_outbox()
+    event = CommandRunEventFactory().started(build_command_run_record())
+    record = outbox.enqueue(event)
+
+    with pytest.raises(EventOutboxStatusError) as exc_info:
+        outbox.requeue(record.id)
+
+    assert str(record.id) in str(exc_info.value)

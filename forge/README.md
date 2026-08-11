@@ -30,6 +30,8 @@ GET /version
 GET /capabilities
 GET /events/outbox
 POST /events/outbox/publish
+POST /events/outbox/requeue-failed
+POST /events/outbox/{record_id}/requeue
 GET /projects/current
 GET /project-templates
 GET /project-templates/{name}
@@ -110,3 +112,9 @@ External publication is opt-in. Set
 through the configured transport. The default transport is `memory` for local
 testing; `nats` publishes event envelopes to their `syzygy.forge.<EventName>`
 subjects using `SYZYGY_FORGE_NATS_URL`.
+
+Failed deliveries can be requeued manually with
+`POST /events/outbox/{record_id}/requeue` or
+`POST /events/outbox/requeue-failed`. Both operations require `confirm=true`.
+Requeue returns failed events to `pending`, preserves the attempt count, and
+clears the last error.
