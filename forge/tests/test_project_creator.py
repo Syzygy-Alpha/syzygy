@@ -34,6 +34,37 @@ def test_project_creator_creates_python_cli_project(tmp_path: Path) -> None:
     )
 
 
+def test_project_creator_creates_python_package_project(tmp_path: Path) -> None:
+    creator = build_creator(tmp_path)
+
+    result = creator.create(
+        ProjectCreationRequest(name="hello-package", template="python-package")
+    )
+
+    project_path = tmp_path / "hello-package"
+    assert result.record.name == "hello-package"
+    assert result.template == "python-package"
+    assert "src/hello_package/core.py" in result.files
+    assert "tests/test_core.py" in result.files
+    assert 'template = "python-package"' in (project_path / "syzygy.project.toml").read_text(
+        encoding="utf-8"
+    )
+
+
+def test_project_creator_creates_static_site_project(tmp_path: Path) -> None:
+    creator = build_creator(tmp_path)
+
+    result = creator.create(ProjectCreationRequest(name="hello-site", template="static-site"))
+
+    project_path = tmp_path / "hello-site"
+    assert result.record.name == "hello-site"
+    assert result.template == "static-site"
+    assert "index.html" in result.files
+    assert "styles.css" in result.files
+    assert "app.js" in result.files
+    assert "hello-site" in (project_path / "index.html").read_text(encoding="utf-8")
+
+
 def test_project_creator_rejects_invalid_project_name(tmp_path: Path) -> None:
     creator = build_creator(tmp_path)
 

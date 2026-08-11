@@ -44,6 +44,18 @@ curl -X POST http://127.0.0.1:8010/projects/create ^
   -d "{\"name\":\"hello-tool\",\"template\":\"python-cli\",\"initialize_git\":true}"
 ```
 
+Other local templates:
+
+```bash
+curl -X POST http://127.0.0.1:8010/projects/create ^
+  -H "Content-Type: application/json" ^
+  -d "{\"name\":\"hello-package\",\"template\":\"python-package\",\"initialize_git\":true}"
+
+curl -X POST http://127.0.0.1:8010/projects/create ^
+  -H "Content-Type: application/json" ^
+  -d "{\"name\":\"hello-site\",\"template\":\"static-site\",\"initialize_git\":true}"
+```
+
 List registered projects:
 
 ```bash

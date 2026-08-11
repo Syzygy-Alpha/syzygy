@@ -76,9 +76,10 @@ registry does not mutate repositories; it only records known local paths.
 `SYZYGY_FORGE_WORKSPACE_ROOT` from a built-in template and registers it in the
 project registry.
 
-The first supported template is `python-cli`. Project creation writes local
-files only inside the configured workspace root. Git initialization is opt-in
-through the request payload and does not create commits or push to remotes.
+The currently supported templates are `python-cli`, `python-package`, and
+`static-site`. Project creation writes local files only inside the configured
+workspace root. Git initialization is opt-in through the request payload and
+does not create commits or push to remotes.
 
 ## Command Discovery
 

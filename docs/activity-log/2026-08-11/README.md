@@ -5,3 +5,4 @@
 - [Forge Event Requeue](forge-event-requeue.md)
 - [Forge Event Summary](forge-event-summary.md)
 - [Forge Practical Usage Guide](forge-practical-usage-guide.md)
+- [Forge Project Templates](forge-project-templates.md)

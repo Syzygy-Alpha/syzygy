@@ -95,7 +95,11 @@ def test_project_template_endpoints() -> None:
         fetched = client.get("/project-templates/python-cli")
 
     assert listed.status_code == 200
-    assert [template["name"] for template in listed.json()] == ["python-cli"]
+    assert [template["name"] for template in listed.json()] == [
+        "python-cli",
+        "python-package",
+        "static-site",
+    ]
     assert fetched.status_code == 200
     assert fetched.json()["name"] == "python-cli"
 
