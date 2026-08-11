@@ -45,6 +45,27 @@ MIGRATIONS: tuple[Migration, ...] = (
         ON forge_command_runs (project, id DESC);
         """,
     ),
+    Migration(
+        version=3,
+        name="forge_event_outbox",
+        sql="""
+        CREATE TABLE IF NOT EXISTS forge_event_outbox (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            event_id TEXT NOT NULL UNIQUE,
+            name TEXT NOT NULL,
+            subject TEXT NOT NULL,
+            producer TEXT NOT NULL,
+            payload TEXT NOT NULL,
+            version TEXT NOT NULL,
+            occurred_at TEXT NOT NULL,
+            status TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_forge_event_outbox_status
+        ON forge_event_outbox (status, id);
+        """,
+    ),
 )
 
 

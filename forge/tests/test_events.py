@@ -4,7 +4,7 @@ from syzygy_forge.events import CommandRunEventFactory, ForgeEventName
 from syzygy_forge.project_command_history import ProjectCommandRunRecord
 
 
-def build_record() -> ProjectCommandRunRecord:
+def build_command_run_record() -> ProjectCommandRunRecord:
     return ProjectCommandRunRecord(
         id=1,
         project="hello-tool",
@@ -21,7 +21,7 @@ def build_record() -> ProjectCommandRunRecord:
 
 
 def test_command_run_started_event_contract() -> None:
-    event = CommandRunEventFactory().started(build_record())
+    event = CommandRunEventFactory().started(build_command_run_record())
 
     assert event.name == ForgeEventName.COMMAND_RUN_STARTED
     assert event.producer == "forge"
@@ -34,7 +34,7 @@ def test_command_run_started_event_contract() -> None:
 
 
 def test_command_run_completed_event_contract() -> None:
-    event = CommandRunEventFactory().completed(build_record())
+    event = CommandRunEventFactory().completed(build_command_run_record())
 
     assert event.name == ForgeEventName.COMMAND_RUN_COMPLETED
     assert event.subject() == "syzygy.forge.CommandRunCompleted"

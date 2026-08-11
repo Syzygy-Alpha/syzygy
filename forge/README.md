@@ -28,6 +28,7 @@ GET /
 GET /health
 GET /version
 GET /capabilities
+GET /events/outbox
 GET /projects/current
 GET /project-templates
 GET /project-templates/{name}
@@ -99,4 +100,6 @@ timeout state, and timestamps, but it does not persist stdout or stderr.
 
 Forge defines command lifecycle event contracts in `forge/docs/events.md` for
 future publication through the SYZYGY event infrastructure. Current Forge code
-does not publish those events yet.
+stores generated command lifecycle events in a local SQLite outbox through
+`GET /events/outbox`, but it does not publish those events to an external
+transport yet.

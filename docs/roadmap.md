@@ -17,7 +17,7 @@ implementation.
 
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
-- Wire Forge command lifecycle events to the SYZYGY event infrastructure.
+- Add an external publisher for the Forge event outbox.
 
 ## Later
 

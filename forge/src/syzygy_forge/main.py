@@ -7,6 +7,8 @@ from fastapi import FastAPI, HTTPException, status
 
 from syzygy_forge.config import Settings, get_settings
 from syzygy_forge.database import Database
+from syzygy_forge.event_outbox import ForgeEventOutbox, ForgeEventOutboxRecord
+from syzygy_forge.events import CommandRunEventFactory
 from syzygy_forge.foundation_client import FoundationClient
 from syzygy_forge.module import ModuleDescriptor, forge_descriptor
 from syzygy_forge.project_command_history import (
@@ -61,6 +63,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     project_command_planner = ProjectCommandPlanner()
     project_command_runner = ProjectCommandRunner()
     project_command_history = ProjectCommandHistory(database)
+    command_run_event_factory = CommandRunEventFactory()
+    event_outbox = ForgeEventOutbox(database)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -89,6 +93,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.project_command_planner = project_command_planner
     app.state.project_command_runner = project_command_runner
     app.state.project_command_history = project_command_history
+    app.state.command_run_event_factory = command_run_event_factory
+    app.state.event_outbox = event_outbox
 
     @app.get("/")
     def root() -> dict[str, str]:
@@ -182,7 +188,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         except ProjectCommandExecutionError as exc:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
         run_record = project_command_history.record(result)
+        event_outbox.enqueue_many(
+            [
+                command_run_event_factory.started(run_record),
+                command_run_event_factory.completed(run_record),
+            ]
+        )
         return result.model_copy(update={"run_id": run_record.id})
+
+    @app.get("/events/outbox")
+    def list_event_outbox(status: str | None = None) -> list[ForgeEventOutboxRecord]:
+        return event_outbox.list_events(status)
 
     @app.get("/projects/{name}/command-runs")
     def list_project_command_runs(name: str) -> list[ProjectCommandRunRecord]:

@@ -173,6 +173,7 @@ hello = 'python -c "print(123)"'
             json={"confirm": True, "timeout_seconds": 5},
         )
         history = client.get("/projects/plain/command-runs")
+        outbox = client.get("/events/outbox")
 
     assert response.status_code == 201
     payload = response.json()
@@ -186,3 +187,11 @@ hello = 'python -c "print(123)"'
     assert history_payload[0]["id"] == 1
     assert history_payload[0]["project"] == "plain"
     assert history_payload[0]["command_name"] == "hello"
+    assert outbox.status_code == 200
+    outbox_payload = outbox.json()
+    assert [event["name"] for event in outbox_payload] == [
+        "CommandRunStarted",
+        "CommandRunCompleted",
+    ]
+    assert "stdout" not in outbox_payload[1]["payload"]
+    assert "stderr" not in outbox_payload[1]["payload"]

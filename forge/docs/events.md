@@ -1,8 +1,8 @@
 # Forge Event Catalog
 
-Forge event contracts prepare future publication through the SYZYGY event
-infrastructure. Current Forge code defines the payload contracts but does not
-publish events yet.
+Forge event contracts prepare publication through the SYZYGY event
+infrastructure. Current Forge code writes generated events to a local SQLite
+outbox and does not publish them to an external transport yet.
 
 Subjects follow:
 
@@ -61,3 +61,17 @@ syzygy.forge.<EventName>
 
 Forge event payloads do not include stdout or stderr. Command output can contain
 secrets or sensitive local data, so it remains outside the event contract.
+
+## Current Routing
+
+When a confirmed command run finishes, Forge stores `CommandRunStarted` and
+`CommandRunCompleted` in the local event outbox. The outbox can be inspected
+with:
+
+```text
+GET /events/outbox
+GET /events/outbox?status=pending
+```
+
+Future work should add an external publisher that reads from this outbox and
+marks events as published after successful delivery.
