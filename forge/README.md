@@ -21,6 +21,9 @@ python -m pip install -e ".[dev]"
 uvicorn syzygy_forge.main:app --reload --port 8010
 ```
 
+For a complete local walkthrough with `curl`, see
+[Forge Practical Usage](docs/usage.md).
+
 Useful endpoints:
 
 ```text
