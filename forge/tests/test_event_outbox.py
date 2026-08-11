@@ -57,3 +57,31 @@ def test_event_outbox_lists_events_by_status() -> None:
         "CommandRunStarted",
         "CommandRunCompleted",
     ]
+
+
+def test_event_outbox_tracks_publish_state() -> None:
+    outbox = build_outbox()
+    event = CommandRunEventFactory().started(build_command_run_record())
+    record = outbox.enqueue(event)
+
+    published = outbox.mark_published(record.id)
+
+    assert published.status == "published"
+    assert published.attempts == 1
+    assert published.last_error is None
+    assert published.published_at is not None
+    assert outbox.pending() == []
+
+
+def test_event_outbox_tracks_publish_failure() -> None:
+    outbox = build_outbox()
+    event = CommandRunEventFactory().started(build_command_run_record())
+    record = outbox.enqueue(event)
+
+    failed = outbox.mark_failed(record.id, "transport unavailable")
+
+    assert failed.status == "failed"
+    assert failed.attempts == 1
+    assert failed.last_error == "transport unavailable"
+    assert failed.published_at is None
+    assert outbox.pending() == []

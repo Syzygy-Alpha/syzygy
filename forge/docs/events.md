@@ -2,7 +2,7 @@
 
 Forge event contracts prepare publication through the SYZYGY event
 infrastructure. Current Forge code writes generated events to a local SQLite
-outbox and does not publish them to an external transport yet.
+outbox and can publish pending events through an explicitly enabled transport.
 
 Subjects follow:
 
@@ -73,5 +73,23 @@ GET /events/outbox
 GET /events/outbox?status=pending
 ```
 
-Future work should add an external publisher that reads from this outbox and
-marks events as published after successful delivery.
+External publication is disabled by default. When
+`SYZYGY_FORGE_EVENT_PUBLISHER_ENABLED=true`, pending events can be published
+with:
+
+```text
+POST /events/outbox/publish
+```
+
+The request must include `confirm=true`. Successful delivery marks events as
+`published`, increments `attempts`, clears `last_error`, and stores
+`published_at`. Failed delivery marks events as `failed`, increments
+`attempts`, and stores `last_error`.
+
+Supported transports:
+
+- `memory`: local test transport that records publish attempts in process.
+- `nats`: publishes the event envelope to the record subject.
+
+Failed events are not retried automatically yet. A future increment should add
+explicit retry or requeue operations.

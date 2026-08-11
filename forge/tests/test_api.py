@@ -9,10 +9,12 @@ from syzygy_forge.main import create_app
 def build_client(
     workspace_root: Path | None = None,
     database_url: str = "sqlite:///:memory:",
+    event_publisher_enabled: bool = False,
 ) -> TestClient:
     settings = Settings(
         register_with_foundation=False,
         database_url=database_url,
+        event_publisher_enabled=event_publisher_enabled,
         workspace_root=workspace_root or Path("."),
     )
     return TestClient(create_app(settings))
@@ -38,6 +40,8 @@ def test_capabilities_expose_forge_descriptor() -> None:
     assert payload["name"] == "forge"
     assert payload["dependencies"] == ["foundation"]
     assert "git" in payload["capabilities"]
+    assert "event_outbox" in payload["capabilities"]
+    assert "event_outbox_publishing" in payload["capabilities"]
     assert "project_command_execution" in payload["capabilities"]
     assert "project_creation" in payload["capabilities"]
     assert "project_command_planning" in payload["capabilities"]
@@ -195,3 +199,41 @@ hello = 'python -c "print(123)"'
     ]
     assert "stdout" not in outbox_payload[1]["payload"]
     assert "stderr" not in outbox_payload[1]["payload"]
+
+
+def test_event_outbox_publish_endpoint_is_disabled_by_default() -> None:
+    with build_client() as client:
+        response = client.post("/events/outbox/publish", json={"confirm": True})
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Event publisher is disabled"
+
+
+def test_event_outbox_publish_endpoint_publishes_pending_events(tmp_path: Path) -> None:
+    (tmp_path / "syzygy.project.toml").write_text(
+        """
+name = "plain"
+
+[commands]
+hello = 'python -c "print(123)"'
+""",
+        encoding="utf-8",
+    )
+    with build_client(event_publisher_enabled=True) as client:
+        client.post("/projects", json={"name": "plain", "path": str(tmp_path)})
+        client.post(
+            "/projects/plain/commands/hello/runs",
+            json={"confirm": True, "timeout_seconds": 5},
+        )
+        response = client.post("/events/outbox/publish", json={"confirm": True})
+        outbox = client.get("/events/outbox")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "attempted": 2,
+        "published": 2,
+        "failed": 0,
+        "failures": [],
+    }
+    assert [event["status"] for event in outbox.json()] == ["published", "published"]
+    assert [event["attempts"] for event in outbox.json()] == [1, 1]

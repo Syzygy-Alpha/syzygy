@@ -19,6 +19,9 @@ class ForgeEventOutboxRecord(BaseModel):
     version: str
     occurred_at: datetime
     status: str
+    attempts: int = 0
+    last_error: str | None = None
+    published_at: datetime | None = None
     created_at: datetime
 
 
@@ -40,9 +43,12 @@ class ForgeEventOutbox:
                     version,
                     occurred_at,
                     status,
+                    attempts,
+                    last_error,
+                    published_at,
                     created_at
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     event.id,
@@ -53,6 +59,9 @@ class ForgeEventOutbox:
                     event.version,
                     event.occurred_at.isoformat(),
                     status,
+                    0,
+                    None,
+                    None,
                     now.isoformat(),
                 ),
             )
@@ -72,11 +81,75 @@ class ForgeEventOutbox:
             version=event.version,
             occurred_at=event.occurred_at,
             status=status,
+            attempts=0,
+            last_error=None,
+            published_at=None,
             created_at=now,
         )
 
     def enqueue_many(self, events: list[ForgeEvent]) -> list[ForgeEventOutboxRecord]:
         return [self.enqueue(event) for event in events]
+
+    def pending(self, limit: int = 100) -> list[ForgeEventOutboxRecord]:
+        with self.database.connect() as connection:
+            rows = connection.execute(
+                """
+                SELECT * FROM forge_event_outbox
+                WHERE status = 'pending'
+                ORDER BY id
+                LIMIT ?
+                """,
+                (limit,),
+            ).fetchall()
+        return [self._from_row(row) for row in rows]
+
+    def mark_published(self, record_id: int) -> ForgeEventOutboxRecord:
+        published_at = datetime.now(UTC)
+        with self.database.connect() as connection:
+            connection.execute(
+                """
+                UPDATE forge_event_outbox
+                SET status = 'published',
+                    attempts = attempts + 1,
+                    last_error = NULL,
+                    published_at = ?
+                WHERE id = ?
+                """,
+                (published_at.isoformat(), record_id),
+            )
+            connection.commit()
+        record = self.get(record_id)
+        if record is None:
+            msg = f"Event outbox record not found after publishing: {record_id}"
+            raise RuntimeError(msg)
+        return record
+
+    def mark_failed(self, record_id: int, error: str) -> ForgeEventOutboxRecord:
+        with self.database.connect() as connection:
+            connection.execute(
+                """
+                UPDATE forge_event_outbox
+                SET status = 'failed',
+                    attempts = attempts + 1,
+                    last_error = ?
+                WHERE id = ?
+                """,
+                (error, record_id),
+            )
+            connection.commit()
+        record = self.get(record_id)
+        if record is None:
+            msg = f"Event outbox record not found after failure: {record_id}"
+            raise RuntimeError(msg)
+        return record
+
+    def get(self, record_id: int) -> ForgeEventOutboxRecord | None:
+        with self.database.connect() as connection:
+            row = connection.execute(
+                "SELECT * FROM forge_event_outbox WHERE id = ?",
+                (record_id,),
+            ).fetchone()
+        return self._from_row(row) if row else None
 
     def list_events(self, status: str | None = None) -> list[ForgeEventOutboxRecord]:
         with self.database.connect() as connection:
@@ -106,6 +179,9 @@ class ForgeEventOutbox:
             version=row["version"],
             occurred_at=datetime.fromisoformat(row["occurred_at"]),
             status=row["status"],
+            attempts=row["attempts"],
+            last_error=row["last_error"],
+            published_at=self._datetime_or_none(row["published_at"]),
             created_at=datetime.fromisoformat(row["created_at"]),
         )
 
@@ -115,3 +191,8 @@ class ForgeEventOutbox:
             msg = "stored event payload is not an object"
             raise ValueError(msg)
         return loaded
+
+    def _datetime_or_none(self, value: str | None) -> datetime | None:
+        if value is None:
+            return None
+        return datetime.fromisoformat(value)

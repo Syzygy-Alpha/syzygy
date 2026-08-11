@@ -66,6 +66,20 @@ MIGRATIONS: tuple[Migration, ...] = (
         ON forge_event_outbox (status, id);
         """,
     ),
+    Migration(
+        version=4,
+        name="forge_event_outbox_publish_state",
+        sql="""
+        ALTER TABLE forge_event_outbox
+        ADD COLUMN attempts INTEGER NOT NULL DEFAULT 0;
+
+        ALTER TABLE forge_event_outbox
+        ADD COLUMN last_error TEXT;
+
+        ALTER TABLE forge_event_outbox
+        ADD COLUMN published_at TEXT;
+        """,
+    ),
 )
 
 

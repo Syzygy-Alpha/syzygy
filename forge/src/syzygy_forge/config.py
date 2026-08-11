@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     foundation_username: str = Field(default="admin")
     foundation_password: SecretStr = Field(default=SecretStr("change-me"))
     database_url: str = Field(default="sqlite:///./data/forge.db")
+    event_publisher_enabled: bool = Field(default=False)
+    event_publisher_transport: str = Field(default="memory")
+    nats_url: str = Field(default="nats://127.0.0.1:4222")
     workspace_root: Path = Field(default=Path("."))
     log_level: str = Field(default="INFO")
 

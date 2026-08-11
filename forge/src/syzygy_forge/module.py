@@ -18,6 +18,7 @@ class ModuleDescriptor(BaseModel):
 FORGE_CAPABILITIES = [
     "git",
     "event_outbox",
+    "event_outbox_publishing",
     "project_command_execution",
     "project_command_events",
     "project_command_planning",

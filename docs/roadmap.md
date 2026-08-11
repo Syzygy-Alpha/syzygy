@@ -17,7 +17,7 @@ implementation.
 
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
-- Add an external publisher for the Forge event outbox.
+- Add retry or requeue operations for failed Forge outbox events.
 
 ## Later
 

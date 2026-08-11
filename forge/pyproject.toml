@@ -13,6 +13,7 @@ authors = [{ name = "SYZYGY" }]
 dependencies = [
   "fastapi>=0.115.0,<1.0.0",
   "httpx>=0.27.0,<1.0.0",
+  "nats-py>=2.9.0,<3.0.0",
   "pydantic-settings>=2.6.0,<3.0.0",
   "uvicorn[standard]>=0.30.0,<1.0.0",
 ]
@@ -53,4 +54,3 @@ python_version = "3.11"
 strict = true
 warn_unused_ignores = true
 warn_return_any = true
-

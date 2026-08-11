@@ -8,6 +8,13 @@ from fastapi import FastAPI, HTTPException, status
 from syzygy_forge.config import Settings, get_settings
 from syzygy_forge.database import Database
 from syzygy_forge.event_outbox import ForgeEventOutbox, ForgeEventOutboxRecord
+from syzygy_forge.event_publisher import (
+    EventOutboxPublisher,
+    EventPublishingError,
+    EventPublishRequest,
+    EventPublishResult,
+    build_event_publisher,
+)
 from syzygy_forge.events import CommandRunEventFactory
 from syzygy_forge.foundation_client import FoundationClient
 from syzygy_forge.module import ModuleDescriptor, forge_descriptor
@@ -65,6 +72,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     project_command_history = ProjectCommandHistory(database)
     command_run_event_factory = CommandRunEventFactory()
     event_outbox = ForgeEventOutbox(database)
+    event_publisher = build_event_publisher(
+        app_settings.event_publisher_transport,
+        app_settings.nats_url,
+    )
+    event_outbox_publisher = EventOutboxPublisher(event_outbox, event_publisher)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -95,6 +107,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.project_command_history = project_command_history
     app.state.command_run_event_factory = command_run_event_factory
     app.state.event_outbox = event_outbox
+    app.state.event_publisher = event_publisher
+    app.state.event_outbox_publisher = event_outbox_publisher
 
     @app.get("/")
     def root() -> dict[str, str]:
@@ -199,6 +213,18 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/events/outbox")
     def list_event_outbox(status: str | None = None) -> list[ForgeEventOutboxRecord]:
         return event_outbox.list_events(status)
+
+    @app.post("/events/outbox/publish")
+    async def publish_event_outbox(request: EventPublishRequest) -> EventPublishResult:
+        if not app_settings.event_publisher_enabled:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Event publisher is disabled",
+            )
+        try:
+            return await event_outbox_publisher.publish_pending(request)
+        except EventPublishingError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
     @app.get("/projects/{name}/command-runs")
     def list_project_command_runs(name: str) -> list[ProjectCommandRunRecord]:

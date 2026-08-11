@@ -29,6 +29,7 @@ GET /health
 GET /version
 GET /capabilities
 GET /events/outbox
+POST /events/outbox/publish
 GET /projects/current
 GET /project-templates
 GET /project-templates/{name}
@@ -101,5 +102,11 @@ timeout state, and timestamps, but it does not persist stdout or stderr.
 Forge defines command lifecycle event contracts in `forge/docs/events.md` for
 future publication through the SYZYGY event infrastructure. Current Forge code
 stores generated command lifecycle events in a local SQLite outbox through
-`GET /events/outbox`, but it does not publish those events to an external
-transport yet.
+`GET /events/outbox`.
+
+External publication is opt-in. Set
+`SYZYGY_FORGE_EVENT_PUBLISHER_ENABLED=true` and call
+`POST /events/outbox/publish` with `confirm=true` to publish pending events
+through the configured transport. The default transport is `memory` for local
+testing; `nats` publishes event envelopes to their `syzygy.forge.<EventName>`
+subjects using `SYZYGY_FORGE_NATS_URL`.
