@@ -10,6 +10,7 @@ from syzygy_forge.database import Database
 from syzygy_forge.event_outbox import (
     EventOutboxRecordNotFoundError,
     EventOutboxStatusError,
+    EventOutboxSummary,
     EventRequeueFailedRequest,
     EventRequeueRequest,
     EventRequeueResult,
@@ -221,6 +222,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/events/outbox")
     def list_event_outbox(status: str | None = None) -> list[ForgeEventOutboxRecord]:
         return event_outbox.list_events(status)
+
+    @app.get("/events/outbox/summary")
+    def event_outbox_summary() -> EventOutboxSummary:
+        return event_outbox.summary()
 
     @app.post("/events/outbox/publish")
     async def publish_event_outbox(request: EventPublishRequest) -> EventPublishResult:

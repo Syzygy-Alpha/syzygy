@@ -71,7 +71,12 @@ with:
 ```text
 GET /events/outbox
 GET /events/outbox?status=pending
+GET /events/outbox/summary
 ```
+
+The summary endpoint reports local delivery health: total events, counts by
+status, total attempts, maximum attempts, oldest pending event, and latest
+failed event. Its `delivery_status` is `ok`, `pending`, or `attention`.
 
 External publication is disabled by default. When
 `SYZYGY_FORGE_EVENT_PUBLISHER_ENABLED=true`, pending events can be published
@@ -103,4 +108,4 @@ Supported transports:
 - `nats`: publishes the event envelope to the record subject.
 
 Failed events are not retried automatically yet. A future increment should add
-operational summaries or scheduled retry policy after the manual path is stable.
+a scheduled retry policy only after the manual path is stable.

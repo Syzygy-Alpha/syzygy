@@ -37,6 +37,19 @@ class ForgeEventOutboxRecord(BaseModel):
     created_at: datetime
 
 
+class EventOutboxSummary(BaseModel):
+    total: int
+    pending: int
+    published: int
+    failed: int
+    by_status: dict[str, int] = Field(default_factory=dict)
+    total_attempts: int
+    max_attempts: int
+    delivery_status: str
+    oldest_pending: ForgeEventOutboxRecord | None = None
+    latest_failed: ForgeEventOutboxRecord | None = None
+
+
 class EventRequeueRequest(BaseModel):
     confirm: bool = Field(default=False)
 
@@ -220,6 +233,57 @@ class ForgeEventOutbox:
     def requeue_failed(self, limit: int = 100) -> list[ForgeEventOutboxRecord]:
         return [self.requeue(record.id) for record in self.failed(limit)]
 
+    def summary(self) -> EventOutboxSummary:
+        with self.database.connect() as connection:
+            count_rows = connection.execute(
+                """
+                SELECT status, COUNT(*) AS count
+                FROM forge_event_outbox
+                GROUP BY status
+                """
+            ).fetchall()
+            totals = connection.execute(
+                """
+                SELECT
+                    COUNT(*) AS total,
+                    COALESCE(SUM(attempts), 0) AS total_attempts,
+                    COALESCE(MAX(attempts), 0) AS max_attempts
+                FROM forge_event_outbox
+                """
+            ).fetchone()
+            oldest_pending = connection.execute(
+                """
+                SELECT * FROM forge_event_outbox
+                WHERE status = 'pending'
+                ORDER BY id
+                LIMIT 1
+                """
+            ).fetchone()
+            latest_failed = connection.execute(
+                """
+                SELECT * FROM forge_event_outbox
+                WHERE status = 'failed'
+                ORDER BY id DESC
+                LIMIT 1
+                """
+            ).fetchone()
+
+        by_status = {row["status"]: int(row["count"]) for row in count_rows}
+        pending = by_status.get("pending", 0)
+        failed = by_status.get("failed", 0)
+        return EventOutboxSummary(
+            total=int(totals["total"]),
+            pending=pending,
+            published=by_status.get("published", 0),
+            failed=failed,
+            by_status=by_status,
+            total_attempts=int(totals["total_attempts"]),
+            max_attempts=int(totals["max_attempts"]),
+            delivery_status=self._delivery_status(pending=pending, failed=failed),
+            oldest_pending=self._from_row(oldest_pending) if oldest_pending else None,
+            latest_failed=self._from_row(latest_failed) if latest_failed else None,
+        )
+
     def list_events(self, status: str | None = None) -> list[ForgeEventOutboxRecord]:
         with self.database.connect() as connection:
             if status is None:
@@ -265,3 +329,10 @@ class ForgeEventOutbox:
         if value is None:
             return None
         return datetime.fromisoformat(value)
+
+    def _delivery_status(self, pending: int, failed: int) -> str:
+        if failed > 0:
+            return "attention"
+        if pending > 0:
+            return "pending"
+        return "ok"

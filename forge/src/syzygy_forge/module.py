@@ -20,6 +20,7 @@ FORGE_CAPABILITIES = [
     "event_outbox",
     "event_outbox_publishing",
     "event_outbox_requeue",
+    "event_outbox_summary",
     "project_command_execution",
     "project_command_events",
     "project_command_planning",

@@ -45,6 +45,7 @@ def test_capabilities_expose_forge_descriptor() -> None:
     assert "event_outbox" in payload["capabilities"]
     assert "event_outbox_publishing" in payload["capabilities"]
     assert "event_outbox_requeue" in payload["capabilities"]
+    assert "event_outbox_summary" in payload["capabilities"]
     assert "project_command_execution" in payload["capabilities"]
     assert "project_creation" in payload["capabilities"]
     assert "project_command_planning" in payload["capabilities"]
@@ -210,6 +211,58 @@ def test_event_outbox_publish_endpoint_is_disabled_by_default() -> None:
 
     assert response.status_code == 400
     assert response.json()["detail"] == "Event publisher is disabled"
+
+
+def test_event_outbox_summary_endpoint_reports_empty_state() -> None:
+    with build_client() as client:
+        response = client.get("/events/outbox/summary")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "total": 0,
+        "pending": 0,
+        "published": 0,
+        "failed": 0,
+        "by_status": {},
+        "total_attempts": 0,
+        "max_attempts": 0,
+        "delivery_status": "ok",
+        "oldest_pending": None,
+        "latest_failed": None,
+    }
+
+
+def test_event_outbox_summary_endpoint_reports_delivery_state(tmp_path: Path) -> None:
+    (tmp_path / "syzygy.project.toml").write_text(
+        """
+name = "plain"
+
+[commands]
+hello = 'python -c "print(123)"'
+""",
+        encoding="utf-8",
+    )
+    with build_client() as client:
+        client.post("/projects", json={"name": "plain", "path": str(tmp_path)})
+        client.post(
+            "/projects/plain/commands/hello/runs",
+            json={"confirm": True, "timeout_seconds": 5},
+        )
+        cast(FastAPI, client.app).state.event_outbox.mark_failed(2, "transport unavailable")
+        response = client.get("/events/outbox/summary")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["total"] == 2
+    assert payload["pending"] == 1
+    assert payload["published"] == 0
+    assert payload["failed"] == 1
+    assert payload["by_status"] == {"failed": 1, "pending": 1}
+    assert payload["total_attempts"] == 1
+    assert payload["max_attempts"] == 1
+    assert payload["delivery_status"] == "attention"
+    assert payload["oldest_pending"]["id"] == 1
+    assert payload["latest_failed"]["id"] == 2
 
 
 def test_event_outbox_publish_endpoint_publishes_pending_events(tmp_path: Path) -> None:

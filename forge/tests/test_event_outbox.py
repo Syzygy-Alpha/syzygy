@@ -65,6 +65,68 @@ def test_event_outbox_lists_events_by_status() -> None:
     ]
 
 
+def test_event_outbox_summary_reports_empty_state() -> None:
+    outbox = build_outbox()
+
+    summary = outbox.summary()
+
+    assert summary.total == 0
+    assert summary.pending == 0
+    assert summary.published == 0
+    assert summary.failed == 0
+    assert summary.by_status == {}
+    assert summary.total_attempts == 0
+    assert summary.max_attempts == 0
+    assert summary.delivery_status == "ok"
+    assert summary.oldest_pending is None
+    assert summary.latest_failed is None
+
+
+def test_event_outbox_summary_reports_delivery_state() -> None:
+    outbox = build_outbox()
+    factory = CommandRunEventFactory()
+    run_record = build_command_run_record()
+    first, second = outbox.enqueue_many(
+        [factory.started(run_record), factory.completed(run_record)]
+    )
+    outbox.mark_failed(second.id, "transport unavailable")
+
+    summary = outbox.summary()
+
+    assert summary.total == 2
+    assert summary.pending == 1
+    assert summary.published == 0
+    assert summary.failed == 1
+    assert summary.by_status == {"failed": 1, "pending": 1}
+    assert summary.total_attempts == 1
+    assert summary.max_attempts == 1
+    assert summary.delivery_status == "attention"
+    assert summary.oldest_pending is not None
+    assert summary.oldest_pending.id == first.id
+    assert summary.latest_failed is not None
+    assert summary.latest_failed.id == second.id
+
+
+def test_event_outbox_summary_reports_published_state() -> None:
+    outbox = build_outbox()
+    event = CommandRunEventFactory().started(build_command_run_record())
+    record = outbox.enqueue(event)
+    outbox.mark_published(record.id)
+
+    summary = outbox.summary()
+
+    assert summary.total == 1
+    assert summary.pending == 0
+    assert summary.published == 1
+    assert summary.failed == 0
+    assert summary.by_status == {"published": 1}
+    assert summary.total_attempts == 1
+    assert summary.max_attempts == 1
+    assert summary.delivery_status == "ok"
+    assert summary.oldest_pending is None
+    assert summary.latest_failed is None
+
+
 def test_event_outbox_tracks_publish_state() -> None:
     outbox = build_outbox()
     event = CommandRunEventFactory().started(build_command_run_record())

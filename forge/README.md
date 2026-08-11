@@ -29,6 +29,7 @@ GET /health
 GET /version
 GET /capabilities
 GET /events/outbox
+GET /events/outbox/summary
 POST /events/outbox/publish
 POST /events/outbox/requeue-failed
 POST /events/outbox/{record_id}/requeue
@@ -105,6 +106,10 @@ Forge defines command lifecycle event contracts in `forge/docs/events.md` for
 future publication through the SYZYGY event infrastructure. Current Forge code
 stores generated command lifecycle events in a local SQLite outbox through
 `GET /events/outbox`.
+
+`GET /events/outbox/summary` reports local delivery health: total events,
+status counts, total attempts, maximum attempts, oldest pending event, and most
+recent failed event.
 
 External publication is opt-in. Set
 `SYZYGY_FORGE_EVENT_PUBLISHER_ENABLED=true` and call
