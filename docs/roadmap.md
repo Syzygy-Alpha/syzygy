@@ -17,7 +17,7 @@ implementation.
 
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
-- Add Observatory ingestion from Foundation module health.
+- Add scheduled Observatory polling after manual Foundation ingestion is stable.
 - Add a scheduled retry policy for Forge outbox events after the manual path is stable.
 
 ## Later

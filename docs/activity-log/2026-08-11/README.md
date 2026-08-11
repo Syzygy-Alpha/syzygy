@@ -8,3 +8,4 @@
 - [Forge Project Templates](forge-project-templates.md)
 - [Forge Git Automation](forge-git-automation.md)
 - [Observatory Bootstrap](observatory-bootstrap.md)
+- [Observatory Foundation Ingestion](observatory-foundation-ingestion.md)

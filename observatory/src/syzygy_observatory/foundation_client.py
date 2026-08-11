@@ -1,6 +1,22 @@
 import httpx
+from pydantic import BaseModel, Field
 
 from syzygy_observatory.module import ModuleDescriptor
+
+
+class FoundationModuleHealth(BaseModel):
+    status: str
+    details: dict[str, str] = Field(default_factory=dict)
+
+
+class FoundationModuleDescriptor(BaseModel):
+    name: str
+    version: str
+    status: str
+    health: FoundationModuleHealth
+    capabilities: list[str] = Field(default_factory=list)
+    dependencies: list[str] = Field(default_factory=list)
+    last_seen_at: str | None = None
 
 
 class FoundationClient:
@@ -29,6 +45,24 @@ class FoundationClient:
                 json=descriptor.model_dump(mode="json"),
             )
             response.raise_for_status()
+
+    async def list_modules(self) -> list[FoundationModuleDescriptor]:
+        async with httpx.AsyncClient(
+            base_url=self.base_url,
+            timeout=5.0,
+            transport=self.transport,
+        ) as client:
+            token = await self._token(client)
+            response = await client.get(
+                "/modules",
+                headers={"Authorization": f"Bearer {token}"},
+            )
+            response.raise_for_status()
+            payload = response.json()
+        if not isinstance(payload, list):
+            msg = "Foundation modules response was not a list"
+            raise ValueError(msg)
+        return [FoundationModuleDescriptor.model_validate(module) for module in payload]
 
     async def _token(self, client: httpx.AsyncClient) -> str:
         response = await client.post(

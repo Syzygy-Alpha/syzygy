@@ -2,11 +2,17 @@ import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 
 from syzygy_observatory.config import Settings, get_settings
 from syzygy_observatory.database import Database
 from syzygy_observatory.foundation_client import FoundationClient
+from syzygy_observatory.foundation_ingestion import (
+    FoundationModuleIngestionError,
+    FoundationModuleIngestor,
+    FoundationModuleIngestRequest,
+    FoundationModuleIngestResult,
+)
 from syzygy_observatory.health_observations import (
     HealthObservationRecord,
     HealthObservationRequest,
@@ -25,18 +31,22 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     descriptor = observatory_descriptor(app_settings.version)
     database = Database(app_settings.database_url)
     health_observations = HealthObservationStore(database)
+    foundation_client = FoundationClient(
+        base_url=app_settings.foundation_url,
+        username=app_settings.foundation_username,
+        password=app_settings.foundation_password.get_secret_value(),
+    )
+    foundation_module_ingestor = FoundationModuleIngestor(
+        foundation_client=foundation_client,
+        health_observations=health_observations,
+    )
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         database.initialize()
         if app_settings.register_with_foundation:
-            client = FoundationClient(
-                base_url=app_settings.foundation_url,
-                username=app_settings.foundation_username,
-                password=app_settings.foundation_password.get_secret_value(),
-            )
             try:
-                await client.register_module(descriptor)
+                await foundation_client.register_module(descriptor)
                 logger.info("observatory_registered_with_foundation")
             except Exception:
                 logger.exception("observatory_registration_failed")
@@ -51,6 +61,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.descriptor = descriptor
     app.state.database = database
     app.state.health_observations = health_observations
+    app.state.foundation_client = foundation_client
+    app.state.foundation_module_ingestor = foundation_module_ingestor
 
     @app.get("/")
     def root() -> dict[str, str]:
@@ -85,6 +97,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/health-observations/summary")
     def health_observation_summary() -> HealthObservationSummary:
         return health_observations.summary()
+
+    @app.post("/ingest/foundation/modules")
+    async def ingest_foundation_modules(
+        request: FoundationModuleIngestRequest,
+    ) -> FoundationModuleIngestResult:
+        try:
+            return await foundation_module_ingestor.ingest(request)
+        except FoundationModuleIngestionError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
     return app
 

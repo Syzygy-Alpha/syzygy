@@ -114,6 +114,7 @@ Current status:
 - It can register itself with Foundation through the module registry API.
 - It stores local health observations in SQLite.
 - It can summarize latest health by service/module.
+- It can manually ingest Foundation module health from the `/modules` contract.
 
 ## Imrryr
 

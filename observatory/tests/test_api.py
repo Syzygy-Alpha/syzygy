@@ -49,3 +49,11 @@ def test_health_observation_endpoints_record_list_and_summarize() -> None:
     assert summary.json()["total"] == 1
     assert summary.json()["by_status"] == {"ok": 1}
     assert summary.json()["latest_by_name"][0]["name"] == "forge"
+
+
+def test_foundation_module_ingest_endpoint_requires_confirmation() -> None:
+    with build_client() as client:
+        response = client.post("/ingest/foundation/modules", json={"confirm": False})
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Foundation module ingestion requires confirm=true"

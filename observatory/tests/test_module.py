@@ -9,5 +9,6 @@ def test_observatory_descriptor() -> None:
     assert descriptor.status == "online"
     assert descriptor.health.status == "ok"
     assert descriptor.dependencies == ["foundation"]
+    assert "foundation_module_ingestion" in descriptor.capabilities
     assert "health_observation_storage" in descriptor.capabilities
     assert "health_summary" in descriptor.capabilities

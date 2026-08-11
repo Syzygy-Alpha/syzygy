@@ -10,6 +10,7 @@ This first increment intentionally implements only local health visibility:
 - optional registration with Foundation
 - SQLite-backed health observation storage
 - health summary endpoint
+- manual ingestion of Foundation module health through the `/modules` contract
 
 ## Local Development
 
@@ -29,6 +30,7 @@ GET /capabilities
 POST /health-observations
 GET /health-observations
 GET /health-observations/summary
+POST /ingest/foundation/modules
 ```
 
 ## Health Observations
@@ -53,8 +55,38 @@ Example payload:
 `GET /health-observations/summary` returns total observations, counts by status,
 and the latest observation per service.
 
+## Foundation Module Ingestion
+
+`POST /ingest/foundation/modules` reads Foundation's authenticated `/modules`
+endpoint and records one local health observation per registered module.
+
+This is intentionally manual in v0.1: Observatory does not poll Foundation on a
+schedule yet, and the endpoint requires an explicit confirmation flag.
+
+It uses the configured Foundation connection:
+
+```text
+SYZYGY_OBSERVATORY_FOUNDATION_URL
+SYZYGY_OBSERVATORY_FOUNDATION_USERNAME
+SYZYGY_OBSERVATORY_FOUNDATION_PASSWORD
+```
+
+Example:
+
+```bash
+curl -X POST http://127.0.0.1:8020/ingest/foundation/modules \
+  -H "Content-Type: application/json" \
+  -d '{"confirm": true}'
+```
+
+Then inspect the collected view:
+
+```bash
+curl http://127.0.0.1:8020/health-observations/summary
+```
+
 ## Scope Boundary
 
 Observatory v0.1 does not yet run Prometheus, Grafana, Loki, tracing, alerting,
-or dashboards. Those remain future integrations after local contracts are
-stable.
+dashboards, or scheduled polling. Those remain future integrations after local
+contracts are stable.
