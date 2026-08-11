@@ -31,10 +31,10 @@ Prefer small commits that describe one coherent increment.
 
 ## Activity Logs
 
-Meaningful increments should add one file under:
+Meaningful increments should add one file under a dated activity-log folder:
 
 ```text
-docs/activity-log/
+docs/activity-log/YYYY-MM-DD/
 ```
 
 The log should explain:
@@ -56,4 +56,3 @@ python -m mypy src tests
 
 Docker should be checked when Docker is available and the change affects the
 runtime.
-

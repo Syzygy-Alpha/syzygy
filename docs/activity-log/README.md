@@ -1,15 +1,20 @@
 # SYZYGY Activity Log
 
 This folder records one concise log file per meaningful implementation
-increment.
+increment, grouped by date.
 
 These logs are not runtime logs. They are development records that explain what
 was created, why it was created, how it was validated, and what should remain
 outside the current scope.
 
-Suggested filename format:
+Suggested path format:
 
 ```text
-YYYY-MM-DD-short-description.md
+YYYY-MM-DD/short-description.md
 ```
 
+## Index
+
+- [2026-08-07](2026-08-07/README.md)
+- [2026-08-08](2026-08-08/README.md)
+- [2026-08-11](2026-08-11/README.md)
