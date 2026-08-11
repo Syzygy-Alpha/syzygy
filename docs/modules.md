@@ -93,6 +93,9 @@ Current status:
 - Forge bootstrap exists as a standalone module.
 - It exposes health, version, and capabilities.
 - It can register itself with Foundation through the module registry API.
+- It can create local projects from templates, execute declared commands, track
+  command history, emit command events to a local outbox, summarize outbox
+  delivery state, and perform local Git status/branch/commit workflows.
 
 ## Observatory
 
@@ -103,6 +106,14 @@ MVP direction:
 - logs
 - health visibility
 - dashboard later
+
+Current status:
+
+- Observatory bootstrap exists as a standalone module.
+- It exposes health, version, and capabilities.
+- It can register itself with Foundation through the module registry API.
+- It stores local health observations in SQLite.
+- It can summarize latest health by service/module.
 
 ## Imrryr
 

@@ -45,9 +45,11 @@ directly. Contracts and events should be preferred where they reduce coupling.
 
 ## Current Implementation
 
-The only functional module is:
+The functional modules are:
 
 - Foundation v0.1
+- Forge v0.1
+- Observatory v0.1
 
 Foundation currently provides:
 
@@ -60,6 +62,20 @@ Foundation currently provides:
 - scheduler abstraction
 - module lifecycle descriptor
 
+Forge currently provides:
+
+- project registry and creation
+- project command discovery, planning, execution, and history
+- command lifecycle event contracts and local outbox
+- opt-in event publishing and manual requeue
+- local Git status, branch, and commit workflows
+
+Observatory currently provides:
+
+- local health observation storage
+- health observation listing and filtering
+- health summary by status and latest service/module state
+
 ## Deferred Capabilities
 
 The architecture explicitly defers:
@@ -69,6 +85,5 @@ The architecture explicitly defers:
 - MAGI agents
 - NERV UI
 - Tungsten vault/security stack
-- Forge automation
+- full Observatory dashboards, metrics, tracing, and alerting
 - Bastion labs
-

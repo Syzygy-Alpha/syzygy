@@ -11,18 +11,19 @@ implementation.
 - Avoid implementing future modules before their contracts are clear.
 - Use the Foundation module registry as the first integration contract for
   future modules.
-- Bootstrap Forge as the first module that integrates with Foundation.
+- Keep Foundation, Forge, and Observatory contracts stable.
 
 ## Next
 
 - Add basic configuration update events.
 - Validate Docker locally once Docker is available.
+- Add Observatory ingestion from Foundation module health.
 - Add a scheduled retry policy for Forge outbox events after the manual path is stable.
 
 ## Later
 
 - Mycelium device discovery and sync experiments.
-- Observatory health/log visibility.
+- Observatory health/log visibility beyond manual observations.
 - Tungsten secrets and trust model.
 - Coppermind knowledge storage.
 - MAGI persona prototypes.

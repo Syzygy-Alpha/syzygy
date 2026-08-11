@@ -1,0 +1,1 @@
+"""SYZYGY Observatory module."""

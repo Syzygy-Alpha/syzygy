@@ -22,6 +22,10 @@ The second module phase starts with Forge:
 
 - [Forge README](forge/README.md)
 
+The observability phase starts with Observatory:
+
+- [Observatory README](observatory/README.md)
+
 Project activity is tracked in:
 
 - [Activity Log](docs/activity-log/README.md)
