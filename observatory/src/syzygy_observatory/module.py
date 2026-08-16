@@ -17,6 +17,7 @@ class ModuleDescriptor(BaseModel):
 
 OBSERVATORY_CAPABILITIES = [
     "foundation_module_ingestion",
+    "foundation_module_polling",
     "health_observation_storage",
     "health_summary",
     "local_observability",

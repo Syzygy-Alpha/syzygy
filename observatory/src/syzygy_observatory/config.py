@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     register_with_foundation: bool = Field(default=False)
     foundation_username: str = Field(default="admin")
     foundation_password: SecretStr = Field(default=SecretStr("change-me"))
+    foundation_module_polling_enabled: bool = Field(default=False)
+    foundation_module_polling_interval_seconds: int = Field(default=60, ge=1)
     log_level: str = Field(default="INFO")
 
 

@@ -13,6 +13,10 @@ from syzygy_observatory.foundation_ingestion import (
     FoundationModuleIngestRequest,
     FoundationModuleIngestResult,
 )
+from syzygy_observatory.foundation_polling import (
+    FoundationModulePoller,
+    FoundationModulePollingStatus,
+)
 from syzygy_observatory.health_observations import (
     HealthObservationRecord,
     HealthObservationRequest,
@@ -40,6 +44,11 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         foundation_client=foundation_client,
         health_observations=health_observations,
     )
+    foundation_module_poller = FoundationModulePoller(
+        ingestor=foundation_module_ingestor,
+        enabled=app_settings.foundation_module_polling_enabled,
+        interval_seconds=app_settings.foundation_module_polling_interval_seconds,
+    )
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
@@ -50,7 +59,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 logger.info("observatory_registered_with_foundation")
             except Exception:
                 logger.exception("observatory_registration_failed")
-        yield
+        if app_settings.foundation_module_polling_enabled:
+            foundation_module_poller.start()
+            logger.info("foundation_module_polling_started")
+        try:
+            yield
+        finally:
+            await foundation_module_poller.stop()
 
     app = FastAPI(
         title="SYZYGY Observatory",
@@ -63,6 +78,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.health_observations = health_observations
     app.state.foundation_client = foundation_client
     app.state.foundation_module_ingestor = foundation_module_ingestor
+    app.state.foundation_module_poller = foundation_module_poller
 
     @app.get("/")
     def root() -> dict[str, str]:
@@ -106,6 +122,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             return await foundation_module_ingestor.ingest(request)
         except FoundationModuleIngestionError as exc:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+    @app.get("/ingest/foundation/modules/polling")
+    def foundation_module_polling_status() -> FoundationModulePollingStatus:
+        return foundation_module_poller.status()
 
     return app
 

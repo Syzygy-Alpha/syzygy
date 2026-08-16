@@ -11,6 +11,7 @@ This first increment intentionally implements only local health visibility:
 - SQLite-backed health observation storage
 - health summary endpoint
 - manual ingestion of Foundation module health through the `/modules` contract
+- optional scheduled polling of Foundation module health
 
 ## Local Development
 
@@ -31,6 +32,7 @@ POST /health-observations
 GET /health-observations
 GET /health-observations/summary
 POST /ingest/foundation/modules
+GET /ingest/foundation/modules/polling
 ```
 
 ## Health Observations
@@ -69,6 +71,8 @@ It uses the configured Foundation connection:
 SYZYGY_OBSERVATORY_FOUNDATION_URL
 SYZYGY_OBSERVATORY_FOUNDATION_USERNAME
 SYZYGY_OBSERVATORY_FOUNDATION_PASSWORD
+SYZYGY_OBSERVATORY_FOUNDATION_MODULE_POLLING_ENABLED
+SYZYGY_OBSERVATORY_FOUNDATION_MODULE_POLLING_INTERVAL_SECONDS
 ```
 
 Example:
@@ -85,8 +89,22 @@ Then inspect the collected view:
 curl http://127.0.0.1:8020/health-observations/summary
 ```
 
+Polling is disabled by default. To let Observatory ingest Foundation module
+health on a schedule, set:
+
+```env
+SYZYGY_OBSERVATORY_FOUNDATION_MODULE_POLLING_ENABLED=true
+SYZYGY_OBSERVATORY_FOUNDATION_MODULE_POLLING_INTERVAL_SECONDS=60
+```
+
+Check polling state:
+
+```bash
+curl http://127.0.0.1:8020/ingest/foundation/modules/polling
+```
+
 ## Scope Boundary
 
 Observatory v0.1 does not yet run Prometheus, Grafana, Loki, tracing, alerting,
-dashboards, or scheduled polling. Those remain future integrations after local
-contracts are stable.
+dashboards, or distributed telemetry. Those remain future integrations after
+local contracts are stable.

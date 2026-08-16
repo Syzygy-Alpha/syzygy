@@ -57,3 +57,17 @@ def test_foundation_module_ingest_endpoint_requires_confirmation() -> None:
 
     assert response.status_code == 400
     assert response.json()["detail"] == "Foundation module ingestion requires confirm=true"
+
+
+def test_foundation_module_polling_status_endpoint() -> None:
+    with build_client() as client:
+        response = client.get("/ingest/foundation/modules/polling")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "enabled": False,
+        "running": False,
+        "interval_seconds": 60,
+        "last_observed": None,
+        "last_error": None,
+    }

@@ -76,6 +76,7 @@ Observatory currently provides:
 - health observation listing and filtering
 - health summary by status and latest service/module state
 - manual ingestion of Foundation module health through the module registry API
+- optional scheduled polling of Foundation module health
 
 ## Deferred Capabilities
 

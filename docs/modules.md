@@ -115,6 +115,7 @@ Current status:
 - It stores local health observations in SQLite.
 - It can summarize latest health by service/module.
 - It can manually ingest Foundation module health from the `/modules` contract.
+- It can optionally poll Foundation module health on a local schedule.
 
 ## Imrryr
 
