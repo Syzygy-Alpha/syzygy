@@ -22,6 +22,7 @@ from syzygy_observatory.health_observations import (
     HealthObservationRequest,
     HealthObservationStore,
     HealthObservationSummary,
+    HealthObservationTrends,
 )
 from syzygy_observatory.module import ModuleDescriptor, observatory_descriptor
 
@@ -113,6 +114,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/health-observations/summary")
     def health_observation_summary() -> HealthObservationSummary:
         return health_observations.summary()
+
+    @app.get("/health-observations/trends")
+    def health_observation_trends(name: str | None = None) -> HealthObservationTrends:
+        return health_observations.trends(name=name)
 
     @app.post("/ingest/foundation/modules")
     async def ingest_foundation_modules(

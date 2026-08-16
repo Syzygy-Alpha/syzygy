@@ -75,6 +75,7 @@ Observatory currently provides:
 - local health observation storage
 - health observation listing and filtering
 - health summary by status and latest service/module state
+- health trend summaries from stored observations
 - manual ingestion of Foundation module health through the module registry API
 - optional scheduled polling of Foundation module health
 

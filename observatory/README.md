@@ -10,6 +10,7 @@ This first increment intentionally implements only local health visibility:
 - optional registration with Foundation
 - SQLite-backed health observation storage
 - health summary endpoint
+- health trend summaries from stored observations
 - manual ingestion of Foundation module health through the `/modules` contract
 - optional scheduled polling of Foundation module health
 
@@ -31,6 +32,7 @@ GET /capabilities
 POST /health-observations
 GET /health-observations
 GET /health-observations/summary
+GET /health-observations/trends
 POST /ingest/foundation/modules
 GET /ingest/foundation/modules/polling
 ```
@@ -56,6 +58,17 @@ Example payload:
 
 `GET /health-observations/summary` returns total observations, counts by status,
 and the latest observation per service.
+
+`GET /health-observations/trends` returns one trend per service/module with
+total observations, counts by status, first and latest observation timestamps,
+latest status, and how many times the status changed.
+
+Example:
+
+```bash
+curl http://127.0.0.1:8020/health-observations/trends
+curl "http://127.0.0.1:8020/health-observations/trends?name=forge"
+```
 
 ## Foundation Module Ingestion
 

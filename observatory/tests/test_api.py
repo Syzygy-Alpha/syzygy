@@ -51,6 +51,19 @@ def test_health_observation_endpoints_record_list_and_summarize() -> None:
     assert summary.json()["latest_by_name"][0]["name"] == "forge"
 
 
+def test_health_observation_trends_endpoint() -> None:
+    with build_client() as client:
+        client.post("/health-observations", json={"name": "forge", "status": "ok"})
+        client.post("/health-observations", json={"name": "forge", "status": "degraded"})
+        response = client.get("/health-observations/trends?name=forge")
+
+    assert response.status_code == 200
+    assert response.json()["total_services"] == 1
+    assert response.json()["trends"][0]["name"] == "forge"
+    assert response.json()["trends"][0]["latest_status"] == "degraded"
+    assert response.json()["trends"][0]["status_changes"] == 1
+
+
 def test_foundation_module_ingest_endpoint_requires_confirmation() -> None:
     with build_client() as client:
         response = client.post("/ingest/foundation/modules", json={"confirm": False})

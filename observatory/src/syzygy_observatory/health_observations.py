@@ -31,6 +31,21 @@ class HealthObservationSummary(BaseModel):
     latest_by_name: list[HealthObservationRecord] = Field(default_factory=list)
 
 
+class HealthObservationTrend(BaseModel):
+    name: str
+    total: int
+    by_status: dict[str, int] = Field(default_factory=dict)
+    first_observed_at: datetime
+    latest_observed_at: datetime
+    latest_status: str
+    status_changes: int
+
+
+class HealthObservationTrends(BaseModel):
+    total_services: int
+    trends: list[HealthObservationTrend] = Field(default_factory=list)
+
+
 class HealthObservationStore:
     def __init__(self, database: Database) -> None:
         self.database = database
@@ -136,6 +151,57 @@ class HealthObservationStore:
             total=int(total_row["total"]),
             by_status={row["status"]: int(row["count"]) for row in count_rows},
             latest_by_name=[self._from_row(row) for row in latest_rows],
+        )
+
+    def trends(self, name: str | None = None) -> HealthObservationTrends:
+        where_sql = "WHERE name = ?" if name is not None else ""
+        values = (name,) if name is not None else ()
+        with self.database.connect() as connection:
+            rows = connection.execute(
+                f"""
+                SELECT *
+                FROM observatory_health_observations
+                {where_sql}
+                ORDER BY name ASC, id ASC
+                """,
+                values,
+            ).fetchall()
+
+        grouped: dict[str, list[HealthObservationRecord]] = {}
+        for row in rows:
+            record = self._from_row(row)
+            grouped.setdefault(record.name, []).append(record)
+
+        trends = [
+            self._trend_from_records(service_name, records)
+            for service_name, records in grouped.items()
+        ]
+        return HealthObservationTrends(total_services=len(trends), trends=trends)
+
+    def _trend_from_records(
+        self,
+        name: str,
+        records: list[HealthObservationRecord],
+    ) -> HealthObservationTrend:
+        first = records[0]
+        latest = records[-1]
+        by_status: dict[str, int] = {}
+        status_changes = 0
+        previous_status: str | None = None
+        for record in records:
+            by_status[record.status] = by_status.get(record.status, 0) + 1
+            if previous_status is not None and previous_status != record.status:
+                status_changes += 1
+            previous_status = record.status
+
+        return HealthObservationTrend(
+            name=name,
+            total=len(records),
+            by_status=by_status,
+            first_observed_at=first.observed_at,
+            latest_observed_at=latest.observed_at,
+            latest_status=latest.status,
+            status_changes=status_changes,
         )
 
     def _from_row(self, row: sqlite3.Row) -> HealthObservationRecord:

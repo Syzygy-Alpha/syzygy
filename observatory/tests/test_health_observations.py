@@ -58,3 +58,55 @@ def test_health_observation_store_summarizes_latest_by_name() -> None:
         ("forge", "degraded"),
         ("foundation", "ok"),
     ]
+
+
+def test_health_observation_store_builds_trends() -> None:
+    store = build_store()
+    store.record(
+        HealthObservationRequest(
+            name="forge",
+            status="ok",
+            observed_at=datetime(2026, 8, 16, 10, 0, tzinfo=UTC),
+        )
+    )
+    store.record(
+        HealthObservationRequest(
+            name="forge",
+            status="degraded",
+            observed_at=datetime(2026, 8, 16, 10, 5, tzinfo=UTC),
+        )
+    )
+    store.record(
+        HealthObservationRequest(
+            name="forge",
+            status="ok",
+            observed_at=datetime(2026, 8, 16, 10, 10, tzinfo=UTC),
+        )
+    )
+    store.record(
+        HealthObservationRequest(
+            name="foundation",
+            status="ok",
+            observed_at=datetime(2026, 8, 16, 10, 15, tzinfo=UTC),
+        )
+    )
+
+    trends = store.trends()
+    forge_trends = store.trends(name="forge")
+    trends_by_name = {trend.name: trend for trend in trends.trends}
+
+    assert trends.total_services == 2
+    assert trends_by_name["forge"].total == 3
+    assert trends_by_name["forge"].by_status == {"degraded": 1, "ok": 2}
+    assert trends_by_name["forge"].latest_status == "ok"
+    assert trends_by_name["forge"].status_changes == 2
+    assert trends_by_name["forge"].first_observed_at == datetime(
+        2026,
+        8,
+        16,
+        10,
+        0,
+        tzinfo=UTC,
+    )
+    assert forge_trends.total_services == 1
+    assert forge_trends.trends[0].name == "forge"

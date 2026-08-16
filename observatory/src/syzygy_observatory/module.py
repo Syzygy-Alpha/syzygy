@@ -20,6 +20,7 @@ OBSERVATORY_CAPABILITIES = [
     "foundation_module_polling",
     "health_observation_storage",
     "health_summary",
+    "health_trends",
     "local_observability",
 ]
 
