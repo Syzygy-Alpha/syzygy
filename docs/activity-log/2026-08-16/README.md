@@ -2,3 +2,4 @@
 
 - [Observatory Foundation Polling](observatory-foundation-polling.md)
 - [Observatory Health Trends](observatory-health-trends.md)
+- [Vertical Evolution Cadence](vertical-evolution-cadence.md)

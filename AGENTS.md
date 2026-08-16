@@ -688,7 +688,82 @@ Mudanças significativas devem ser documentadas.
 
 ---
 
-# 20. Foundation é a primeira implementação
+# 20. Evolução vertical e cadência entre módulos
+
+O SYZYGY deve evoluir verticalmente, não apenas horizontalmente.
+
+Isso significa que o agente deve alternar entre:
+
+```text
+aprofundar módulos existentes
+      +
+criar novos módulos oficiais quando o ecossistema já tiver base suficiente
+```
+
+Não ficar indefinidamente preso em microevoluções de um único módulo se outro
+módulo oficial já pode receber um primeiro incremento útil, simples e testável.
+
+## 20.1 Ciclo recomendado por módulo
+
+Antes de passar para outro módulo, é aceitável fazer:
+
+```text
+1 a 2 commits de bootstrap
+3 a 5 commits de MVP vertical
+1 a 2 commits de estabilização/documentação
+```
+
+Como regra prática:
+
+```text
+Após 5 commits consecutivos de feature no mesmo módulo,
+reavaliar se o próximo passo deve ser outro módulo oficial.
+```
+
+O limite não é absoluto. É permitido permanecer no mesmo módulo quando:
+
+* há bug bloqueador;
+* há contrato incompleto impedindo outros módulos;
+* há falha de segurança;
+* há dívida técnica pequena e necessária para concluir o MVP atual;
+* o usuário pediu explicitamente foco naquele módulo.
+
+Mas nesses casos o motivo deve ser documentado no activity log ou no roadmap.
+
+## 20.2 Definição de avanço vertical
+
+Um novo módulo oficial pode receber bootstrap quando existir um contrato mínimo
+para ele interagir com o ecossistema sem acoplamento indevido.
+
+O primeiro incremento de um módulo deve priorizar:
+
+* README próprio;
+* configuração local;
+* healthcheck;
+* versionamento;
+* capabilities;
+* testes;
+* registro opcional no Foundation quando fizer sentido;
+* activity log.
+
+Não iniciar um módulo novo com UI complexa, IA, cloud, sincronização distribuída
+ou stack pesada se o módulo ainda não possui coluna funcional mínima.
+
+## 20.3 Revisão obrigatória de continuidade
+
+Ao fim de cada commit significativo, o agente deve perguntar implicitamente:
+
+1. Este módulo já tem uma coluna mínima funcional?
+2. O próximo commit aqui destrava outro módulo ou é apenas refinamento local?
+3. Há outro módulo oficial na ordem de evolução que já pode nascer com baixo risco?
+4. O roadmap ainda reflete o equilíbrio entre módulos existentes e novos?
+
+Se a resposta indicar saturação local, preferir abrir o próximo módulo oficial
+com um incremento pequeno, funcional, testado e documentado.
+
+---
+
+# 21. Foundation é a primeira implementação
 
 O primeiro software funcional do ecossistema é o Foundation.
 
@@ -708,7 +783,7 @@ Primeiro construir infraestrutura.
 
 ---
 
-# 21. Tecnologias preferenciais
+# 22. Tecnologias preferenciais
 
 Quando houver liberdade de escolha, considerar primeiro:
 
@@ -775,7 +850,7 @@ Não adicionar uma tecnologia simplesmente porque ela é popular.
 
 ---
 
-# 22. Regras de dependências
+# 23. Regras de dependências
 
 Evitar:
 
@@ -798,7 +873,7 @@ ou comunicação por contratos/eventos.
 
 ---
 
-# 23. Contratos
+# 24. Contratos
 
 Contratos entre módulos devem ser explícitos.
 
@@ -823,7 +898,7 @@ Eventos devem possuir:
 
 ---
 
-# 24. Eventos fundamentais
+# 25. Eventos fundamentais
 
 Eventos iniciais previstos:
 
@@ -844,7 +919,7 @@ A existência nesta lista significa que são parte da visão arquitetural.
 
 ---
 
-# 25. Código
+# 26. Código
 
 Preferir código:
 
@@ -865,7 +940,7 @@ Evitar:
 
 ---
 
-# 26. Testes
+# 27. Testes
 
 Todo comportamento importante deve possuir testes.
 
@@ -882,7 +957,7 @@ Não criar testes artificiais apenas para aumentar cobertura.
 
 ---
 
-# 27. Git
+# 28. Git
 
 Utilizar Conventional Commits:
 
@@ -920,7 +995,7 @@ Se o projeto existente possuir outra estratégia, não alterá-la silenciosament
 
 ---
 
-# 28. Documentação
+# 29. Documentação
 
 Decisões arquiteturais relevantes devem ser documentadas.
 
@@ -945,7 +1020,7 @@ Status
 
 ---
 
-# 29. Estrutura documental
+# 30. Estrutura documental
 
 O projeto deve possuir documentação suficiente para explicar:
 
@@ -966,7 +1041,7 @@ O Notion pode funcionar como ferramenta complementar de planejamento, Kanban e o
 
 ---
 
-# 30. Regra de compatibilidade com Notion
+# 31. Regra de compatibilidade com Notion
 
 Os cards do Notion devem seguir o padrão:
 
@@ -982,7 +1057,7 @@ Não contradizer a documentação oficial do projeto.
 
 ---
 
-# 31. Ambientes
+# 32. Ambientes
 
 O sistema deverá futuramente suportar diferentes ambientes:
 
@@ -998,7 +1073,7 @@ O Bastion deve possuir ambientes isolados próprios.
 
 ---
 
-# 32. Desenvolvimento multi-device
+# 33. Desenvolvimento multi-device
 
 Uma das metas centrais do SYZYGY é permitir desenvolvimento e uso em múltiplos dispositivos.
 
@@ -1030,7 +1105,7 @@ Essa é uma meta arquitetural importante.
 
 ---
 
-# 33. O que o agente NÃO deve fazer
+# 34. O que o agente NÃO deve fazer
 
 Não:
 
@@ -1051,7 +1126,7 @@ Não:
 
 ---
 
-# 34. Quando houver dúvida
+# 35. Quando houver dúvida
 
 Se houver ambiguidade:
 
@@ -1077,7 +1152,7 @@ Não faça silenciosamente.
 
 ---
 
-# 35. Processo obrigatório antes de alterar código
+# 36. Processo obrigatório antes de alterar código
 
 Antes de implementar:
 
@@ -1097,7 +1172,7 @@ Antes de implementar:
 
 ---
 
-# 36. Processo obrigatório depois de alterar código
+# 37. Processo obrigatório depois de alterar código
 
 Depois de qualquer alteração significativa:
 
@@ -1113,7 +1188,7 @@ Depois de qualquer alteração significativa:
 
 ---
 
-# 37. Definition of Done
+# 38. Definition of Done
 
 Uma tarefa não está concluída simplesmente porque o código compila.
 
@@ -1130,7 +1205,7 @@ Ela deve:
 
 ---
 
-# 38. Regra de escopo
+# 39. Regra de escopo
 
 Sempre diferenciar:
 
@@ -1156,7 +1231,7 @@ possuir RAG na visão futura não significa que o Foundation deva possuir RAG.
 
 ---
 
-# 39. Estado esperado do projeto
+# 40. Estado esperado do projeto
 
 O SYZYGY deve evoluir aproximadamente assim:
 
@@ -1190,7 +1265,7 @@ O SYZYGY deve evoluir aproximadamente assim:
 
 ---
 
-# 40. Regra final
+# 41. Regra final
 
 O objetivo não é escrever o máximo de código.
 
@@ -1217,7 +1292,7 @@ Quando duas soluções forem tecnicamente equivalentes, prefira a que:
 
 ---
 
-# 41. Resumo absoluto
+# 42. Resumo absoluto
 
 Se houver apenas uma coisa para lembrar deste arquivo:
 
