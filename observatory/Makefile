@@ -4,17 +4,16 @@ install:
 	python -m pip install -e ".[dev]"
 
 dev:
-	uvicorn syzygy_observatory.main:app --reload --host 127.0.0.1 --port 8020
+	python -m uvicorn syzygy_observatory.main:app --reload --host 127.0.0.1 --port 8020
 
 test:
-	pytest
+	python -m pytest
 
 lint:
-	ruff check .
+	python -m ruff check .
 
 format:
-	ruff format .
+	python -m ruff format .
 
 typecheck:
-	mypy src tests
-
+	python -m mypy src tests

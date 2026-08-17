@@ -13,7 +13,7 @@ Coppermind, MAGI, NERV, Tungsten, or Bastion.
 cd foundation
 cp .env.example .env
 python -m pip install -e ".[dev]"
-uvicorn syzygy_foundation.main:app --reload
+python -m uvicorn syzygy_foundation.main:app --reload
 ```
 
 Useful endpoints:
@@ -46,9 +46,9 @@ to `.env` when you want to override the default development values.
 ## Quality
 
 ```bash
-make test
-make lint
-make typecheck
+python -m pytest
+python -m ruff check .
+python -m mypy src tests
 ```
 
 ## Security Notes

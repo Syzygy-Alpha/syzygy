@@ -16,7 +16,7 @@ This first increment intentionally implements only a local node spine:
 ```bash
 cd mycelium
 python -m pip install -e ".[dev]"
-uvicorn syzygy_mycelium.main:app --reload --port 8030
+python -m uvicorn syzygy_mycelium.main:app --reload --port 8030
 ```
 
 Useful endpoints:

@@ -19,7 +19,7 @@ This first increment intentionally implements only local health visibility:
 ```bash
 cd observatory
 python -m pip install -e ".[dev]"
-uvicorn syzygy_observatory.main:app --reload --port 8020
+python -m uvicorn syzygy_observatory.main:app --reload --port 8020
 ```
 
 Useful endpoints:

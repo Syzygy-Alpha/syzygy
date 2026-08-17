@@ -4,3 +4,4 @@
 - [Observatory Health Trends](observatory-health-trends.md)
 - [Vertical Evolution Cadence](vertical-evolution-cadence.md)
 - [Mycelium Bootstrap](mycelium-bootstrap.md)
+- [Python Module Entrypoints](python-module-entrypoints.md)

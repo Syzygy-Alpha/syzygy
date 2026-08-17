@@ -18,7 +18,7 @@ This first increment intentionally implements only the module bootstrap:
 ```bash
 cd forge
 python -m pip install -e ".[dev]"
-uvicorn syzygy_forge.main:app --reload --port 8010
+python -m uvicorn syzygy_forge.main:app --reload --port 8010
 ```
 
 For a complete local walkthrough with `curl`, see
