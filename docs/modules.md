@@ -43,6 +43,13 @@ MVP direction:
 - configuration sync
 - backup
 
+Current status:
+
+- Mycelium bootstrap exists as a standalone module.
+- It exposes health, version, capabilities, and local node identity.
+- It can register itself with Foundation through the module registry API.
+- It defines the local Hypha node descriptor as the first mesh contract.
+
 ## Coppermind
 
 Purpose: persistent knowledge memory.

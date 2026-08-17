@@ -49,6 +49,7 @@ The functional modules are:
 
 - Foundation v0.1
 - Forge v0.1
+- Mycelium v0.1
 - Observatory v0.1
 
 Foundation currently provides:
@@ -70,6 +71,12 @@ Forge currently provides:
 - opt-in event publishing and manual requeue
 - local Git status, branch, and commit workflows
 
+Mycelium currently provides:
+
+- local Hypha node descriptor
+- health, version, and capabilities endpoints
+- optional Foundation module registration
+
 Observatory currently provides:
 
 - local health observation storage
@@ -83,7 +90,7 @@ Observatory currently provides:
 
 The architecture explicitly defers:
 
-- Mycelium distributed sync
+- Mycelium device discovery, distributed sync, replication, and backup
 - Coppermind knowledge/RAG
 - MAGI agents
 - NERV UI

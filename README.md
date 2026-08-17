@@ -22,6 +22,10 @@ The second module phase starts with Forge:
 
 - [Forge README](forge/README.md)
 
+The distributed mesh phase starts with Mycelium:
+
+- [Mycelium README](mycelium/README.md)
+
 The observability phase starts with Observatory:
 
 - [Observatory README](observatory/README.md)

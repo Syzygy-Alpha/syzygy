@@ -12,6 +12,7 @@ implementation.
 - Use the Foundation module registry as the first integration contract for
   future modules.
 - Keep Foundation, Forge, and Observatory contracts stable.
+- Keep Mycelium's first local node contract minimal until discovery is designed.
 - Balance vertical evolution: avoid more than five consecutive feature commits
   in one module without reassessing whether another official module should get
   a minimal functional increment.
@@ -22,8 +23,7 @@ implementation.
 - Validate Docker locally once Docker is available.
 - Add a scheduled retry policy for Forge outbox events after the manual path is stable.
 - Add Observatory status change events from stored health observations.
-- Bootstrap the next official module when Foundation, Forge, and Observatory no
-  longer need immediate contract work.
+- Add a Mycelium local peer registry before attempting real network discovery.
 
 ## Later
 
