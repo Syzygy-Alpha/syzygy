@@ -5,3 +5,4 @@
 - [NERV Quick Actions](nerv-quick-actions.md)
 - [NERV Catalog Import Fix](nerv-catalog-import-fix.md)
 - [NERV Forge Project Workbench](nerv-forge-project-workbench.md)
+- [NERV CI](nerv-ci.md)

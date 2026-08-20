@@ -14,6 +14,8 @@ implementation.
 - Keep Foundation, Forge, and Observatory contracts stable.
 - Keep Mycelium's first local node contract minimal until discovery is designed.
 - Keep NERV Sprint 001 lightweight until its operational contract stabilizes.
+- Keep NERV quality gates reproducible through its path-scoped GitHub Actions
+  workflow.
 - Balance vertical evolution: avoid more than five consecutive feature commits
   in one module without reassessing whether another official module should get
   a minimal functional increment.

@@ -46,7 +46,18 @@ The log should explain:
 
 ## Quality
 
+For module changes, run the module's quality commands. Foundation, Forge, and
+NERV each run their corresponding test, lint, and type checks in GitHub Actions.
+
 For Foundation changes, run from `foundation/`:
+
+```bash
+python -m pytest
+python -m ruff check .
+python -m mypy src tests
+```
+
+For NERV changes, run from `nerv/`:
 
 ```bash
 python -m pytest

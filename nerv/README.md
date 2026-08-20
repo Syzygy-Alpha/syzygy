@@ -25,6 +25,13 @@ python -m pip install -e ".[dev]"
 python -m uvicorn syzygy_nerv.main:app --reload --port 8040
 ```
 
+## Continuous Integration
+
+GitHub Actions runs NERV tests, lint, and type checks on pull requests and on
+pushes to `main` that affect `nerv/`. The workflow provides reproducible remote
+validation, but it does not deploy the dashboard: NERV controls local processes
+and remains a local-first service.
+
 Useful endpoints:
 
 ```text
