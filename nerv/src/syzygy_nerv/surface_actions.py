@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 import httpx
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from syzygy_nerv.catalog import SurfaceCatalog
 

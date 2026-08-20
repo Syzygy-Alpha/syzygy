@@ -35,3 +35,5 @@ control processes and projects on the user's computer.
 - Corrected NERV Forge import ordering after the first CI run reported
   auto-fixable Ruff findings. The workflow remains check-only so a failed check
   always reflects the committed source rather than an ephemeral runner change.
+- Removed the two unused imports and completed the import ordering specified by
+  the Ruff output from that run.

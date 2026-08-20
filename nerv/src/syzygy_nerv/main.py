@@ -19,12 +19,12 @@ from syzygy_nerv.forge_client import (
 from syzygy_nerv.forge_workbench import ForgeWorkbenchService, ForgeWorkbenchSnapshot
 from syzygy_nerv.foundation_client import FoundationClient
 from syzygy_nerv.module import ModuleDescriptor, nerv_descriptor
+from syzygy_nerv.supervisor import ModuleRuntimeStatus, ModuleSupervisor, ModuleSupervisorError
 from syzygy_nerv.surface_actions import (
     SurfaceActionError,
     SurfaceActionExecutor,
     SurfaceActionResult,
 )
-from syzygy_nerv.supervisor import ModuleRuntimeStatus, ModuleSupervisor, ModuleSupervisorError
 
 logger = logging.getLogger(__name__)
 
