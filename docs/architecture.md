@@ -94,6 +94,8 @@ NERV currently provides:
 - local surface catalog for known SYZYGY modules
 - local start and stop actions for known module servers
 - catalog-defined quick actions for common module reads
+- Forge project workbench that delegates declared command planning and execution
+  to Forge
 - live endpoint reachability checks
 - optional Foundation registry visibility
 

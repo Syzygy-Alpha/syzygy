@@ -3,7 +3,7 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Query, status
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -11,6 +11,13 @@ from syzygy_nerv.catalog import SurfaceCatalog
 from syzygy_nerv.config import Settings, get_settings
 from syzygy_nerv.dashboard_service import DashboardState, NervDashboardService
 from syzygy_nerv.foundation_client import FoundationClient
+from syzygy_nerv.forge_client import (
+    ForgeClient,
+    ForgeClientError,
+    ForgeProjectCommandPlan,
+    ForgeProjectCommandRunResult,
+)
+from syzygy_nerv.forge_workbench import ForgeWorkbenchService, ForgeWorkbenchSnapshot
 from syzygy_nerv.module import ModuleDescriptor, nerv_descriptor
 from syzygy_nerv.surface_actions import (
     SurfaceActionError,
@@ -29,6 +36,7 @@ def create_app(
     dashboard_service: NervDashboardService | None = None,
     foundation_client: FoundationClient | None = None,
     action_executor: SurfaceActionExecutor | None = None,
+    forge_workbench_service: ForgeWorkbenchService | None = None,
 ) -> FastAPI:
     app_settings = settings or get_settings()
     logging.basicConfig(level=app_settings.log_level.upper())
@@ -55,6 +63,15 @@ def create_app(
         catalog=catalog_instance,
         timeout_seconds=app_settings.probe_timeout_seconds,
     )
+    forge_entry = catalog_instance.get("forge")
+    if forge_entry is None:
+        raise ValueError("NERV requires a Forge surface in its catalog")
+    forge_workbench_service_instance = forge_workbench_service or ForgeWorkbenchService(
+        ForgeClient(
+            base_url=forge_entry.links.root_url,
+            timeout_seconds=app_settings.probe_timeout_seconds,
+        )
+    )
     static_dir = Path(__file__).resolve().parent / "static"
     html_path = static_dir / "index.html"
 
@@ -80,6 +97,7 @@ def create_app(
     app.state.supervisor = supervisor_instance
     app.state.dashboard_service = dashboard_service_instance
     app.state.action_executor = action_executor_instance
+    app.state.forge_workbench_service = forge_workbench_service_instance
 
     @app.get("/", response_class=HTMLResponse)
     def dashboard() -> str:
@@ -139,6 +157,41 @@ def create_app(
                 else status.HTTP_400_BAD_REQUEST
             )
             raise HTTPException(status_code=code, detail=detail) from exc
+
+    @app.get("/api/forge/projects")
+    async def forge_projects() -> ForgeWorkbenchSnapshot:
+        return await forge_workbench_service_instance.snapshot()
+
+    @app.get("/api/forge/commands/plan")
+    async def forge_command_plan(project: str, command: str) -> ForgeProjectCommandPlan:
+        try:
+            return await forge_workbench_service_instance.forge_client.command_plan(
+                project,
+                command,
+            )
+        except ForgeClientError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+    @app.post("/api/forge/commands/run")
+    async def run_forge_command(
+        project: str,
+        command: str,
+        confirm: bool = False,
+        timeout_seconds: int = Query(default=30, ge=1, le=120),
+    ) -> ForgeProjectCommandRunResult:
+        if not confirm:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="NERV command execution requires confirm=true",
+            )
+        try:
+            return await forge_workbench_service_instance.forge_client.run_command(
+                project,
+                command,
+                timeout_seconds,
+            )
+        except ForgeClientError as exc:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
     return app
 

@@ -150,6 +150,8 @@ Current status:
 - It serves a lightweight local dashboard for known SYZYGY module surfaces.
 - It can start and stop known local module servers through explicit local commands.
 - It can run catalog-defined quick actions for common module endpoint reads.
+- It can expose Forge registered projects, inspect their declared command plans,
+  and delegate confirmed allowed command runs back to Forge.
 - It can probe module reachability and optionally compare that view with
   Foundation's `/modules` contract.
 

@@ -17,6 +17,7 @@ class ModuleDescriptor(BaseModel):
 
 NERV_CAPABILITIES = [
     "dashboard",
+    "forge_project_workbench",
     "surface_catalog",
     "module_launcher",
     "module_monitoring",

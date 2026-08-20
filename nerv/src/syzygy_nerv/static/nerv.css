@@ -65,6 +65,7 @@ body {
 .hero-summary,
 .status-ribbon,
 .action-console,
+.forge-workbench,
 .surface-card {
   border: 1px solid var(--line);
   background: var(--bg-panel);
@@ -194,6 +195,116 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
   gap: 18px;
+}
+
+.forge-workbench {
+  margin-top: 18px;
+  padding: 18px;
+  background:
+    linear-gradient(120deg, rgba(35, 19, 10, 0.98) 0%, rgba(18, 12, 15, 0.98) 62%);
+}
+
+.workbench-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: start;
+  flex-wrap: wrap;
+}
+
+.workbench-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.workbench-meta {
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+}
+
+.workbench-note {
+  max-width: 82ch;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.project-card {
+  padding: 14px;
+  border: 1px solid rgba(255, 123, 57, 0.28);
+  background: rgba(9, 8, 9, 0.45);
+}
+
+.project-card h3 {
+  margin: 0;
+  color: var(--warn);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+}
+
+.project-path,
+.project-message {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.project-command-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.project-command {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.project-command code {
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  overflow-wrap: anywhere;
+}
+
+.project-command-button {
+  padding: 7px 8px;
+  border: 1px solid rgba(255, 214, 74, 0.32);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  cursor: pointer;
+}
+
+.project-command-button.run {
+  border-color: rgba(69, 208, 179, 0.42);
+  color: #b6f7e5;
+}
+
+.project-command-button:hover {
+  background: rgba(255, 214, 74, 0.12);
 }
 
 .action-console {
@@ -426,8 +537,17 @@ body {
   .hero-summary,
   .status-ribbon,
   .action-console,
+  .forge-workbench,
   .surface-card {
     padding-left: 18px;
     padding-right: 18px;
+  }
+
+  .project-command {
+    grid-template-columns: 1fr auto;
+  }
+
+  .project-command code {
+    grid-column: 1 / -1;
   }
 }

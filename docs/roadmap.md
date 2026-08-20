@@ -25,7 +25,8 @@ implementation.
 - Add a scheduled retry policy for Forge outbox events after the manual path is stable.
 - Add Observatory status change events from stored health observations.
 - Add Mycelium peer status updates before attempting real network discovery.
-- Extend NERV from module surfaces into internal app surfaces after the bootstrap settles.
+- Extend NERV from the Forge project workbench into internal app surfaces after
+  their lifecycle contract is designed.
 
 ## Later
 

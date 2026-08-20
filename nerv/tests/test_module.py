@@ -9,4 +9,5 @@ def test_nerv_descriptor() -> None:
     assert descriptor.status == "online"
     assert descriptor.health.status == "ok"
     assert "dashboard" in descriptor.capabilities
+    assert "forge_project_workbench" in descriptor.capabilities
     assert "module_launcher" in descriptor.capabilities

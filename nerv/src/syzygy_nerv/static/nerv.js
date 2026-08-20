@@ -34,6 +34,15 @@ function setText(id, value) {
   }
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 async function callAction(name, action) {
   await fetch(`/api/surfaces/${name}/${action}`, { method: "POST" });
   await loadDashboard();
@@ -55,6 +64,98 @@ async function runQuickAction(surfaceName, actionName, label) {
   });
   const payload = await response.json();
   setConsole(surfaceName.toUpperCase(), label, payload);
+}
+
+function forgeQuery(project, command) {
+  return new URLSearchParams({ project, command });
+}
+
+async function planForgeCommand(project, command) {
+  const response = await fetch(`/api/forge/commands/plan?${forgeQuery(project, command)}`);
+  const payload = await response.json();
+  setConsole(`FORGE :: ${project}`, `Plan ${command}`, payload);
+}
+
+async function runForgeCommand(project, command) {
+  const planResponse = await fetch(`/api/forge/commands/plan?${forgeQuery(project, command)}`);
+  const plan = await planResponse.json();
+  setConsole(`FORGE :: ${project}`, `Plan ${command}`, plan);
+  if (!planResponse.ok || !plan.allowed) {
+    return;
+  }
+  const approved = window.confirm(
+    `Run allowed Forge command '${command}' for project '${project}'?\n\n${plan.command}`
+  );
+  if (!approved) {
+    return;
+  }
+  const query = forgeQuery(project, command);
+  query.set("confirm", "true");
+  const response = await fetch(`/api/forge/commands/run?${query}`, { method: "POST" });
+  const payload = await response.json();
+  setConsole(`FORGE :: ${project}`, `Run ${command}`, payload);
+  await loadForgeWorkbench();
+}
+
+function renderProjectCommand(project, command) {
+  const projectName = escapeHtml(project.name);
+  const commandName = escapeHtml(command.name);
+  const commandValue = escapeHtml(command.command);
+  return `
+    <div class="project-command">
+      <code>${commandName}: ${commandValue}</code>
+      <button
+        class="project-command-button"
+        type="button"
+        data-project="${projectName}"
+        data-command="${commandName}"
+        onclick="planForgeCommand(this.dataset.project, this.dataset.command)"
+      >PLAN</button>
+      <button
+        class="project-command-button run"
+        type="button"
+        data-project="${projectName}"
+        data-command="${commandName}"
+        onclick="runForgeCommand(this.dataset.project, this.dataset.command)"
+      >RUN</button>
+    </div>
+  `;
+}
+
+function renderForgeProject(projectSurface) {
+  const project = projectSurface.project;
+  const commandList = projectSurface.error
+    ? `<p class="project-message">${escapeHtml(projectSurface.error)}</p>`
+    : projectSurface.commands.length === 0
+      ? '<p class="project-message">No declared commands.</p>'
+      : `<div class="project-command-list">${projectSurface.commands
+          .map((command) => renderProjectCommand(project, command))
+          .join("")}</div>`;
+  return `
+    <article class="project-card">
+      <h3>${escapeHtml(project.name)}</h3>
+      <p class="project-path">${escapeHtml(project.path)}</p>
+      ${commandList}
+    </article>
+  `;
+}
+
+async function loadForgeWorkbench() {
+  const grid = document.getElementById("forge-project-grid");
+  const response = await fetch("/api/forge/projects");
+  const payload = await response.json();
+  setText("forge-workbench-state", payload.reachable ? "FORGE LINKED" : "FORGE OFFLINE");
+  setText("forge-project-count", `${payload.projects.length} PROJECTS`);
+  if (!grid) {
+    return;
+  }
+  if (!payload.reachable) {
+    grid.innerHTML = `<p class="project-message">${escapeHtml(payload.error || "Forge is unreachable.")}</p>`;
+    return;
+  }
+  grid.innerHTML = payload.projects.length
+    ? payload.projects.map(renderForgeProject).join("")
+    : '<p class="project-message">No projects are registered in Forge.</p>';
 }
 
 function renderQuickActions(surface) {
@@ -180,6 +281,7 @@ async function loadDashboard() {
     if (grid) {
       grid.innerHTML = payload.surfaces.map(renderSurface).join("");
     }
+    await loadForgeWorkbench();
   } finally {
     state.loading = false;
   }

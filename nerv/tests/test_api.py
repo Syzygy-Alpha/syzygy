@@ -14,6 +14,15 @@ from syzygy_nerv.dashboard_service import (
     SurfaceProbe,
 )
 from syzygy_nerv.foundation_client import FoundationClient
+from syzygy_nerv.forge_client import (
+    ForgeClient,
+    ForgeProject,
+    ForgeProjectCommand,
+    ForgeProjectCommandPlan,
+    ForgeProjectCommandRunResult,
+    ForgeProjectCommandSet,
+)
+from syzygy_nerv.forge_workbench import ForgeWorkbenchService
 from syzygy_nerv.main import create_app
 from syzygy_nerv.surface_actions import SurfaceActionExecutor, SurfaceActionResult
 from syzygy_nerv.supervisor import ModuleRuntimeStatus, ModuleSupervisor
@@ -101,12 +110,66 @@ class FakeActionExecutor(SurfaceActionExecutor):
         )
 
 
+class FakeForgeClient(ForgeClient):
+    def __init__(self) -> None:
+        self.run_calls: list[tuple[str, str, int]] = []
+        self.project = ForgeProject(
+            name="demo",
+            path="C:/demo",
+            created_at=datetime.now(UTC),
+            updated_at=datetime.now(UTC),
+        )
+
+    async def list_projects(self) -> list[ForgeProject]:
+        return [self.project]
+
+    async def project_commands(self, project_name: str) -> ForgeProjectCommandSet:
+        return ForgeProjectCommandSet(
+            project=project_name,
+            manifest_path="C:/demo/syzygy.project.toml",
+            commands=[ForgeProjectCommand(name="test", command="python -m pytest")],
+        )
+
+    async def command_plan(
+        self,
+        project_name: str,
+        command_name: str,
+    ) -> ForgeProjectCommandPlan:
+        return ForgeProjectCommandPlan(
+            project=project_name,
+            command_name=command_name,
+            command="python -m pytest",
+            cwd="C:/demo",
+            argv=["python", "-m", "pytest"],
+            allowed=True,
+            reason="allowed",
+        )
+
+    async def run_command(
+        self,
+        project_name: str,
+        command_name: str,
+        timeout_seconds: int,
+    ) -> ForgeProjectCommandRunResult:
+        self.run_calls.append((project_name, command_name, timeout_seconds))
+        now = datetime.now(UTC)
+        return ForgeProjectCommandRunResult(
+            run_id=1,
+            plan=await self.command_plan(project_name, command_name),
+            returncode=0,
+            stdout="passed",
+            started_at=now,
+            completed_at=now,
+        )
+
+
 def build_client() -> TestClient:
     settings = Settings(register_with_foundation=False, foundation_registry_enabled=False)
     catalog = SurfaceCatalog(settings)
     supervisor = FakeSupervisor(catalog, settings.runtime_logs_dir)
     dashboard_service = FakeDashboardService(catalog, supervisor)
     action_executor = FakeActionExecutor()
+    forge_workbench_service = ForgeWorkbenchService(FakeForgeClient())
     foundation_client = FoundationClient(
         base_url="http://foundation.test",
         username="admin",
@@ -120,6 +183,7 @@ def build_client() -> TestClient:
             dashboard_service=dashboard_service,
             foundation_client=foundation_client,
             action_executor=action_executor,
+            forge_workbench_service=forge_workbench_service,
         )
     )
 
@@ -156,3 +220,28 @@ def test_surface_quick_action_endpoint_returns_payload() -> None:
     assert response.status_code == 200
     assert response.json()["ok"] is True
     assert response.json()["payload"] == {"path": "C:/syzygy"}
+
+
+def test_forge_workbench_exposes_projects_plans_and_confirmed_runs() -> None:
+    with build_client() as client:
+        projects = client.get("/api/forge/projects")
+        plan = client.get(
+            "/api/forge/commands/plan",
+            params={"project": "demo", "command": "test"},
+        )
+        rejected_run = client.post(
+            "/api/forge/commands/run",
+            params={"project": "demo", "command": "test"},
+        )
+        confirmed_run = client.post(
+            "/api/forge/commands/run",
+            params={"project": "demo", "command": "test", "confirm": "true"},
+        )
+
+    assert projects.status_code == 200
+    assert projects.json()["projects"][0]["project"]["name"] == "demo"
+    assert plan.status_code == 200
+    assert plan.json()["allowed"] is True
+    assert rejected_run.status_code == 400
+    assert confirmed_run.status_code == 200
+    assert confirmed_run.json()["returncode"] == 0

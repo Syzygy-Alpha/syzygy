@@ -14,6 +14,7 @@ center:
 - local module catalog for known SYZYGY surfaces
 - local start/stop actions for known module development servers
 - quick actions for common module endpoint reads
+- Forge project workbench for declared project commands
 - live reachability checks and optional Foundation registry visibility
 
 ## Local Development
@@ -35,6 +36,9 @@ GET /api/dashboard
 POST /api/surfaces/{name}/start
 POST /api/surfaces/{name}/stop
 POST /api/surfaces/{name}/actions/{action_name}/run
+GET /api/forge/projects
+GET /api/forge/commands/plan?project={name}&command={name}
+POST /api/forge/commands/run?project={name}&command={name}&confirm=true
 ```
 
 ## Dashboard
@@ -47,6 +51,7 @@ The root page serves a lightweight local dashboard with:
 - direct links to root, health, and capabilities endpoints
 - quick operational state from live HTTP probes
 - optional Foundation registry information when enabled
+- registered Forge projects and their declared commands
 
 Known modules are currently:
 
@@ -63,6 +68,18 @@ Known quick actions currently include examples such as:
 - Observatory health summary, trends, and polling status
 - Mycelium local node and known peers
 - NERV dashboard state and capabilities
+
+## Forge Project Workbench
+
+When Forge is running, NERV reads its registered project and command contracts
+to render a local project workbench. Select `PLAN` to inspect the exact plan
+from Forge. Select `RUN` only after reviewing it; NERV asks for browser
+confirmation, requires `confirm=true` on its API, and asks Forge for a fresh
+allowed plan before it delegates execution.
+
+NERV does not gain direct filesystem or shell access from this feature. Forge
+remains responsible for allow-list policy, execution timeouts, and command
+history.
 
 ## Local Actions
 
@@ -114,5 +131,5 @@ SYZYGY_NERV_FOUNDATION_PASSWORD=change-me
 
 NERV v0.1 does not yet include React, Material UI, device orchestration,
 container management, authentication hardening, persistent action history, or
-internal app launchers beyond the known module catalog. This increment is a
-light local-first dashboard and launcher spine that can be upgraded later.
+internal app lifecycle management. This increment is a light local-first
+dashboard and launcher spine that can be upgraded later.
