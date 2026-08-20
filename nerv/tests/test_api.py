@@ -13,7 +13,6 @@ from syzygy_nerv.dashboard_service import (
     NervDashboardService,
     SurfaceProbe,
 )
-from syzygy_nerv.foundation_client import FoundationClient
 from syzygy_nerv.forge_client import (
     ForgeClient,
     ForgeProject,
@@ -23,6 +22,7 @@ from syzygy_nerv.forge_client import (
     ForgeProjectCommandSet,
 )
 from syzygy_nerv.forge_workbench import ForgeWorkbenchService
+from syzygy_nerv.foundation_client import FoundationClient
 from syzygy_nerv.main import create_app
 from syzygy_nerv.surface_actions import SurfaceActionExecutor, SurfaceActionResult
 from syzygy_nerv.supervisor import ModuleRuntimeStatus, ModuleSupervisor

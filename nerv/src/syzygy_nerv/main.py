@@ -10,7 +10,6 @@ from fastapi.staticfiles import StaticFiles
 from syzygy_nerv.catalog import SurfaceCatalog
 from syzygy_nerv.config import Settings, get_settings
 from syzygy_nerv.dashboard_service import DashboardState, NervDashboardService
-from syzygy_nerv.foundation_client import FoundationClient
 from syzygy_nerv.forge_client import (
     ForgeClient,
     ForgeClientError,
@@ -18,6 +17,7 @@ from syzygy_nerv.forge_client import (
     ForgeProjectCommandRunResult,
 )
 from syzygy_nerv.forge_workbench import ForgeWorkbenchService, ForgeWorkbenchSnapshot
+from syzygy_nerv.foundation_client import FoundationClient
 from syzygy_nerv.module import ModuleDescriptor, nerv_descriptor
 from syzygy_nerv.surface_actions import (
     SurfaceActionError,

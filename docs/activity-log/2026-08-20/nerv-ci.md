@@ -29,3 +29,9 @@ control processes and projects on the user's computer.
 - Local pytest remains blocked before startup by the broken Windows Store Python
   base used by `.venv`; NERV CI provides the clean Python 3.12 verification
   path for this module.
+
+## Follow-Up
+
+- Corrected NERV Forge import ordering after the first CI run reported
+  auto-fixable Ruff findings. The workflow remains check-only so a failed check
+  always reflects the committed source rather than an ephemeral runner change.
