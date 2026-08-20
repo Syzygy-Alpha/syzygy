@@ -9,6 +9,7 @@ Project documentation:
 - [Architecture](docs/architecture.md)
 - [Modules](docs/modules.md)
 - [Roadmap](docs/roadmap.md)
+- [Sprints](docs/sprints/README.md)
 - [Contributing](CONTRIBUTING.md)
 
 The first functional implementation is the Foundation module:
@@ -29,6 +30,10 @@ The distributed mesh phase starts with Mycelium:
 The observability phase starts with Observatory:
 
 - [Observatory README](observatory/README.md)
+
+The operational center phase now includes NERV:
+
+- [NERV README](nerv/README.md)
 
 Project activity is tracked in:
 

@@ -51,6 +51,7 @@ The functional modules are:
 - Forge v0.1
 - Mycelium v0.1
 - Observatory v0.1
+- NERV v0.1
 
 Foundation currently provides:
 
@@ -87,6 +88,14 @@ Observatory currently provides:
 - manual ingestion of Foundation module health through the module registry API
 - optional scheduled polling of Foundation module health
 
+NERV currently provides:
+
+- local operational dashboard
+- local surface catalog for known SYZYGY modules
+- local start and stop actions for known module servers
+- live endpoint reachability checks
+- optional Foundation registry visibility
+
 ## Deferred Capabilities
 
 The architecture explicitly defers:
@@ -94,7 +103,7 @@ The architecture explicitly defers:
 - Mycelium device discovery, distributed sync, replication, and backup
 - Coppermind knowledge/RAG
 - MAGI agents
-- NERV UI
+- deeper NERV orchestration for devices, containers, and agents
 - Tungsten vault/security stack
 - full Observatory dashboards, metrics, tracing, and alerting
 - Bastion labs

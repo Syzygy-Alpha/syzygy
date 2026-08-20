@@ -142,6 +142,15 @@ MVP direction:
 
 - dashboard for known services and devices
 
+Current status:
+
+- NERV bootstrap exists as a standalone module.
+- It exposes health, version, and capabilities.
+- It can optionally register itself with Foundation through the module registry API.
+- It serves a lightweight local dashboard for known SYZYGY module surfaces.
+- It can start and stop known local module servers through explicit local commands.
+- It can probe module reachability and optionally compare that view with Foundation's `/modules` contract.
+
 ## Elric
 
 Purpose: user representation inside the ecosystem.

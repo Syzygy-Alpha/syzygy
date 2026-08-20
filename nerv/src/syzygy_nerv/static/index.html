@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SYZYGY NERV</title>
+    <link rel="stylesheet" href="/static/nerv.css" />
+  </head>
+  <body>
+    <div class="screen-noise"></div>
+    <main class="layout">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">SYZYGY OPERATIONS</p>
+          <h1>NERV COMMAND CENTER</h1>
+          <p class="hero-text">
+            Local-first dashboard for launching, probing, and opening SYZYGY modules
+            without dropping back into repeated terminal rituals.
+          </p>
+        </div>
+        <div class="hero-summary" id="summary-panel">
+          <div class="summary-row">
+            <span>Surfaces</span>
+            <strong id="summary-known">--</strong>
+          </div>
+          <div class="summary-row">
+            <span>Running</span>
+            <strong id="summary-running">--</strong>
+          </div>
+          <div class="summary-row">
+            <span>Reachable</span>
+            <strong id="summary-reachable">--</strong>
+          </div>
+          <div class="summary-row">
+            <span>Registry</span>
+            <strong id="summary-registry">LOCAL</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="status-ribbon">
+        <div class="ribbon-block">
+          <span class="ribbon-label">MODE</span>
+          <strong id="registry-mode">LOCAL CATALOG</strong>
+        </div>
+        <div class="ribbon-block">
+          <span class="ribbon-label">UPDATED</span>
+          <strong id="last-updated">--</strong>
+        </div>
+        <button class="ribbon-button" id="refresh-button" type="button">REFRESH</button>
+      </section>
+
+      <section class="surface-grid" id="surface-grid"></section>
+    </main>
+    <script src="/static/nerv.js"></script>
+  </body>
+</html>

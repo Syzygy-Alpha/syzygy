@@ -13,6 +13,7 @@ implementation.
   future modules.
 - Keep Foundation, Forge, and Observatory contracts stable.
 - Keep Mycelium's first local node contract minimal until discovery is designed.
+- Keep NERV Sprint 001 lightweight until its operational contract stabilizes.
 - Balance vertical evolution: avoid more than five consecutive feature commits
   in one module without reassessing whether another official module should get
   a minimal functional increment.
@@ -24,6 +25,7 @@ implementation.
 - Add a scheduled retry policy for Forge outbox events after the manual path is stable.
 - Add Observatory status change events from stored health observations.
 - Add Mycelium peer status updates before attempting real network discovery.
+- Extend NERV from module surfaces into internal app surfaces after the bootstrap settles.
 
 ## Later
 
@@ -33,7 +35,6 @@ implementation.
 - Coppermind knowledge storage.
 - MAGI persona prototypes.
 - Balance rule engine.
-- NERV operational dashboard.
 - Elric profile.
 - Imrryr internal apps.
 - Bastion isolated labs.
