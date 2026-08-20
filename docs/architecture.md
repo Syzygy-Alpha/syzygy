@@ -74,6 +74,7 @@ Forge currently provides:
 Mycelium currently provides:
 
 - local Hypha node descriptor
+- local peer registry for manually known nodes
 - health, version, and capabilities endpoints
 - optional Foundation module registration
 

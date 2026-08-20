@@ -23,7 +23,7 @@ implementation.
 - Validate Docker locally once Docker is available.
 - Add a scheduled retry policy for Forge outbox events after the manual path is stable.
 - Add Observatory status change events from stored health observations.
-- Add a Mycelium local peer registry before attempting real network discovery.
+- Add Mycelium peer status updates before attempting real network discovery.
 
 ## Later
 

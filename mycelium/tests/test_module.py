@@ -12,4 +12,5 @@ def test_mycelium_descriptor() -> None:
     assert descriptor.dependencies == ["foundation"]
     assert "foundation_registration" in descriptor.capabilities
     assert "local_node_descriptor" in descriptor.capabilities
+    assert "local_peer_registry" in descriptor.capabilities
     assert "mesh_bootstrap" in descriptor.capabilities

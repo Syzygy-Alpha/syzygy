@@ -6,6 +6,7 @@ def test_default_settings() -> None:
 
     assert settings.service_name == "syzygy-mycelium"
     assert settings.port == 8030
+    assert settings.database_url == "sqlite:///./data/mycelium.db"
     assert settings.node_id == "local-node"
     assert settings.node_name == "local"
     assert settings.register_with_foundation is False

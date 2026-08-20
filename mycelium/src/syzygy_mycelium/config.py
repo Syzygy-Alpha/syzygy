@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     version: str = Field(default="0.1.0")
     host: str = Field(default="127.0.0.1")
     port: int = Field(default=8030)
+    database_url: str = Field(default="sqlite:///./data/mycelium.db")
     node_id: str = Field(default="local-node", min_length=1)
     node_name: str = Field(default="local", min_length=1)
     register_with_foundation: bool = Field(default=False)

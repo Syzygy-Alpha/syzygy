@@ -9,6 +9,7 @@ This first increment intentionally implements only a local node spine:
 - HTTP health, version, and capabilities endpoints
 - Mycelium module descriptor
 - local Hypha node descriptor
+- local peer registry backed by SQLite
 - optional registration with Foundation
 
 ## Local Development
@@ -27,6 +28,9 @@ GET /health
 GET /version
 GET /capabilities
 GET /node
+GET /peers
+POST /peers
+GET /peers/{node_id}
 ```
 
 ## Local Node
@@ -43,9 +47,30 @@ curl http://127.0.0.1:8030/node
 The local node can be configured with:
 
 ```text
+SYZYGY_MYCELIUM_DATABASE_URL
 SYZYGY_MYCELIUM_NODE_ID
 SYZYGY_MYCELIUM_NODE_NAME
 ```
+
+## Local Peer Registry
+
+`POST /peers` stores or updates a known peer in Mycelium's local registry. This
+is intentionally manual in v0.1: peers are explicitly recorded before any real
+network discovery or sync protocol is introduced.
+
+Example payload:
+
+```json
+{
+  "node_id": "notebook",
+  "name": "Notebook",
+  "address": "http://192.168.0.11:8030",
+  "capabilities": ["sync"]
+}
+```
+
+`GET /peers` lists known peers, and `GET /peers/{node_id}` returns one stored
+peer record.
 
 ## Foundation Registration
 
@@ -60,6 +85,6 @@ SYZYGY_MYCELIUM_FOUNDATION_PASSWORD=change-me
 
 ## Scope Boundary
 
-Mycelium v0.1 does not yet run Syncthing, WireGuard, Tailscale, gRPC, backup,
-replication, or distributed sync. Those remain future integrations after the
-local node contract is stable.
+Mycelium v0.1 does not yet run Syncthing, WireGuard, Tailscale, gRPC, automatic
+peer discovery, backup, replication, or distributed sync. Those remain future
+integrations after the local node and peer registry contracts are stable.

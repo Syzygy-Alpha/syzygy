@@ -18,6 +18,7 @@ class ModuleDescriptor(BaseModel):
 MYCELIUM_CAPABILITIES = [
     "foundation_registration",
     "local_node_descriptor",
+    "local_peer_registry",
     "mesh_bootstrap",
 ]
 

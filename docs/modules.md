@@ -47,6 +47,7 @@ Current status:
 
 - Mycelium bootstrap exists as a standalone module.
 - It exposes health, version, capabilities, and local node identity.
+- It stores a local peer registry for manually known nodes.
 - It can register itself with Foundation through the module registry API.
 - It defines the local Hypha node descriptor as the first mesh contract.
 
