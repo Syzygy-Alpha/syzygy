@@ -64,6 +64,7 @@ body {
 .hero-copy,
 .hero-summary,
 .status-ribbon,
+.action-console,
 .surface-card {
   border: 1px solid var(--line);
   background: var(--bg-panel);
@@ -195,6 +196,59 @@ body {
   gap: 18px;
 }
 
+.action-console {
+  margin-top: 18px;
+  padding: 18px;
+  background:
+    linear-gradient(180deg, rgba(41, 13, 18, 0.98) 0%, rgba(16, 11, 14, 0.98) 100%);
+}
+
+.console-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: start;
+  flex-wrap: wrap;
+}
+
+.console-eyebrow {
+  margin: 0 0 6px;
+  color: var(--warn);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+}
+
+.console-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.console-meta {
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+}
+
+.console-output {
+  margin: 16px 0 0;
+  padding: 16px;
+  min-height: 180px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #f4f0d7;
+  border: 1px solid rgba(255, 214, 74, 0.18);
+  background: rgba(8, 7, 9, 0.84);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
 .surface-card {
   position: relative;
   overflow: hidden;
@@ -287,10 +341,49 @@ body {
 }
 
 .surface-actions,
-.surface-links {
+.surface-links,
+.surface-quick-actions {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.surface-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.quick-action-button {
+  border: 1px solid rgba(255, 214, 74, 0.24);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.quick-action-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 214, 74, 0.58);
+  background: rgba(255, 214, 74, 0.08);
+}
+
+.quick-action-button strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.quick-action-button span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  line-height: 1.45;
 }
 
 .link-button {
@@ -332,6 +425,7 @@ body {
   .hero-copy,
   .hero-summary,
   .status-ribbon,
+  .action-console,
   .surface-card {
     padding-left: 18px;
     padding-right: 18px;

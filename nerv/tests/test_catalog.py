@@ -14,3 +14,8 @@ def test_surface_catalog_lists_known_modules(tmp_path: Path) -> None:
     assert catalog.get("nerv") is not None
     assert catalog.get("nerv").launch_enabled is False
     assert catalog.get("forge").launch_command[:3] == ["python", "-m", "uvicorn"]
+    assert [action.name for action in catalog.get("forge").actions] == [
+        "current-project",
+        "projects",
+        "outbox-summary",
+    ]

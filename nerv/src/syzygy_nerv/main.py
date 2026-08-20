@@ -12,6 +12,11 @@ from syzygy_nerv.config import Settings, get_settings
 from syzygy_nerv.dashboard_service import DashboardState, NervDashboardService
 from syzygy_nerv.foundation_client import FoundationClient
 from syzygy_nerv.module import ModuleDescriptor, nerv_descriptor
+from syzygy_nerv.surface_actions import (
+    SurfaceActionError,
+    SurfaceActionExecutor,
+    SurfaceActionResult,
+)
 from syzygy_nerv.supervisor import ModuleRuntimeStatus, ModuleSupervisor, ModuleSupervisorError
 
 logger = logging.getLogger(__name__)
@@ -23,6 +28,7 @@ def create_app(
     supervisor: ModuleSupervisor | None = None,
     dashboard_service: NervDashboardService | None = None,
     foundation_client: FoundationClient | None = None,
+    action_executor: SurfaceActionExecutor | None = None,
 ) -> FastAPI:
     app_settings = settings or get_settings()
     logging.basicConfig(level=app_settings.log_level.upper())
@@ -44,6 +50,10 @@ def create_app(
         foundation_client=foundation_client_instance,
         foundation_registry_enabled=app_settings.foundation_registry_enabled,
         probe_timeout_seconds=app_settings.probe_timeout_seconds,
+    )
+    action_executor_instance = action_executor or SurfaceActionExecutor(
+        catalog=catalog_instance,
+        timeout_seconds=app_settings.probe_timeout_seconds,
     )
     static_dir = Path(__file__).resolve().parent / "static"
     html_path = static_dir / "index.html"
@@ -69,6 +79,7 @@ def create_app(
     app.state.foundation_client = foundation_client_instance
     app.state.supervisor = supervisor_instance
     app.state.dashboard_service = dashboard_service_instance
+    app.state.action_executor = action_executor_instance
 
     @app.get("/", response_class=HTMLResponse)
     def dashboard() -> str:
@@ -96,7 +107,11 @@ def create_app(
             return supervisor_instance.start(name)
         except ModuleSupervisorError as exc:
             detail = str(exc)
-            code = status.HTTP_404_NOT_FOUND if detail.startswith("Unknown") else status.HTTP_400_BAD_REQUEST
+            code = (
+                status.HTTP_404_NOT_FOUND
+                if detail.startswith("Unknown")
+                else status.HTTP_400_BAD_REQUEST
+            )
             raise HTTPException(status_code=code, detail=detail) from exc
 
     @app.post("/api/surfaces/{name}/stop")
@@ -105,7 +120,24 @@ def create_app(
             return supervisor_instance.stop(name)
         except ModuleSupervisorError as exc:
             detail = str(exc)
-            code = status.HTTP_404_NOT_FOUND if detail.startswith("Unknown") else status.HTTP_400_BAD_REQUEST
+            code = (
+                status.HTTP_404_NOT_FOUND
+                if detail.startswith("Unknown")
+                else status.HTTP_400_BAD_REQUEST
+            )
+            raise HTTPException(status_code=code, detail=detail) from exc
+
+    @app.post("/api/surfaces/{name}/actions/{action_name}/run")
+    async def run_surface_action(name: str, action_name: str) -> SurfaceActionResult:
+        try:
+            return await action_executor_instance.execute(name, action_name)
+        except SurfaceActionError as exc:
+            detail = str(exc)
+            code = (
+                status.HTTP_404_NOT_FOUND
+                if detail.startswith("Unknown")
+                else status.HTTP_400_BAD_REQUEST
+            )
             raise HTTPException(status_code=code, detail=detail) from exc
 
     return app

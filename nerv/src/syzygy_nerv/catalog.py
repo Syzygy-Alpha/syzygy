@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 from pydantic import BaseModel, Field
 
@@ -11,6 +12,15 @@ class SurfaceLinks(BaseModel):
     capabilities_url: str
 
 
+class SurfaceAction(BaseModel):
+    name: str
+    label: str
+    description: str
+    method: str = "GET"
+    path: str
+    body: dict[str, Any] = Field(default_factory=dict)
+
+
 class SurfaceEntry(BaseModel):
     name: str
     label: str
@@ -21,6 +31,7 @@ class SurfaceEntry(BaseModel):
     launch_command: list[str] = Field(default_factory=list)
     launch_enabled: bool = True
     links: SurfaceLinks
+    actions: list[SurfaceAction] = Field(default_factory=list)
 
 
 class SurfaceCatalog:
@@ -46,6 +57,20 @@ class SurfaceCatalog:
                 module_dir="foundation",
                 package="syzygy_foundation",
                 port=8000,
+                actions=[
+                    self._action(
+                        name="health",
+                        label="Health",
+                        description="Read the Foundation health contract.",
+                        path="/health",
+                    ),
+                    self._action(
+                        name="version",
+                        label="Version",
+                        description="Read Foundation version metadata.",
+                        path="/version",
+                    ),
+                ],
             ),
             self._entry(
                 name="forge",
@@ -56,6 +81,26 @@ class SurfaceCatalog:
                 module_dir="forge",
                 package="syzygy_forge",
                 port=8010,
+                actions=[
+                    self._action(
+                        name="current-project",
+                        label="Current Project",
+                        description="Inspect the configured Forge workspace.",
+                        path="/projects/current",
+                    ),
+                    self._action(
+                        name="projects",
+                        label="Projects",
+                        description="List registered local Forge projects.",
+                        path="/projects",
+                    ),
+                    self._action(
+                        name="outbox-summary",
+                        label="Outbox Summary",
+                        description="Read the Forge event outbox summary.",
+                        path="/events/outbox/summary",
+                    ),
+                ],
             ),
             self._entry(
                 name="observatory",
@@ -66,6 +111,26 @@ class SurfaceCatalog:
                 module_dir="observatory",
                 package="syzygy_observatory",
                 port=8020,
+                actions=[
+                    self._action(
+                        name="health-summary",
+                        label="Health Summary",
+                        description="Read the latest local health summary.",
+                        path="/health-observations/summary",
+                    ),
+                    self._action(
+                        name="health-trends",
+                        label="Health Trends",
+                        description="Read aggregated health trend information.",
+                        path="/health-observations/trends",
+                    ),
+                    self._action(
+                        name="polling-status",
+                        label="Polling Status",
+                        description="Check Foundation polling status in Observatory.",
+                        path="/ingest/foundation/modules/polling",
+                    ),
+                ],
             ),
             self._entry(
                 name="mycelium",
@@ -76,6 +141,20 @@ class SurfaceCatalog:
                 module_dir="mycelium",
                 package="syzygy_mycelium",
                 port=8030,
+                actions=[
+                    self._action(
+                        name="local-node",
+                        label="Local Node",
+                        description="Read the local Hypha node descriptor.",
+                        path="/node",
+                    ),
+                    self._action(
+                        name="known-peers",
+                        label="Known Peers",
+                        description="List manually registered Mycelium peers.",
+                        path="/peers",
+                    ),
+                ],
             ),
             self._entry(
                 name="nerv",
@@ -87,6 +166,20 @@ class SurfaceCatalog:
                 package="syzygy_nerv",
                 port=8040,
                 launch_enabled=False,
+                actions=[
+                    self._action(
+                        name="dashboard-state",
+                        label="Dashboard State",
+                        description="Read the current NERV operational snapshot.",
+                        path="/api/dashboard",
+                    ),
+                    self._action(
+                        name="capabilities",
+                        label="Capabilities",
+                        description="Read the NERV capability descriptor.",
+                        path="/capabilities",
+                    ),
+                ],
             ),
         ]
 
@@ -102,6 +195,7 @@ class SurfaceCatalog:
         package: str,
         port: int,
         launch_enabled: bool = True,
+        actions: list[SurfaceAction] | None = None,
     ) -> SurfaceEntry:
         cwd = self.workspace_root / module_dir
         base_url = f"http://{self.settings.module_host}:{port}"
@@ -129,4 +223,24 @@ class SurfaceCatalog:
                 health_url=f"{base_url}/health",
                 capabilities_url=f"{base_url}/capabilities",
             ),
+            actions=actions or [],
+        )
+
+    def _action(
+        self,
+        *,
+        name: str,
+        label: str,
+        description: str,
+        path: str,
+        method: str = "GET",
+        body: dict[str, Any] | None = None,
+    ) -> SurfaceAction:
+        return SurfaceAction(
+            name=name,
+            label=label,
+            description=description,
+            method=method,
+            path=path,
+            body=body or {},
         )

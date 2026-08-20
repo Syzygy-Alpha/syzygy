@@ -15,6 +15,7 @@ from syzygy_nerv.dashboard_service import (
 )
 from syzygy_nerv.foundation_client import FoundationClient
 from syzygy_nerv.main import create_app
+from syzygy_nerv.surface_actions import SurfaceActionExecutor, SurfaceActionResult
 from syzygy_nerv.supervisor import ModuleRuntimeStatus, ModuleSupervisor
 
 
@@ -46,6 +47,7 @@ class FakeDashboardService(NervDashboardService):
                     launch_command=entry.launch_command,
                     launch_enabled=entry.launch_enabled,
                     links=entry.links,
+                    actions=entry.actions,
                     runtime=ModuleRuntimeStatus(name=entry.name, running=False, cwd=entry.cwd),
                     probe=SurfaceProbe(reachable=False, error="offline"),
                 )
@@ -75,11 +77,36 @@ class FakeSupervisor(ModuleSupervisor):
         return
 
 
+class FakeActionExecutor(SurfaceActionExecutor):
+    def __init__(self) -> None:
+        self.calls: list[tuple[str, str]] = []
+
+    async def execute(
+        self,
+        surface_name: str,
+        action_name: str,
+    ) -> SurfaceActionResult:  # type: ignore[override]
+        self.calls.append((surface_name, action_name))
+        return SurfaceActionResult(
+            surface=surface_name,
+            action=action_name,
+            label="Current Project",
+            method="GET",
+            url="http://127.0.0.1:8010/projects/current",
+            ok=True,
+            status_code=200,
+            content_type="application/json",
+            received_at=datetime.now(UTC),
+            payload={"path": "C:/syzygy"},
+        )
+
+
 def build_client() -> TestClient:
     settings = Settings(register_with_foundation=False, foundation_registry_enabled=False)
     catalog = SurfaceCatalog(settings)
     supervisor = FakeSupervisor(catalog, settings.runtime_logs_dir)
     dashboard_service = FakeDashboardService(catalog, supervisor)
+    action_executor = FakeActionExecutor()
     foundation_client = FoundationClient(
         base_url="http://foundation.test",
         username="admin",
@@ -92,6 +119,7 @@ def build_client() -> TestClient:
             supervisor=supervisor,
             dashboard_service=dashboard_service,
             foundation_client=foundation_client,
+            action_executor=action_executor,
         )
     )
 
@@ -119,3 +147,12 @@ def test_surface_actions_delegate_to_supervisor() -> None:
     assert started.json()["running"] is True
     assert stopped.status_code == 200
     assert stopped.json()["running"] is False
+
+
+def test_surface_quick_action_endpoint_returns_payload() -> None:
+    with build_client() as client:
+        response = client.post("/api/surfaces/forge/actions/current-project/run")
+
+    assert response.status_code == 200
+    assert response.json()["ok"] is True
+    assert response.json()["payload"] == {"path": "C:/syzygy"}

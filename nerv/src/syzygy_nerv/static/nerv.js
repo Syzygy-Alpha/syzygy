@@ -39,12 +39,56 @@ async function callAction(name, action) {
   await loadDashboard();
 }
 
+function setConsole(surface, label, payload) {
+  setText("action-meta-surface", `${surface} :: ${label}`);
+  setText("action-meta-time", formatTimestamp(payload.received_at));
+  const output = document.getElementById("action-output");
+  if (!output) {
+    return;
+  }
+  output.textContent = JSON.stringify(payload, null, 2);
+}
+
+async function runQuickAction(surfaceName, actionName, label) {
+  const response = await fetch(`/api/surfaces/${surfaceName}/actions/${actionName}/run`, {
+    method: "POST",
+  });
+  const payload = await response.json();
+  setConsole(surfaceName.toUpperCase(), label, payload);
+}
+
+function renderQuickActions(surface) {
+  if (!surface.actions || surface.actions.length === 0) {
+    return "";
+  }
+  const items = surface.actions
+    .map(
+      (action) => `
+        <button
+          class="quick-action-button"
+          type="button"
+          onclick="runQuickAction('${surface.name}', '${action.name}', '${action.label}')"
+        >
+          <strong>${action.label}</strong>
+          <span>${action.description}</span>
+        </button>
+      `
+    )
+    .join("");
+  return `
+    <div class="surface-quick-actions">
+      ${items}
+    </div>
+  `;
+}
+
 function renderSurface(surface) {
   const runtimeState = surface.runtime.running ? "running" : "stopped";
   const probeState = surface.probe.reachable
     ? surface.probe.service_status || "reachable"
     : "unreachable";
   const registryState = surface.foundation_status || "unregistered";
+  const launchDisabled = surface.launch_enabled ? "" : "disabled";
 
   return `
     <article class="surface-card">
@@ -68,13 +112,39 @@ function renderSurface(surface) {
         <div>foundation health: <strong>${surface.foundation_health ?? "--"}</strong></div>
       </div>
       <div class="surface-actions">
-        <button class="action-button" type="button" ${surface.launch_enabled ? "" : "disabled"} onclick="callAction('${surface.name}', 'start')">Launch</button>
-        <button class="action-button danger" type="button" ${surface.launch_enabled ? "" : "disabled"} onclick="callAction('${surface.name}', 'stop')">Stop</button>
+        <button
+          class="action-button"
+          type="button"
+          ${launchDisabled}
+          onclick="callAction('${surface.name}', 'start')"
+        >Launch</button>
+        <button
+          class="action-button danger"
+          type="button"
+          ${launchDisabled}
+          onclick="callAction('${surface.name}', 'stop')"
+        >Stop</button>
       </div>
+      ${renderQuickActions(surface)}
       <div class="surface-links">
-        <a class="link-button" href="${surface.links.root_url}" target="_blank" rel="noreferrer">Open</a>
-        <a class="link-button" href="${surface.links.health_url}" target="_blank" rel="noreferrer">Health</a>
-        <a class="link-button" href="${surface.links.capabilities_url}" target="_blank" rel="noreferrer">Capabilities</a>
+        <a
+          class="link-button"
+          href="${surface.links.root_url}"
+          target="_blank"
+          rel="noreferrer"
+        >Open</a>
+        <a
+          class="link-button"
+          href="${surface.links.health_url}"
+          target="_blank"
+          rel="noreferrer"
+        >Health</a>
+        <a
+          class="link-button"
+          href="${surface.links.capabilities_url}"
+          target="_blank"
+          rel="noreferrer"
+        >Capabilities</a>
       </div>
     </article>
   `;

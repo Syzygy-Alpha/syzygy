@@ -149,7 +149,9 @@ Current status:
 - It can optionally register itself with Foundation through the module registry API.
 - It serves a lightweight local dashboard for known SYZYGY module surfaces.
 - It can start and stop known local module servers through explicit local commands.
-- It can probe module reachability and optionally compare that view with Foundation's `/modules` contract.
+- It can run catalog-defined quick actions for common module endpoint reads.
+- It can probe module reachability and optionally compare that view with
+  Foundation's `/modules` contract.
 
 ## Elric
 

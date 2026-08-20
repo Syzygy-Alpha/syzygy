@@ -13,6 +13,7 @@ center:
 - zero-build dashboard served by FastAPI
 - local module catalog for known SYZYGY surfaces
 - local start/stop actions for known module development servers
+- quick actions for common module endpoint reads
 - live reachability checks and optional Foundation registry visibility
 
 ## Local Development
@@ -33,6 +34,7 @@ GET /capabilities
 GET /api/dashboard
 POST /api/surfaces/{name}/start
 POST /api/surfaces/{name}/stop
+POST /api/surfaces/{name}/actions/{action_name}/run
 ```
 
 ## Dashboard
@@ -41,6 +43,7 @@ The root page serves a lightweight local dashboard with:
 
 - cards for known SYZYGY modules
 - launch and stop buttons for supported local module servers
+- quick action buttons for frequently used module reads
 - direct links to root, health, and capabilities endpoints
 - quick operational state from live HTTP probes
 - optional Foundation registry information when enabled
@@ -52,6 +55,14 @@ Known modules are currently:
 - Observatory
 - Mycelium
 - NERV
+
+Known quick actions currently include examples such as:
+
+- Foundation health and version
+- Forge current project, projects, and outbox summary
+- Observatory health summary, trends, and polling status
+- Mycelium local node and known peers
+- NERV dashboard state and capabilities
 
 ## Local Actions
 
@@ -75,6 +86,16 @@ Runtime logs are written under:
 ```text
 SYZYGY_NERV_RUNTIME_LOGS_DIR
 ```
+
+## Quick Actions
+
+NERV keeps quick actions explicit and catalog-driven. It does not expose a
+generic arbitrary request UI; instead, it offers curated reads for the known
+module contracts already documented in the repository.
+
+Quick actions return their response inline in the dashboard's operations
+console, so common operational queries no longer require manually opening each
+endpoint one by one.
 
 ## Foundation Registry
 

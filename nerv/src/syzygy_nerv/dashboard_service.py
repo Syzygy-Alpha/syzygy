@@ -4,7 +4,7 @@ from datetime import UTC, datetime
 import httpx
 from pydantic import BaseModel, Field
 
-from syzygy_nerv.catalog import SurfaceCatalog, SurfaceEntry, SurfaceLinks
+from syzygy_nerv.catalog import SurfaceAction, SurfaceCatalog, SurfaceEntry, SurfaceLinks
 from syzygy_nerv.foundation_client import FoundationClient, FoundationModuleDescriptor
 from syzygy_nerv.supervisor import ModuleRuntimeStatus, ModuleSupervisor
 
@@ -35,6 +35,7 @@ class DashboardSurface(BaseModel):
     launch_command: list[str] = Field(default_factory=list)
     launch_enabled: bool
     links: SurfaceLinks
+    actions: list[SurfaceAction] = Field(default_factory=list)
     runtime: ModuleRuntimeStatus
     probe: SurfaceProbe
     foundation_status: str | None = None
@@ -81,7 +82,12 @@ class NervDashboardService:
         probes = await asyncio.gather(*(self._probe(entry) for entry in entries))
 
         surfaces = [
-            self._surface(entry, runtime_snapshot[entry.name], probe, registry_by_name.get(entry.name))
+            self._surface(
+                entry,
+                runtime_snapshot[entry.name],
+                probe,
+                registry_by_name.get(entry.name),
+            )
             for entry, probe in zip(entries, probes, strict=True)
         ]
         summary = DashboardSummary(
@@ -126,7 +132,8 @@ class NervDashboardService:
                 response = await client.get(entry.links.health_url)
         except Exception as exc:
             return SurfaceProbe(reachable=False, error=str(exc))
-        payload = response.json() if response.headers.get("content-type", "").startswith("application/json") else {}
+        content_type = response.headers.get("content-type", "")
+        payload = response.json() if content_type.startswith("application/json") else {}
         service_status = payload.get("status") if isinstance(payload, dict) else None
         return SurfaceProbe(
             reachable=response.status_code == 200,
@@ -151,6 +158,7 @@ class NervDashboardService:
             launch_command=entry.launch_command,
             launch_enabled=entry.launch_enabled,
             links=entry.links,
+            actions=entry.actions,
             runtime=runtime,
             probe=probe,
             foundation_status=foundation_module.status if foundation_module is not None else None,
