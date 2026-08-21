@@ -25,7 +25,7 @@ class FakeProcess:
 
 
 class FakeSupervisor(ModuleSupervisor):
-    def _spawn_process(self, entry: SurfaceEntry) -> ManagedProcess:  # type: ignore[override]
+    def _spawn_process(self, entry: SurfaceEntry) -> ManagedProcess:
         return ManagedProcess(
             entry=entry,
             process=FakeProcess(),

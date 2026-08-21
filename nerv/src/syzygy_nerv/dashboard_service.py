@@ -78,7 +78,7 @@ class NervDashboardService:
         foundation_registry = await self._foundation_registry()
         registry_by_name = {module.name: module for module in foundation_registry.modules}
         runtime_snapshot = self.supervisor.snapshot()
-        entries = self.catalog.list()
+        entries = self.catalog.list_entries()
         probes = await asyncio.gather(*(self._probe(entry) for entry in entries))
 
         surfaces = [

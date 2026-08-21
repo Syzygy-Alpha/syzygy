@@ -33,7 +33,7 @@ class FakeDashboardService(NervDashboardService):
         self.catalog = catalog
         self.supervisor = supervisor
 
-    async def dashboard_state(self) -> DashboardState:  # type: ignore[override]
+    async def dashboard_state(self) -> DashboardState:
         entry = self.catalog.get("foundation")
         assert entry is not None
         return DashboardState(
@@ -70,19 +70,19 @@ class FakeSupervisor(ModuleSupervisor):
         self.started: list[str] = []
         self.stopped: list[str] = []
 
-    def start(self, name: str) -> ModuleRuntimeStatus:  # type: ignore[override]
+    def start(self, name: str) -> ModuleRuntimeStatus:
         self.started.append(name)
         entry = self.catalog.get(name)
         assert entry is not None
         return ModuleRuntimeStatus(name=name, running=True, cwd=entry.cwd, pid=1000)
 
-    def stop(self, name: str) -> ModuleRuntimeStatus:  # type: ignore[override]
+    def stop(self, name: str) -> ModuleRuntimeStatus:
         self.stopped.append(name)
         entry = self.catalog.get(name)
         assert entry is not None
         return ModuleRuntimeStatus(name=name, running=False, cwd=entry.cwd)
 
-    def shutdown(self) -> None:  # type: ignore[override]
+    def shutdown(self) -> None:
         return
 
 
@@ -94,7 +94,7 @@ class FakeActionExecutor(SurfaceActionExecutor):
         self,
         surface_name: str,
         action_name: str,
-    ) -> SurfaceActionResult:  # type: ignore[override]
+    ) -> SurfaceActionResult:
         self.calls.append((surface_name, action_name))
         return SurfaceActionResult(
             surface=surface_name,

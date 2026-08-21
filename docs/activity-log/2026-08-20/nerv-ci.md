@@ -37,3 +37,5 @@ control processes and projects on the user's computer.
   always reflects the committed source rather than an ephemeral runner change.
 - Removed the two unused imports and completed the import ordering specified by
   the Ruff output from that run.
+- Resolved the remaining mypy findings by removing the catalog type-name
+  collision, narrowing optional test fixtures, and deleting obsolete ignores.

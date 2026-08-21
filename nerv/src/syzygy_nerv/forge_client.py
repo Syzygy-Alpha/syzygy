@@ -136,8 +136,10 @@ class ForgeClient:
             payload = response.json()
         except ValueError:
             return f"Forge request failed with HTTP {response.status_code}"
-        if isinstance(payload, dict) and isinstance(payload.get("detail"), str):
-            return payload["detail"]
+        if isinstance(payload, dict):
+            detail = payload.get("detail")
+            if isinstance(detail, str):
+                return detail
         return f"Forge request failed with HTTP {response.status_code}"
 
     def _path_segment(self, value: str) -> str:

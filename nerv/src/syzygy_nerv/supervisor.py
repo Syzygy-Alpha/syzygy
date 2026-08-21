@@ -118,10 +118,10 @@ class ModuleSupervisor:
 
     def snapshot(self) -> dict[str, ModuleRuntimeStatus]:
         with self._lock:
-            return {entry.name: self.status(entry.name) for entry in self.catalog.list()}
+            return {entry.name: self.status(entry.name) for entry in self.catalog.list_entries()}
 
     def shutdown(self) -> None:
-        names = [entry.name for entry in self.catalog.list() if entry.launch_enabled]
+        names = [entry.name for entry in self.catalog.list_entries() if entry.launch_enabled]
         for name in names:
             try:
                 self.stop(name)

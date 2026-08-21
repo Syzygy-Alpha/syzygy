@@ -41,7 +41,7 @@ class SurfaceCatalog:
         self.workspace_root = settings.workspace_root.resolve()
         self.entries = {entry.name: entry for entry in self._build_entries()}
 
-    def list(self) -> list[SurfaceEntry]:
+    def list_entries(self) -> list[SurfaceEntry]:
         return list(self.entries.values())
 
     def get(self, name: str) -> SurfaceEntry | None:
