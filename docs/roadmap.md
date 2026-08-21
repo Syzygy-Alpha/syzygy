@@ -16,6 +16,8 @@ implementation.
 - Keep NERV Sprint 001 lightweight until its operational contract stabilizes.
 - Keep NERV quality gates reproducible through its path-scoped GitHub Actions
   workflow.
+- Keep NERV startup local and one-command until a desktop packaging decision is
+  justified.
 - Balance vertical evolution: avoid more than five consecutive feature commits
   in one module without reassessing whether another official module should get
   a minimal functional increment.

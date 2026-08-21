@@ -25,6 +25,23 @@ python -m pip install -e ".[dev]"
 python -m uvicorn syzygy_nerv.main:app --reload --port 8040
 ```
 
+## Local Launcher
+
+On Windows, start NERV and open its dashboard with:
+
+```powershell
+cd nerv
+powershell -ExecutionPolicy Bypass -File .\scripts\start-nerv.ps1
+```
+
+The launcher waits for `GET /health`, opens `http://127.0.0.1:8040/`, and
+reuses an already running healthy NERV process. Use `-NoBrowser` to start it
+without opening a tab, or `-Port 8041` for another local port.
+
+It uses `SYZYGY_NERV_PYTHON_EXECUTABLE` when set, otherwise it prefers the
+repository `.venv\Scripts\python.exe` and then falls back to `python`. Launcher
+logs are written to `nerv/data/runtime-logs/`.
+
 ## Continuous Integration
 
 GitHub Actions runs NERV tests, lint, and type checks on pull requests and on
