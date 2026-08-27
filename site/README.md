@@ -82,6 +82,10 @@ deployment:
 1. open **Settings → Pages**;
 2. under **Build and deployment**, select **GitHub Actions** as the source.
 
+After changing the source, run the **Institutional site** workflow manually or
+push a change under `site/` to create a fresh deployment. The published artifact
+contains `.nojekyll`, making the static-site boundary explicit.
+
 The expected project URL is:
 
 ```text

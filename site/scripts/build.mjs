@@ -6,6 +6,7 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const siteRoot = path.resolve(scriptDirectory, "..");
 const outputRoot = path.resolve(siteRoot, "dist");
 const publicEntries = [
+  ".nojekyll",
   "404.html",
   "favicon.svg",
   "index.html",

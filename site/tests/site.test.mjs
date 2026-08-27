@@ -56,6 +56,10 @@ test("all official module pages are present", async () => {
   );
 });
 
+test("GitHub Pages artifact bypasses Jekyll processing", async () => {
+  await access(path.join(siteRoot, ".nojekyll"));
+});
+
 test("content pages expose semantic and social metadata", () => {
   for (const file of contentFiles) {
     const source = htmlByFile.get(file);
@@ -293,6 +297,7 @@ test("generated browser state is not part of the source tree", async () => {
 
 test("public source stays inside the static performance budget", async () => {
   const publicFiles = [
+    ".nojekyll",
     "404.html",
     "favicon.svg",
     "index.html",
