@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Observatory é o módulo de observabilidade do SYZYGY para saúde, tendências e visibilidade operacional local."
+    />
+    <meta name="theme-color" content="#0f1716" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Observatory — SYZYGY" />
+    <meta
+      property="og:description"
+      content="Observabilidade local para saúde, histórico, tendências e visibilidade operacional."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SYZYGY" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta
+      property="og:url"
+      content="https://syzygy-alpha.github.io/syzygy/modules/observatory.html"
+    />
+    <title>Observatory — SYZYGY</title>
+    <link
+      rel="canonical"
+      href="https://syzygy-alpha.github.io/syzygy/modules/observatory.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../site.css" />
+    <link rel="stylesheet" href="../module-page.css" />
+  </head>
+  <body class="module-page observatory-page">
+    <a class="skip-link" href="#content">Ir para o conteúdo</a>
+    <div class="reading-progress" aria-hidden="true"><span></span></div>
+    <nav class="nav" aria-label="Navegação principal">
+      <a class="wordmark" href="../index.html"
+        ><span class="mark" aria-hidden="true"></span>SYZYGY</a
+      ><button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <span></span><span></span><span></span
+        ><span class="sr-only">Abrir menu</span>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="../index.html#vision">Visão</a
+        ><a href="../index.html#platform">Plataforma</a
+        ><a href="../index.html#modules">Módulos</a
+        ><a href="../index.html#roadmap">Roadmap</a
+        ><a
+          class="nav-console"
+          href="https://github.com/Syzygy-Alpha/syzygy/tree/main/observatory"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Código <span>↗</span></a
+        >
+      </div>
+    </nav>
+    <main id="content">
+      <section class="module-detail-hero">
+        <canvas id="hero-particles" aria-hidden="true"></canvas>
+        <div class="module-hero-content">
+          <div class="breadcrumb">
+            <a href="../index.html">SYZYGY</a><span>/</span
+            ><a href="../index.html#modules">Módulos</a
+            ><span>/</span>Observatory
+          </div>
+          <div class="module-badge"><i></i> FUNCIONAL · v0.1</div>
+          <h1>Observatory<em>Ver o sistema antes de reagir.</em></h1>
+          <p class="module-tagline">
+            A superfície de observabilidade do SYZYGY transforma sinais de saúde
+            em histórico, resumo e tendência para tornar o ecossistema
+            operacionalmente legível.
+          </p>
+          <div class="module-hero-meta">
+            <div><span>FUNÇÃO</span><strong>Observabilidade</strong></div>
+            <div><span>RUNTIME</span><strong>Python · FastAPI</strong></div>
+            <div><span>PERSISTÊNCIA</span><strong>SQLite local</strong></div>
+            <div><span>PORTA LOCAL</span><strong>8020</strong></div>
+          </div>
+          <div
+            class="module-identity"
+            data-identity="observatory"
+            role="button"
+            tabindex="0"
+            aria-label="Observatório interativo de sinais e tendências"
+          >
+            <canvas class="module-identity-canvas" aria-hidden="true"></canvas>
+            <div class="identity-caption">
+              <span>CAMPO 04</span><strong>SINAL / HISTÓRICO VIVO</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="module-overview section">
+        <aside class="module-aside reveal">
+          <span class="module-number">04</span>
+          <h2>Estado com memória.</h2>
+          <p>
+            Observatory não se limita a perguntar se algo está online; ele
+            preserva o contexto necessário para perceber mudança.
+          </p>
+        </aside>
+        <div class="module-story reveal">
+          <p>
+            Sem visibilidade, uma plataforma distribuída é apenas um conjunto de
+            suposições.
+          </p>
+          <p>
+            Observatory armazena observações locais de saúde, reúne o estado
+            mais recente de cada serviço e produz tendências a partir do
+            histórico. A integração com Foundation permite observar módulos
+            registrados manualmente ou por polling opt-in.
+          </p>
+          <p>
+            Essa base precede stacks mais pesadas de métricas, logs e tracing,
+            entregando valor local sem antecipar infraestrutura que o MVP ainda
+            não precisa.
+          </p>
+          <a
+            class="button primary"
+            href="https://github.com/Syzygy-Alpha/syzygy/tree/main/observatory"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Explorar código fonte ↗</a
+          >
+        </div>
+      </section>
+      <section class="capabilities section">
+        <div class="capabilities-heading reveal">
+          <div>
+            <p class="kicker"><span></span> Capacidade atual</p>
+            <h2>Saúde que conta<br />uma história.</h2>
+          </div>
+          <p>
+            Observações pontuais tornam-se uma visão local acumulada sobre
+            disponibilidade e mudança.
+          </p>
+        </div>
+        <div class="capability-grid">
+          <article class="capability-card reveal">
+            <span>01 / INGESTÃO</span>
+            <h3>Observações locais</h3>
+            <p>
+              Registro explícito de status, origem, detalhes e momento para
+              serviços e módulos.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>02 / RESUMO</span>
+            <h3>Estado mais recente</h3>
+            <p>
+              Contagens por status e a última observação conhecida de cada
+              superfície.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>03 / TEMPO</span>
+            <h3>Tendências</h3>
+            <p>
+              Primeiro e último sinal, distribuição de estados e quantidade de
+              mudanças.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>04 / FOUNDATION</span>
+            <h3>Ingestão do registro</h3>
+            <p>
+              Leitura autenticada dos módulos conhecidos e conversão em
+              observações locais.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>05 / AUTOMAÇÃO</span>
+            <h3>Polling opcional</h3>
+            <p>
+              Coleta agendada desabilitada por padrão e controlada por
+              configuração explícita.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>06 / CONTRATOS</span>
+            <h3>API de consulta</h3>
+            <p>
+              Filtros, resumos e tendências acessíveis para NERV e futuros
+              consumidores.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="module-contract section">
+        <div class="contract-copy reveal">
+          <p class="kicker light"><span></span> Sinais acumulados</p>
+          <h2>Do instante<br /><em>à tendência.</em></h2>
+          <p>
+            O contrato separa ingestão, consulta e integração. Cada observação
+            permanece local e pode ser resumida sem depender de uma stack
+            externa.
+          </p>
+        </div>
+        <div class="contract-panel reveal">
+          <div class="contract-panel-header">
+            <span>OBSERVATORY / HTTP</span><span>127.0.0.1:8020</span>
+          </div>
+          <div class="contract-list">
+            <div><strong>POST</strong><span>/health-observations</span></div>
+            <div><strong>GET</strong><span>/health-observations</span></div>
+            <div>
+              <strong>GET</strong><span>/health-observations/summary</span>
+            </div>
+            <div>
+              <strong>GET</strong><span>/health-observations/trends</span>
+            </div>
+            <div>
+              <strong>POST</strong><span>/ingest/foundation/modules</span>
+            </div>
+            <div>
+              <strong>GET</strong
+              ><span>/ingest/foundation/modules/polling</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="ecosystem-flow section">
+        <div class="flow-heading reveal">
+          <p class="kicker"><span></span> Posição no ecossistema</p>
+          <h2>Sinais entram.<br />Contexto emerge.</h2>
+        </div>
+        <div class="flow-map reveal">
+          <div class="flow-node">
+            <strong>FOUNDATION</strong><span>módulos e saúde</span>
+          </div>
+          <span class="flow-link"></span>
+          <div class="flow-node active">
+            <strong>OBSERVATORY</strong
+            ><span>histórico · resumo · tendência</span>
+          </div>
+          <span class="flow-link"></span>
+          <div class="flow-node">
+            <strong>NERV</strong><span>visibilidade operacional</span>
+          </div>
+        </div>
+      </section>
+      <section class="horizon section">
+        <div class="horizon-heading reveal">
+          <p class="kicker"><span></span> Próximos incrementos</p>
+          <h2>Da saúde local<br />à observabilidade plena.</h2>
+        </div>
+        <div class="horizon-grid">
+          <article class="reveal">
+            <span>EVENTOS</span>
+            <h3>Mudanças de status</h3>
+            <p>
+              Publicar transições relevantes como eventos explícitos do
+              ecossistema.
+            </p>
+          </article>
+          <article class="reveal">
+            <span>SINAIS</span>
+            <h3>Métricas e logs</h3>
+            <p>
+              Ampliar além de health quando os contratos e volumes justificarem.
+            </p>
+          </article>
+          <article class="reveal">
+            <span>OPERAÇÃO</span>
+            <h3>Alertas e tracing</h3>
+            <p>
+              Construir diagnóstico distribuído sobre uma base local já
+              compreendida.
+            </p>
+          </article>
+        </div>
+      </section>
+      <nav class="module-pagination" aria-label="Navegação entre módulos">
+        <a href="./mycelium.html"
+          ><span>MÓDULO ANTERIOR</span><strong>← Mycelium</strong></a
+        ><a href="./nerv.html"
+          ><span>PRÓXIMO MÓDULO</span><strong>NERV →</strong></a
+        >
+      </nav>
+    </main>
+    <footer>
+      <a class="wordmark" href="../index.html"
+        ><span class="mark" aria-hidden="true"></span>SYZYGY</a
+      >
+      <div class="footer-links">
+        <a href="../index.html#architecture">Arquitetura</a
+        ><a href="../index.html#modules">Módulos</a
+        ><a href="../index.html#roadmap">Roadmap</a>
+      </div>
+      <p>© <span id="current-year">2026</span> · Observatory</p>
+    </footer>
+    <script src="../site.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Imrryr é a visão de workspace do SYZYGY para aplicações próprias e experimentais."
+    />
+    <meta name="theme-color" content="#0f1716" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Imrryr — SYZYGY" />
+    <meta
+      property="og:description"
+      content="Workspace conceitual para aplicações próprias e experimentais do SYZYGY."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SYZYGY" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta
+      property="og:url"
+      content="https://syzygy-alpha.github.io/syzygy/modules/imrryr.html"
+    />
+    <title>Imrryr — SYZYGY</title>
+    <link
+      rel="canonical"
+      href="https://syzygy-alpha.github.io/syzygy/modules/imrryr.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../site.css" />
+    <link rel="stylesheet" href="../module-page.css" />
+  </head>
+  <body class="module-page imrryr-page">
+    <a class="skip-link" href="#content">Ir para o conteúdo</a>
+    <div class="reading-progress" aria-hidden="true"><span></span></div>
+    <nav class="nav" aria-label="Navegação principal">
+      <a class="wordmark" href="../index.html"
+        ><span class="mark" aria-hidden="true"></span>SYZYGY</a
+      ><button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <span></span><span></span><span></span
+        ><span class="sr-only">Abrir menu</span>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="../index.html#vision">Visão</a
+        ><a href="../index.html#platform">Plataforma</a
+        ><a href="../index.html#modules">Módulos</a
+        ><a href="../index.html#roadmap">Roadmap</a
+        ><a
+          class="nav-console"
+          href="https://github.com/Syzygy-Alpha/syzygy/blob/main/docs/modules.md#imrryr"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Documentação <span>↗</span></a
+        >
+      </div>
+    </nav>
+    <main id="content">
+      <section class="module-detail-hero">
+        <canvas id="hero-particles" aria-hidden="true"></canvas>
+        <div class="module-hero-content">
+          <div class="breadcrumb">
+            <a href="../index.html">SYZYGY</a><span>/</span
+            ><a href="../index.html#modules">Módulos</a><span>/</span>Imrryr
+          </div>
+          <div class="module-badge concept"><i></i> CONCEITO · FUTURO</div>
+          <h1>Imrryr<em>Um espaço para ferramentas próprias.</em></h1>
+          <p class="module-tagline">
+            O workspace previsto para aplicações internas e experimentais que
+            compartilham contexto sem virar um monólito.
+          </p>
+          <div class="module-hero-meta">
+            <div>
+              <span>FUNÇÃO</span><strong>Workspace de aplicações</strong>
+            </div>
+            <div><span>ESTADO</span><strong>Não implementado</strong></div>
+            <div>
+              <span>PRIMEIRO PASSO</span><strong>Um app pequeno</strong>
+            </div>
+            <div><span>PLATAFORMA</span><strong>A decidir</strong></div>
+          </div>
+          <div
+            class="module-identity"
+            data-identity="imrryr"
+            role="button"
+            tabindex="0"
+            aria-label="Workspace conceitual interativo com janelas em camadas"
+          >
+            <canvas class="module-identity-canvas" aria-hidden="true"></canvas>
+            <div class="identity-caption">
+              <span>CAMPO 11</span
+              ><strong>WORKSPACE / APLICAÇÕES PRÓPRIAS</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="module-overview section">
+        <aside class="module-aside reveal">
+          <span class="module-number">11</span>
+          <h2>Ferramentas com uma casa comum.</h2>
+          <p>
+            Imrryr deverá hospedar experiências próprias sem misturar seus
+            domínios internos.
+          </p>
+        </aside>
+        <div class="module-story reveal">
+          <p>
+            Editor, terminal e explorer podem compartilhar uma superfície sem
+            precisar compartilhar a mesma implementação.
+          </p>
+          <p>
+            Imrryr é o espaço previsto para aplicações próprias e experimentais:
+            editor Markdown, gerenciador de PDFs, terminal, explorer, SSH e
+            outras ferramentas. O MVP ainda deve começar com apenas um
+            aplicativo pequeno.
+          </p>
+          <p>
+            O protótipo alterna superfícies possíveis; ele não determina React,
+            Tauri, Flutter ou outro runtime.
+          </p>
+          <a
+            class="button primary"
+            href="https://github.com/Syzygy-Alpha/syzygy/blob/main/docs/modules.md#imrryr"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Ler direção técnica ↗</a
+          >
+        </div>
+      </section>
+      <section class="capabilities section">
+        <div class="capabilities-heading reveal">
+          <div>
+            <p class="kicker"><span></span> Direção do MVP</p>
+            <h2>Uma superfície.<br />Apps desacoplados.</h2>
+          </div>
+          <p>
+            O primeiro app deve validar lifecycle e integração antes de
+            construir uma suíte.
+          </p>
+        </div>
+        <div class="capability-grid">
+          <article class="capability-card reveal">
+            <span>01 / SHELL</span>
+            <h3>Workspace comum</h3>
+            <p>
+              Navegação, abertura e fechamento sem absorver o domínio de cada
+              aplicação.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>02 / APP</span>
+            <h3>Primeira ferramenta</h3>
+            <p>
+              Um editor ou viewer pequeno, local e testável como incremento
+              vertical.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>03 / CONTRATO</span>
+            <h3>Lifecycle explícito</h3>
+            <p>
+              Apps registrados e observáveis por contratos compartilhados com
+              NERV.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="module-contract section">
+        <div class="contract-copy reveal">
+          <p class="kicker light"><span></span> Fronteira atual</p>
+          <h2>
+            Um workspace imaginado.<br /><em>Nenhum framework escolhido.</em>
+          </h2>
+          <p>
+            O modelo demonstra organização visual. Ele não abre arquivos,
+            terminal ou processos reais.
+          </p>
+        </div>
+        <div class="contract-panel reveal">
+          <div class="contract-panel-header">
+            <span>IMRRYR / ESCOPO</span><span>CONCEITUAL</span>
+          </div>
+          <div class="contract-list">
+            <div>
+              <strong>AGORA</strong><span>visão e protótipo visual</span>
+            </div>
+            <div><strong>MVP</strong><span>primeiro app interno</span></div>
+            <div><strong>BASE</strong><span>lifecycle do Foundation</span></div>
+            <div>
+              <strong>LIMITE</strong><span>nenhum arquivo é acessado</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="ecosystem-flow section">
+        <div class="flow-heading reveal">
+          <p class="kicker"><span></span> Posição prevista</p>
+          <h2>Aplicações vivem.<br />Operações permanecem visíveis.</h2>
+        </div>
+        <div class="flow-map reveal">
+          <div class="flow-node">
+            <strong>NERV</strong><span>catálogo e acesso</span>
+          </div>
+          <span class="flow-link"></span>
+          <div class="flow-node active">
+            <strong>IMRRYR</strong><span>workspace e apps</span>
+          </div>
+          <span class="flow-link"></span>
+          <div class="flow-node">
+            <strong>FOUNDATION</strong><span>lifecycle e contratos</span>
+          </div>
+        </div>
+      </section>
+      <section class="horizon section">
+        <div class="horizon-heading reveal">
+          <p class="kicker"><span></span> Evolução possível</p>
+          <h2>De uma ferramenta<br />a um workspace pessoal.</h2>
+        </div>
+        <div class="horizon-grid">
+          <article class="reveal">
+            <span>APP 01</span>
+            <h3>Editor mínimo</h3>
+            <p>Validar abertura, edição e persistência local.</p>
+          </article>
+          <article class="reveal">
+            <span>SHELL</span>
+            <h3>Lifecycle comum</h3>
+            <p>Carregar aplicações sem acoplamento interno.</p>
+          </article>
+          <article class="reveal">
+            <span>PORTFÓLIO</span>
+            <h3>Novas ferramentas</h3>
+            <p>Expandir somente após a primeira coluna estabilizar.</p>
+          </article>
+        </div>
+      </section>
+      <nav class="module-pagination" aria-label="Navegação entre módulos">
+        <a href="./elric.html"
+          ><span>MÓDULO ANTERIOR</span><strong>← Elric</strong></a
+        ><a href="./bastion.html"
+          ><span>PRÓXIMO MÓDULO</span><strong>Bastion →</strong></a
+        >
+      </nav>
+    </main>
+    <footer>
+      <a class="wordmark" href="../index.html"
+        ><span class="mark" aria-hidden="true"></span>SYZYGY</a
+      >
+      <div class="footer-links">
+        <a href="../index.html#architecture">Arquitetura</a
+        ><a href="../index.html#modules">Módulos</a
+        ><a href="../index.html#roadmap">Roadmap</a>
+      </div>
+      <p>© <span id="current-year">2026</span> · Imrryr</p>
+    </footer>
+    <script src="../site.js" defer></script>
+  </body>
+</html>

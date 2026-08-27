@@ -3,6 +3,11 @@
 SYZYGY is a personal distributed platform, built incrementally around local-first
 infrastructure, modular contracts, observability, and digital sovereignty.
 
+Public project presentation:
+
+- [SYZYGY institutional site](https://syzygy-alpha.github.io/syzygy/)
+- [Site source and local development guide](site/README.md)
+
 Project documentation:
 
 - [Vision](docs/vision.md)

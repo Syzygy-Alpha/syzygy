@@ -1,0 +1,932 @@
+/*
+ * SYZYGY / ECLIPSE BLOOM
+ *
+ * A bolder, mixed-light identity: nocturnal fields hold the living systems,
+ * while warm editorial surfaces keep the platform readable and human.
+ * Orbital Cartography remains available with ?theme=orbital.
+ */
+
+:root:not(.theme-clean):not(.theme-orbital) {
+  --ink: #151716;
+  --paper: #efe7d8;
+  --lime: #d7ef62;
+  --green: #14211f;
+  --muted: #706b63;
+  --line: rgba(21, 23, 22, 0.2);
+  --bone: #efe7d8;
+  --bone-deep: #ddd3c3;
+  --eclipse: #0f1716;
+  --copper: #ff735c;
+  --lichen: #d7ef62;
+  --moss: #82d2aa;
+  --sky: #8790e7;
+  --dust: #9b897c;
+  --bold-night: #0f1716;
+  --bold-night-soft: #172523;
+  --bold-coral: #ff735c;
+  --bold-acid: #d7ef62;
+  --bold-blue: #9099ed;
+  --bold-celestial: #b6bcff;
+  --bold-celestial-deep: #7d86db;
+  --bold-mint: #82d2aa;
+  --font-display:
+    "Bahnschrift Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-editorial:
+    "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  --hero-particle-base: rgba(235, 229, 214, 0.27);
+  --hero-particle-active: rgba(182, 188, 255, 0.9);
+  --hero-particle-link-rgb: 255, 115, 92;
+  --module-particle-main: rgba(135, 144, 231, 0.7);
+  --module-particle-rare: #ff735c;
+  --mycelium-particle-main: rgba(130, 210, 170, 0.68);
+  --mycelium-particle-strong: rgba(130, 210, 170, 0.88);
+  --mycelium-particle-rare: #d7ef62;
+  --mycelium-particle-line-rgb: 135, 144, 231;
+  --mycelium-hypha-line: rgba(135, 144, 231, 0.16);
+  --network-link: rgba(135, 144, 231, 0.38);
+  --network-root: #090e0d;
+  --network-label: #efe7d8;
+  --identity-ink: #1f2523;
+  --identity-network-ink: #285a4c;
+  --identity-network-line-alpha: 0.42;
+  --identity-network-special-alpha: 0.82;
+  --identity-network-node-alpha: 0.82;
+  --identity-network-node-radius: 2;
+  --identity-network-special-width: 1.5;
+}
+
+html:not(.theme-clean):not(.theme-orbital) body {
+  background:
+    radial-gradient(
+      circle at 3% 34%,
+      rgba(255, 115, 92, 0.07),
+      transparent 25rem
+    ),
+    radial-gradient(
+      circle at 96% 68%,
+      rgba(135, 144, 231, 0.08),
+      transparent 30rem
+    ),
+    var(--paper);
+}
+
+html:not(.theme-clean):not(.theme-orbital) .reading-progress span {
+  background: linear-gradient(
+    90deg,
+    var(--bold-coral),
+    var(--bold-celestial) 48%,
+    var(--paper)
+  );
+}
+
+/* The alignment mark gains three separate bodies without becoming a tech logo. */
+html:not(.theme-clean):not(.theme-orbital) .mark::before {
+  box-shadow:
+    12px 0 0 -1px var(--bold-celestial),
+    24px 0 0 currentColor;
+}
+html:not(.theme-clean):not(.theme-orbital) .mark::after {
+  border-color: var(--bold-coral);
+}
+
+html:not(.theme-clean):not(.theme-orbital) .nav {
+  color: var(--paper);
+  background: rgba(15, 23, 22, 0.9);
+  border-color: rgba(239, 231, 216, 0.15);
+}
+html:not(.theme-clean):not(.theme-orbital) .nav::after {
+  width: min(29vw, 390px);
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--bold-coral) 0 31%,
+    var(--bold-celestial) 31% 68%,
+    rgba(239, 231, 216, 0.72) 68%
+  );
+}
+html:not(.theme-clean):not(.theme-orbital) .nav.scrolled {
+  color: var(--paper);
+  background: rgba(15, 23, 22, 0.97);
+  box-shadow: 0 16px 50px rgba(7, 11, 10, 0.22);
+}
+html:not(.theme-clean):not(.theme-orbital)
+  .nav-links
+  > a:not(.nav-console)::after {
+  background: var(--bold-celestial);
+}
+html:not(.theme-clean):not(.theme-orbital) .nav-console {
+  color: var(--bold-night);
+  border-color: var(--paper);
+  background: var(--paper);
+}
+html:not(.theme-clean):not(.theme-orbital) .nav-console:hover {
+  color: var(--paper);
+  border-color: var(--bold-coral);
+  background: var(--bold-coral);
+}
+html:not(.theme-clean):not(.theme-orbital) .menu-toggle {
+  border-color: rgba(239, 231, 216, 0.24);
+}
+html:not(.theme-clean):not(.theme-orbital) .menu-toggle > span:not(.sr-only) {
+  background: var(--paper);
+}
+
+/* A nocturnal entry field, framed by warm and spectral color planes. */
+html:not(.theme-clean):not(.theme-orbital) .hero {
+  color: var(--paper);
+  background:
+    linear-gradient(116deg, rgba(255, 115, 92, 0.075), transparent 28%),
+    linear-gradient(296deg, rgba(135, 144, 231, 0.1), transparent 31%),
+    linear-gradient(
+      90deg,
+      transparent calc(50% - 0.5px),
+      rgba(239, 231, 216, 0.08) 50%,
+      transparent calc(50% + 0.5px)
+    ),
+    linear-gradient(
+      0deg,
+      transparent calc(50% - 0.5px),
+      rgba(239, 231, 216, 0.055) 50%,
+      transparent calc(50% + 0.5px)
+    ),
+    var(--bold-night);
+  background-size:
+    100% 100%,
+    100% 100%,
+    240px 100%,
+    100% 240px,
+    100% 100%;
+}
+html:not(.theme-clean):not(.theme-orbital) .hero::after {
+  content: "SYZYGY / LOCAL ORBIT / 00";
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: clamp(18px, 3vw, 48px);
+  color: rgba(239, 231, 216, 0.38);
+  font-size: 0.5rem;
+  letter-spacing: 0.22em;
+  writing-mode: vertical-rl;
+  transform: translateY(-50%);
+}
+html:not(.theme-clean):not(.theme-orbital) .hero-glow {
+  opacity: 1;
+  background:
+    radial-gradient(
+      circle at 25% 50%,
+      rgba(255, 115, 92, 0.38) 0 6.5%,
+      transparent 7%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(182, 188, 255, 0.24) 0 13%,
+      transparent 13.5%
+    ),
+    radial-gradient(
+      circle at 75% 50%,
+      rgba(135, 144, 231, 0.4) 0 7.5%,
+      transparent 8%
+    );
+}
+html:not(.theme-clean):not(.theme-orbital) .hero-glow::before {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--bold-coral),
+    var(--bold-celestial),
+    var(--bold-blue),
+    transparent
+  );
+  opacity: 0.78;
+}
+html:not(.theme-clean):not(.theme-orbital) .hero-glow::after {
+  border-color: rgba(182, 188, 255, 0.23);
+}
+html:not(.theme-clean):not(.theme-orbital) .hero h1,
+html:not(.theme-clean):not(.theme-orbital) .module-detail-hero h1 {
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-stretch: condensed;
+  letter-spacing: -0.055em;
+}
+html:not(.theme-clean):not(.theme-orbital) h1 em,
+html:not(.theme-clean):not(.theme-orbital) h2 em {
+  font-family: var(--font-editorial);
+}
+html:not(.theme-clean):not(.theme-orbital) .hero h1 em {
+  color: var(--bold-celestial);
+}
+html:not(.theme-clean):not(.theme-orbital) .hero-lead {
+  color: rgba(239, 231, 216, 0.68);
+}
+html:not(.theme-clean):not(.theme-orbital) .hero .kicker {
+  color: rgba(239, 231, 216, 0.58);
+}
+html:not(.theme-clean):not(.theme-orbital) .hero .kicker span {
+  background: linear-gradient(90deg, var(--bold-coral), var(--bold-celestial));
+}
+html:not(.theme-clean):not(.theme-orbital) .hero .button.primary {
+  color: var(--bold-night);
+  background: var(--bold-celestial);
+}
+html:not(.theme-clean):not(.theme-orbital) .hero .button.primary:hover {
+  background: var(--bold-coral);
+}
+html:not(.theme-clean):not(.theme-orbital) .hero .button.quiet {
+  color: var(--paper);
+  border-color: rgba(239, 231, 216, 0.32);
+  background: rgba(239, 231, 216, 0.04);
+}
+html:not(.theme-clean):not(.theme-orbital) .hero .button.quiet:hover {
+  border-color: var(--bold-blue);
+  background: rgba(135, 144, 231, 0.13);
+}
+html:not(.theme-clean):not(.theme-orbital) .hero-facts {
+  color: rgba(239, 231, 216, 0.48);
+  border-color: rgba(239, 231, 216, 0.14);
+}
+html:not(.theme-clean):not(.theme-orbital) .hero-facts strong {
+  color: var(--paper);
+}
+html:not(.theme-clean):not(.theme-orbital)
+  .hero-facts
+  span:nth-child(1)::before {
+  background: var(--bold-coral);
+}
+html:not(.theme-clean):not(.theme-orbital)
+  .hero-facts
+  span:nth-child(2)::before {
+  background: var(--bold-celestial);
+}
+html:not(.theme-clean):not(.theme-orbital)
+  .hero-facts
+  span:nth-child(3)::before {
+  background: var(--paper);
+}
+html:not(.theme-clean):not(.theme-orbital) .scroll-cue {
+  background: linear-gradient(
+      rgba(239, 231, 216, 0.25),
+      rgba(239, 231, 216, 0.25)
+    )
+    center/1px 100% no-repeat;
+}
+html:not(.theme-clean):not(.theme-orbital) .scroll-cue span {
+  background: var(--bold-celestial);
+}
+
+/* Warm editorial fields retain clarity, but registration marks become assertive. */
+html:not(.theme-clean):not(.theme-orbital) .manifest::before,
+html:not(.theme-clean):not(.theme-orbital) .modules::before,
+html:not(.theme-clean):not(.theme-orbital) .faq::before {
+  width: 110px;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--bold-coral) 0 34%,
+    var(--bold-celestial) 34% 67%,
+    var(--bold-blue) 67%
+  );
+}
+html:not(.theme-clean):not(.theme-orbital) .manifest {
+  background:
+    linear-gradient(90deg, var(--bold-coral) 0 10px, transparent 10px),
+    var(--paper);
+}
+html:not(.theme-clean):not(.theme-orbital) .manifest-points span,
+html:not(.theme-clean):not(.theme-orbital) .module-stage-label {
+  color: #b84135;
+}
+html:not(.theme-clean):not(.theme-orbital) .principle-grid article {
+  background: radial-gradient(
+    circle 185px at var(--spot-x) var(--spot-y),
+    rgba(135, 144, 231, 0.2),
+    transparent 72%
+  );
+}
+html:not(.theme-clean):not(.theme-orbital)
+  .principle-grid
+  article:nth-child(2) {
+  background: radial-gradient(
+    circle 185px at var(--spot-x) var(--spot-y),
+    rgba(130, 210, 170, 0.22),
+    transparent 72%
+  );
+}
+html:not(.theme-clean):not(.theme-orbital)
+  .principle-grid
+  article:nth-child(3) {
+  background: radial-gradient(
+    circle 185px at var(--spot-x) var(--spot-y),
+    rgba(255, 115, 92, 0.18),
+    transparent 72%
+  );
+}
+html:not(.theme-clean):not(.theme-orbital) .principle-grid article:hover {
+  border-color: var(--bold-blue);
+}
+
+html:not(.theme-clean):not(.theme-orbital) .platform {
+  background: var(--bone-deep);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-lab {
+  border-color: rgba(21, 23, 22, 0.3);
+  border-radius: 0 36px 0 0;
+  background: var(--paper);
+  box-shadow:
+    18px 18px 0 rgba(255, 115, 92, 0.16),
+    36px 36px 0 rgba(135, 144, 231, 0.1);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-stage {
+  background: radial-gradient(
+    circle at 35% 42%,
+    rgba(135, 144, 231, 0.13),
+    transparent 38%
+  );
+}
+html:not(.theme-clean):not(.theme-orbital) .module-stage::before {
+  color: #766c62;
+}
+html:not(.theme-clean):not(.theme-orbital) .module-stage::after {
+  width: 64px;
+  height: 3px;
+  background: var(--bold-coral);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-list {
+  background: var(--bold-night-soft);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-list a {
+  color: var(--paper);
+  border-color: rgba(239, 231, 216, 0.13);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-list a span {
+  color: rgba(239, 231, 216, 0.46);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-list a:hover,
+html:not(.theme-clean):not(.theme-orbital) .module-list a.active,
+html:not(.theme-clean):not(.theme-orbital) .module-list a:focus-visible {
+  color: var(--bold-night);
+  background: var(--bold-celestial);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-list a:hover span,
+html:not(.theme-clean):not(.theme-orbital) .module-list a.active span,
+html:not(.theme-clean):not(.theme-orbital) .module-list a:focus-visible span {
+  color: #4b5126;
+}
+
+/* The mesh is a separate living biome: mint matter, violet links, acid signals. */
+html:not(.theme-clean):not(.theme-orbital) .mycelium {
+  background:
+    radial-gradient(
+      circle at 77% 48%,
+      rgba(135, 144, 231, 0.2),
+      transparent 33%
+    ),
+    linear-gradient(112deg, #111b19 0 57%, #20223a 100%);
+}
+html:not(.theme-clean):not(.theme-orbital) .mycelium::after {
+  background: linear-gradient(
+    90deg,
+    rgba(15, 23, 22, 0.97),
+    rgba(15, 23, 22, 0.36) 61%,
+    transparent
+  );
+}
+html:not(.theme-clean):not(.theme-orbital) .network-status i {
+  background: var(--bold-mint);
+  box-shadow: 0 0 16px var(--bold-mint);
+}
+html:not(.theme-clean):not(.theme-orbital) .network-status strong {
+  color: var(--bold-acid);
+}
+html:not(.theme-clean):not(.theme-orbital) .mycelium-cursor {
+  border-color: rgba(135, 144, 231, 0.75);
+}
+html:not(.theme-clean):not(.theme-orbital) .mycelium-cursor::before,
+html:not(.theme-clean):not(.theme-orbital) .mycelium-cursor::after {
+  background: rgba(215, 239, 98, 0.66);
+}
+html:not(.theme-clean):not(.theme-orbital) .mycelium-cursor span {
+  border-color: rgba(130, 210, 170, 0.32);
+}
+
+html:not(.theme-clean):not(.theme-orbital) .architecture {
+  color: var(--paper);
+  background:
+    radial-gradient(
+      circle at 82% 36%,
+      rgba(135, 144, 231, 0.14),
+      transparent 30%
+    ),
+    #20223a;
+}
+html:not(.theme-clean):not(.theme-orbital) .architecture-copy > p:not(.kicker) {
+  color: rgba(239, 231, 216, 0.63);
+}
+html:not(.theme-clean):not(.theme-orbital) .architecture .kicker {
+  color: rgba(239, 231, 216, 0.54);
+}
+html:not(.theme-clean):not(.theme-orbital) .arch-node {
+  color: var(--paper);
+  border-color: rgba(239, 231, 216, 0.22);
+  border-radius: 0 16px 0 0;
+  background: rgba(15, 23, 22, 0.64);
+}
+html:not(.theme-clean):not(.theme-orbital) .arch-node small {
+  color: rgba(239, 231, 216, 0.5);
+}
+html:not(.theme-clean):not(.theme-orbital) .arch-node.current {
+  border-color: var(--bold-coral);
+  box-shadow: 8px 8px 0 rgba(255, 115, 92, 0.18);
+}
+html:not(.theme-clean):not(.theme-orbital) .arch-node.future {
+  color: rgba(239, 231, 216, 0.55);
+}
+html:not(.theme-clean):not(.theme-orbital) .core-node {
+  color: var(--bold-night);
+  border-color: var(--bold-celestial);
+  background: var(--bold-celestial);
+}
+html:not(.theme-clean):not(.theme-orbital) .core-node small {
+  color: #3c416f;
+}
+html:not(.theme-clean):not(.theme-orbital) .arch-line,
+html:not(.theme-clean):not(.theme-orbital) .arch-branches::before,
+html:not(.theme-clean):not(.theme-orbital) .arch-branches span {
+  background-color: rgba(239, 231, 216, 0.23);
+}
+html:not(.theme-clean):not(.theme-orbital) .arch-branches {
+  border-color: rgba(239, 231, 216, 0.23);
+  background: transparent;
+}
+
+html:not(.theme-clean):not(.theme-orbital) .modules {
+  background: var(--paper);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-card {
+  border-radius: 0 30px 0 0;
+  background:
+    radial-gradient(
+      circle 220px at var(--card-x) var(--card-y),
+      rgba(135, 144, 231, 0.19),
+      transparent 72%
+    ),
+    rgba(255, 255, 255, 0.18);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-card::before {
+  width: 102px;
+  height: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--bold-coral) 0 33%,
+    var(--bold-celestial) 33% 66%,
+    var(--bold-blue) 66%
+  );
+}
+html:not(.theme-clean):not(.theme-orbital) .module-card:nth-child(2n)::before {
+  background: linear-gradient(
+    90deg,
+    var(--bold-blue) 0 50%,
+    var(--bold-mint) 50%
+  );
+}
+html:not(.theme-clean):not(.theme-orbital) .module-card:hover {
+  border-color: var(--bold-blue);
+  background-color: rgba(255, 255, 255, 0.55);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-status.live {
+  color: var(--bold-night);
+  background: var(--bold-celestial);
+}
+html:not(.theme-clean):not(.theme-orbital) .future-grid a:hover {
+  color: var(--bold-night);
+  background: var(--bold-mint);
+}
+html:not(.theme-clean):not(.theme-orbital) .future-grid a:hover span {
+  color: #334c40;
+}
+
+html:not(.theme-clean):not(.theme-orbital) .roadmap {
+  background:
+    linear-gradient(120deg, rgba(255, 115, 92, 0.08), transparent 35%), #20223a;
+}
+html:not(.theme-clean):not(.theme-orbital) .roadmap-columns span {
+  color: var(--bold-celestial);
+}
+html:not(.theme-clean):not(.theme-orbital) .roadmap-columns li::before {
+  color: var(--bold-coral);
+}
+html:not(.theme-clean):not(.theme-orbital) .closing {
+  color: var(--bold-night);
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(239, 231, 216, 0.44) 0 13%,
+      transparent 13.4%
+    ),
+    radial-gradient(
+      circle at 25% 50%,
+      rgba(215, 239, 98, 0.58) 0 7%,
+      transparent 7.4%
+    ),
+    radial-gradient(
+      circle at 75% 50%,
+      rgba(135, 144, 231, 0.34) 0 8%,
+      transparent 8.4%
+    ),
+    var(--bold-coral);
+}
+html:not(.theme-clean):not(.theme-orbital) .closing::before {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--bold-acid),
+    var(--paper),
+    var(--bold-blue),
+    transparent
+  );
+}
+html:not(.theme-clean):not(.theme-orbital) .closing .kicker,
+html:not(.theme-clean):not(.theme-orbital) .closing > p:not(.kicker) {
+  color: rgba(15, 23, 22, 0.7);
+}
+html:not(.theme-clean):not(.theme-orbital) .closing .button.primary {
+  background: var(--bold-night);
+}
+html:not(.theme-clean):not(.theme-orbital) .closing .button.primary:hover {
+  color: var(--bold-night);
+  background: var(--bold-celestial);
+}
+html:not(.theme-clean):not(.theme-orbital) footer {
+  background: var(--bold-night);
+}
+html:not(.theme-clean):not(.theme-orbital) .footer-links a:hover {
+  color: var(--bold-celestial);
+}
+
+/* Each module keeps its own specimen color inside the shared atlas. */
+html:not(.theme-clean):not(.theme-orbital) body.module-page.foundation-page {
+  --module-accent: #9da6f5;
+  --module-soft: rgba(157, 166, 245, 0.23);
+}
+html:not(.theme-clean):not(.theme-orbital) body.module-page.forge-page {
+  --module-accent: #ff735c;
+  --module-soft: rgba(255, 115, 92, 0.2);
+}
+html:not(.theme-clean):not(.theme-orbital) body.module-page.mycelium-page {
+  --module-accent: #82d2aa;
+  --module-soft: rgba(130, 210, 170, 0.21);
+}
+html:not(.theme-clean):not(.theme-orbital) body.module-page.observatory-page {
+  --module-accent: #73ccef;
+  --module-soft: rgba(115, 204, 239, 0.2);
+}
+html:not(.theme-clean):not(.theme-orbital) body.module-page.nerv-page {
+  --module-accent: #ff6659;
+  --module-soft: rgba(255, 102, 89, 0.2);
+}
+html:not(.theme-clean):not(.theme-orbital) body.module-page.tungsten-page {
+  --module-accent: #aebbc4;
+  --module-soft: rgba(174, 187, 196, 0.22);
+}
+html:not(.theme-clean):not(.theme-orbital) body.module-page.coppermind-page {
+  --module-accent: #e89b67;
+  --module-soft: rgba(232, 155, 103, 0.22);
+}
+html:not(.theme-clean):not(.theme-orbital) body.module-page.magi-page {
+  --module-accent: #a99cff;
+  --module-soft: rgba(169, 156, 255, 0.22);
+}
+html:not(.theme-clean):not(.theme-orbital) body.module-page.balance-page {
+  --module-accent: #edc959;
+  --module-soft: rgba(237, 201, 89, 0.22);
+}
+html:not(.theme-clean):not(.theme-orbital) body.module-page.elric-page {
+  --module-accent: #f493b7;
+  --module-soft: rgba(244, 147, 183, 0.21);
+}
+html:not(.theme-clean):not(.theme-orbital) body.module-page.imrryr-page {
+  --module-accent: #6fd9c8;
+  --module-soft: rgba(111, 217, 200, 0.21);
+}
+html:not(.theme-clean):not(.theme-orbital) body.module-page.bastion-page {
+  --module-accent: #f0a251;
+  --module-soft: rgba(240, 162, 81, 0.22);
+}
+
+/* Domain cartographies: one quiet vector watermark for each module story. */
+html:not(.theme-clean):not(.theme-orbital) .module-overview {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+html:not(.theme-clean):not(.theme-orbital) .module-overview::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 7% -4% 3% 31%;
+  pointer-events: none;
+  background-image: var(--module-texture);
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: clamp(480px, 55vw, 780px) auto;
+  opacity: 0.3;
+  mix-blend-mode: multiply;
+  -webkit-mask-image: radial-gradient(
+    ellipse 74% 70% at 72% 50%,
+    #000 18%,
+    rgba(0, 0, 0, 0.72) 57%,
+    transparent 88%
+  );
+  mask-image: radial-gradient(
+    ellipse 74% 70% at 72% 50%,
+    #000 18%,
+    rgba(0, 0, 0, 0.72) 57%,
+    transparent 88%
+  );
+}
+html:not(.theme-clean):not(.theme-orbital) .module-overview > * {
+  position: relative;
+  z-index: 1;
+}
+
+html:not(.theme-clean):not(.theme-orbital) .foundation-page {
+  --module-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 520'%3E%3Cg fill='none' stroke='%239da6f5' stroke-width='1.35'%3E%3Crect x='154' y='54' width='430' height='410' rx='18'/%3E%3Crect x='198' y='94' width='344' height='326' rx='14'/%3E%3Crect x='242' y='134' width='258' height='242' rx='10'/%3E%3Crect x='286' y='174' width='172' height='158' rx='6'/%3E%3Cpath d='M104 440H614M130 466H590M369 28V488' stroke-dasharray='4 11'/%3E%3C/g%3E%3C/svg%3E");
+}
+html:not(.theme-clean):not(.theme-orbital) .forge-page {
+  --module-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 520'%3E%3Cg fill='none' stroke='%23ff735c' stroke-width='1.35' stroke-linecap='round'%3E%3Cpath d='M84 388C154 244 208 455 282 300S420 116 492 248 590 336 654 138'/%3E%3Cpath d='M74 420C160 288 220 476 300 334S430 158 510 278 608 354 674 190'/%3E%3Cpath d='M106 344C174 208 224 402 296 260S414 88 480 206 560 302 630 96'/%3E%3Cpath d='M174 92l318 340M236 54l318 340M112 154l318 340' stroke-dasharray='3 15'/%3E%3C/g%3E%3C/svg%3E");
+}
+html:not(.theme-clean):not(.theme-orbital) .mycelium-page {
+  --module-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 520'%3E%3Cg fill='none' stroke='%2382d2aa' stroke-width='1.25'%3E%3Cpath d='M82 390C166 366 174 280 252 282S344 356 398 280 458 134 536 162 586 270 666 218'/%3E%3Cpath d='M252 282C230 208 278 134 340 92M398 280C466 332 494 404 566 440M398 280C354 380 292 424 210 450M536 162C568 110 626 88 680 112'/%3E%3Cpath d='M174 326C116 274 92 214 118 152M458 214C402 158 402 104 430 58' stroke-dasharray='5 9'/%3E%3C/g%3E%3Cg fill='%2382d2aa'%3E%3Ccircle cx='82' cy='390' r='4'/%3E%3Ccircle cx='174' cy='326' r='3'/%3E%3Ccircle cx='252' cy='282' r='5'/%3E%3Ccircle cx='398' cy='280' r='5'/%3E%3Ccircle cx='536' cy='162' r='4'/%3E%3Ccircle cx='666' cy='218' r='3'/%3E%3Ccircle cx='566' cy='440' r='4'/%3E%3Ccircle cx='210' cy='450' r='3'/%3E%3C/g%3E%3C/svg%3E");
+}
+html:not(.theme-clean):not(.theme-orbital) .observatory-page {
+  --module-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 520'%3E%3Cg fill='none' stroke='%2373ccef' stroke-width='1.2'%3E%3Ccircle cx='454' cy='258' r='190'/%3E%3Ccircle cx='454' cy='258' r='142'/%3E%3Ccircle cx='454' cy='258' r='94'/%3E%3Ccircle cx='454' cy='258' r='46'/%3E%3Cpath d='M216 258H692M454 22V494M454 258L638 112'/%3E%3Cpath d='M454 258L648 346' stroke-dasharray='5 10'/%3E%3C/g%3E%3Cg fill='%2373ccef'%3E%3Ccircle cx='570' cy='160' r='5'/%3E%3Ccircle cx='532' cy='326' r='4'/%3E%3Ccircle cx='350' cy='210' r='3'/%3E%3C/g%3E%3C/svg%3E");
+}
+html:not(.theme-clean):not(.theme-orbital) .nerv-page {
+  --module-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 520'%3E%3Cg fill='none' stroke='%23ff6659' stroke-width='1.35'%3E%3Cpath d='M42 278H142l34-72 52 152 56-238 62 310 58-186 46 76 42-42h186'/%3E%3Cpath d='M42 314H158l24-44 38 88 44-118 48 144 40-94 44 48 52-24h230' opacity='.55'/%3E%3Cpath d='M102 96H650M102 446H650' stroke-dasharray='4 12'/%3E%3C/g%3E%3Cg fill='%23ff6659'%3E%3Ccircle cx='284' cy='120' r='5'/%3E%3Ccircle cx='346' cy='430' r='5'/%3E%3Ccircle cx='450' cy='320' r='4'/%3E%3C/g%3E%3C/svg%3E");
+}
+html:not(.theme-clean):not(.theme-orbital) .tungsten-page {
+  --module-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 520'%3E%3Cg fill='none' stroke='%23aebbc4' stroke-width='1.35'%3E%3Cpath d='M364 38l190 108v218L364 472 174 364V146z'/%3E%3Cpath d='M364 92l144 82v164l-144 82-144-82V174z'/%3E%3Cpath d='M364 150l94 54v108l-94 54-94-54V204z'/%3E%3Cpath d='M174 146l190 220 190-220M174 364l190-220 190 220' stroke-dasharray='4 10'/%3E%3C/g%3E%3C/svg%3E");
+}
+html:not(.theme-clean):not(.theme-orbital) .coppermind-page {
+  --module-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 520'%3E%3Cg fill='none' stroke='%23e89b67' stroke-width='1.25'%3E%3Cpath d='M88 330C110 170 262 78 414 104s250 140 214 266-194 128-306 94S68 470 88 330z'/%3E%3Cpath d='M138 326C158 206 278 124 398 144s202 104 176 202-146 96-238 72-216 20-198-92z'/%3E%3Cpath d='M192 318C210 242 292 170 380 184s146 78 130 140-104 62-174 46-156 10-144-52z'/%3E%3Cpath d='M252 308C266 266 314 214 370 224s88 48 80 84-66 38-108 28-98 2-90-28z'/%3E%3C/g%3E%3C/svg%3E");
+}
+html:not(.theme-clean):not(.theme-orbital) .magi-page {
+  --module-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 520'%3E%3Cg fill='none' stroke='%23a99cff' stroke-width='1.3'%3E%3Cpath d='M360 54L632 432H88z'/%3E%3Cpath d='M360 118L548 394H172z'/%3E%3Ccircle cx='360' cy='54' r='64'/%3E%3Ccircle cx='88' cy='432' r='64'/%3E%3Ccircle cx='632' cy='432' r='64'/%3E%3Ccircle cx='360' cy='310' r='86' stroke-dasharray='5 9'/%3E%3Cpath d='M360 118v278M172 394l376-276M548 394L172 118' opacity='.55'/%3E%3C/g%3E%3C/svg%3E");
+}
+html:not(.theme-clean):not(.theme-orbital) .balance-page {
+  --module-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 520'%3E%3Cg fill='none' stroke='%23edc959' stroke-width='1.35'%3E%3Cpath d='M112 172H608M360 104v308M268 412h184'/%3E%3Cpath d='M184 172v162M536 172v162M104 334h160c0 76-160 76-160 0zM456 334h160c0 76-160 76-160 0z'/%3E%3Ccircle cx='360' cy='172' r='14'/%3E%3Cpath d='M80 452C204 422 270 478 360 446s174-10 280 12' stroke-dasharray='4 11'/%3E%3C/g%3E%3C/svg%3E");
+}
+html:not(.theme-clean):not(.theme-orbital) .elric-page {
+  --module-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 520'%3E%3Cg fill='none' stroke='%23f493b7' stroke-width='1.25' stroke-linecap='round'%3E%3Cpath d='M154 430C114 276 208 92 366 86s260 150 206 308'/%3E%3Cpath d='M202 440C160 310 230 138 366 132s218 126 164 266'/%3E%3Cpath d='M250 448C212 338 262 184 368 178s168 98 120 226'/%3E%3Cpath d='M298 452C268 370 294 230 370 224s116 68 78 184'/%3E%3Cpath d='M344 456C328 400 328 280 374 272s64 42 34 142'/%3E%3C/g%3E%3C/svg%3E");
+}
+html:not(.theme-clean):not(.theme-orbital) .imrryr-page {
+  --module-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 520'%3E%3Cg fill='none' stroke='%236fd9c8' stroke-width='1.25'%3E%3Crect x='86' y='68' width='410' height='286' rx='8'/%3E%3Crect x='150' y='118' width='410' height='286' rx='8'/%3E%3Crect x='214' y='168' width='410' height='286' rx='8'/%3E%3Cpath d='M86 104h410M150 154h410M214 204h410'/%3E%3Cpath d='M106 86h10m12 0h10m12 0h10M170 136h10m12 0h10m12 0h10M234 186h10m12 0h10m12 0h10' stroke-width='4'/%3E%3C/g%3E%3C/svg%3E");
+}
+html:not(.theme-clean):not(.theme-orbital) .bastion-page {
+  --module-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 720 520'%3E%3Cg fill='none' stroke='%23f0a251' stroke-width='1.35'%3E%3Cpath d='M360 42l224 82v144c0 116-88 188-224 228-136-40-224-112-224-228V124z'/%3E%3Cpath d='M360 96l168 62v108c0 84-64 140-168 174-104-34-168-90-168-174V158z'/%3E%3Cpath d='M360 154l112 40v72c0 52-42 92-112 120-70-28-112-68-112-120v-72z' stroke-dasharray='5 9'/%3E%3Cpath d='M360 42v454M136 268h448' opacity='.48'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+html:not(.theme-clean):not(.theme-orbital) .module-detail-hero {
+  background: linear-gradient(
+    90deg,
+    var(--paper) 0 58%,
+    var(--bold-night) 58% 100%
+  );
+}
+html:not(.theme-clean):not(.theme-orbital) .module-hero-content {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-detail-hero::before {
+  opacity: 0.42;
+}
+html:not(.theme-clean):not(.theme-orbital) .module-detail-hero::after {
+  opacity: 0.8;
+  filter: saturate(1.15);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-badge {
+  color: var(--bold-night);
+  border-color: var(--module-accent);
+  border-radius: 0 10px 0 0;
+  background: var(--module-accent);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-badge i {
+  background: var(--bold-night);
+  box-shadow: none;
+}
+html:not(.theme-clean):not(.theme-orbital) .module-detail-hero h1 em {
+  color: #555f59;
+}
+html:not(.theme-clean):not(.theme-orbital) .module-hero-meta {
+  padding: 22px 24px 0;
+  border-color: rgba(21, 23, 22, 0.22);
+  background: var(--paper);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-hero-meta::before {
+  width: 34%;
+  height: 4px;
+}
+html:not(.theme-clean):not(.theme-orbital) .module-identity {
+  width: min(380px, 100%);
+  justify-self: center;
+  border-color: var(--module-accent);
+  background: radial-gradient(
+    circle at 50% 44%,
+    var(--module-soft),
+    rgba(229, 220, 203, 0.94) 49%,
+    rgba(239, 231, 216, 0.82) 72%
+  );
+  box-shadow:
+    12px 12px 0 rgba(144, 153, 237, 0.2),
+    24px 24px 0 rgba(255, 115, 92, 0.11);
+}
+html:not(.theme-clean):not(.theme-orbital) .mycelium-page .module-identity {
+  background:
+    radial-gradient(
+      circle at 42% 38%,
+      rgba(130, 210, 170, 0.34),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 68% 64%,
+      rgba(144, 153, 237, 0.25),
+      transparent 43%
+    ),
+    #e3dac9;
+}
+html:not(.theme-clean):not(.theme-orbital) .mycelium-page .identity-caption,
+html:not(.theme-clean):not(.theme-orbital) .observatory-page .identity-caption,
+html:not(.theme-clean):not(.theme-orbital) .elric-page .identity-caption {
+  left: 40px;
+  right: 40px;
+  bottom: 58px;
+}
+html:not(.theme-clean):not(.theme-orbital) .module-number {
+  color: var(--module-accent);
+  text-shadow: 1px 1px 0 rgba(21, 23, 22, 0.14);
+}
+html:not(.theme-clean):not(.theme-orbital) .capabilities,
+html:not(.theme-clean):not(.theme-orbital) .module-demo {
+  background: var(--bone-deep);
+}
+html:not(.theme-clean):not(.theme-orbital) .capability-card {
+  border-radius: 0 22px 0 0;
+  background:
+    radial-gradient(
+      circle 180px at var(--card-x) var(--card-y),
+      var(--module-soft),
+      transparent 72%
+    ),
+    rgba(239, 231, 216, 0.78);
+}
+html:not(.theme-clean):not(.theme-orbital) .capability-card::before {
+  width: 72px;
+  height: 4px;
+}
+html:not(.theme-clean):not(.theme-orbital) .instrument-shell {
+  border-radius: 0 30px 0 0;
+  background: var(--paper);
+  box-shadow: 16px 16px 0 rgba(135, 144, 231, 0.12);
+}
+html:not(.theme-clean):not(.theme-orbital) .instrument-surface {
+  background: linear-gradient(135deg, var(--bold-night), #20223a);
+}
+html:not(.theme-clean):not(.theme-orbital) .sequence-step span {
+  background: var(--bold-night);
+}
+html:not(.theme-clean):not(.theme-orbital) .module-contract {
+  background:
+    radial-gradient(circle at 82% 44%, var(--module-soft), transparent 28%),
+    var(--bold-night);
+}
+html:not(.theme-clean):not(.theme-orbital) .contract-panel {
+  border-radius: 0 24px 0 0;
+}
+html:not(.theme-clean):not(.theme-orbital) .flow-node {
+  border-radius: 0 16px 0 0;
+}
+html:not(.theme-clean):not(.theme-orbital) .flow-node.active {
+  color: var(--bold-night);
+  border-color: var(--module-accent);
+  background: var(--module-accent);
+}
+html:not(.theme-clean):not(.theme-orbital) .flow-node.active span {
+  color: rgba(15, 23, 22, 0.63);
+}
+html:not(.theme-clean):not(.theme-orbital) .horizon {
+  filter: none;
+}
+html:not(.theme-clean):not(.theme-orbital) .module-pagination {
+  background: #20223a;
+}
+html:not(.theme-clean):not(.theme-orbital) .module-pagination a:hover {
+  color: var(--bold-night);
+  background: var(--module-accent);
+}
+
+@media (max-width: 800px) {
+  html:not(.theme-clean):not(.theme-orbital) .nav-links {
+    color: var(--paper);
+    background: var(--bold-night);
+    border-color: rgba(239, 231, 216, 0.15);
+  }
+  html:not(.theme-clean):not(.theme-orbital) .hero::after {
+    display: none;
+  }
+  html:not(.theme-clean):not(.theme-orbital) .module-lab {
+    box-shadow:
+      9px 9px 0 rgba(255, 115, 92, 0.16),
+      18px 18px 0 rgba(135, 144, 231, 0.1);
+  }
+}
+
+@media (max-width: 1100px) and (min-width: 721px) {
+  html:not(.theme-clean):not(.theme-orbital) .module-detail-hero {
+    background: linear-gradient(
+      90deg,
+      var(--paper) 0 52%,
+      var(--bold-night) 52% 100%
+    );
+  }
+  html:not(.theme-clean):not(.theme-orbital) .module-hero-content {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 330px);
+    column-gap: 40px;
+  }
+  html:not(.theme-clean):not(.theme-orbital) .module-identity {
+    width: min(330px, 100%);
+  }
+}
+
+@media (max-width: 850px) and (min-width: 721px) {
+  html:not(.theme-clean):not(.theme-orbital) .module-detail-hero {
+    background: linear-gradient(
+      90deg,
+      var(--paper) 0 46%,
+      var(--bold-night) 46% 100%
+    );
+  }
+}
+
+@media (max-width: 720px) {
+  html:not(.theme-clean):not(.theme-orbital) .module-detail-hero {
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 50% 58%, var(--module-soft), transparent 31%),
+      var(--paper);
+  }
+  html:not(.theme-clean):not(.theme-orbital) .module-hero-content {
+    grid-template-columns: 1fr;
+    grid-template-areas: "breadcrumb" "badge" "title" "tagline" "artifact" "meta";
+  }
+  html:not(.theme-clean):not(.theme-orbital) .module-identity {
+    width: min(330px, 86vw);
+    justify-self: center;
+  }
+  html:not(.theme-clean):not(.theme-orbital) .module-hero-meta {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  html:not(.theme-clean):not(.theme-orbital) .mycelium-page .identity-caption,
+  html:not(.theme-clean):not(.theme-orbital)
+    .observatory-page
+    .identity-caption,
+  html:not(.theme-clean):not(.theme-orbital) .elric-page .identity-caption {
+    left: 32px;
+    right: 32px;
+    bottom: 46px;
+  }
+  html:not(.theme-clean):not(.theme-orbital) .module-overview::before {
+    inset: 38% -48% -4% 18%;
+    background-position: right bottom;
+    background-size: 620px auto;
+    opacity: 0.2;
+  }
+}
+
+@media (max-width: 520px) {
+  html:not(.theme-clean):not(.theme-orbital) .hero {
+    background-size:
+      100% 100%,
+      100% 100%,
+      130px 100%,
+      100% 130px,
+      100% 100%;
+  }
+  html:not(.theme-clean):not(.theme-orbital) .manifest {
+    background: var(--paper);
+  }
+  html:not(.theme-clean):not(.theme-orbital) .module-lab {
+    border-radius: 0 24px 0 0;
+  }
+  html:not(.theme-clean):not(.theme-orbital) .module-identity {
+    width: min(300px, 86vw);
+    box-shadow: 9px 9px 0 rgba(135, 144, 231, 0.18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not(.theme-clean):not(.theme-orbital) .hero-glow::after {
+    animation: none;
+  }
+}

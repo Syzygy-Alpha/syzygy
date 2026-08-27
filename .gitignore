@@ -11,3 +11,10 @@ __pycache__/
 .tmp/
 .pytest-tmp/
 pytest-cache-files-*/
+
+# Institutional site build and local preview artifacts
+site/dist/
+site/.tmp/
+site/**/.edge-*/
+site/**/.preview-*
+site/**/.runtime-logs/

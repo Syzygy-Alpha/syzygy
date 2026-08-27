@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Mycelium é a malha distribuída do SYZYGY, responsável pela identidade de nós e pela evolução futura de descoberta, sincronização e replicação."
+    />
+    <meta name="theme-color" content="#0f1716" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Mycelium — SYZYGY" />
+    <meta
+      property="og:description"
+      content="Malha distribuída com identidade local de nós e registro explícito de pares conhecidos."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SYZYGY" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta
+      property="og:url"
+      content="https://syzygy-alpha.github.io/syzygy/modules/mycelium.html"
+    />
+    <title>Mycelium — SYZYGY</title>
+    <link
+      rel="canonical"
+      href="https://syzygy-alpha.github.io/syzygy/modules/mycelium.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../site.css" />
+    <link rel="stylesheet" href="../module-page.css" />
+  </head>
+  <body class="module-page mycelium-page">
+    <a class="skip-link" href="#content">Ir para o conteúdo</a>
+    <div class="reading-progress" aria-hidden="true"><span></span></div>
+    <nav class="nav" aria-label="Navegação principal">
+      <a class="wordmark" href="../index.html"
+        ><span class="mark" aria-hidden="true"></span>SYZYGY</a
+      ><button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <span></span><span></span><span></span
+        ><span class="sr-only">Abrir menu</span>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="../index.html#vision">Visão</a
+        ><a href="../index.html#platform">Plataforma</a
+        ><a href="../index.html#modules">Módulos</a
+        ><a href="../index.html#roadmap">Roadmap</a
+        ><a
+          class="nav-console"
+          href="https://github.com/Syzygy-Alpha/syzygy/tree/main/mycelium"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Código <span>↗</span></a
+        >
+      </div>
+    </nav>
+    <main id="content">
+      <section class="module-detail-hero">
+        <canvas id="hero-particles" aria-hidden="true"></canvas>
+        <div class="module-hero-content">
+          <div class="breadcrumb">
+            <a href="../index.html">SYZYGY</a><span>/</span
+            ><a href="../index.html#modules">Módulos</a><span>/</span>Mycelium
+          </div>
+          <div class="module-badge"><i></i> FUNCIONAL · v0.1</div>
+          <h1>Mycelium<em>Uma malha para tudo que pertence a você.</em></h1>
+          <p class="module-tagline">
+            A camada distribuída do SYZYGY estabelece identidades locais e
+            relações entre pares como primeiro passo para um ecossistema
+            contínuo entre dispositivos.
+          </p>
+          <div class="module-hero-meta">
+            <div><span>FUNÇÃO</span><strong>Malha distribuída</strong></div>
+            <div><span>AGENTE</span><strong>Hypha</strong></div>
+            <div><span>PERSISTÊNCIA</span><strong>SQLite local</strong></div>
+            <div><span>PORTA LOCAL</span><strong>8030</strong></div>
+          </div>
+          <div
+            class="module-identity"
+            data-identity="mycelium"
+            role="button"
+            tabindex="0"
+            aria-label="Malha orgânica interativa entre nós locais"
+          >
+            <canvas class="module-identity-canvas" aria-hidden="true"></canvas>
+            <div class="identity-caption">
+              <span>CAMPO 03</span><strong>HYPHA / MALHA LOCAL</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="module-overview section">
+        <aside class="module-aside reveal">
+          <span class="module-number">03</span>
+          <h2>Identidade antes da sincronização.</h2>
+          <p>
+            A rede começa sabendo quem é o nó local e quais pares foram
+            explicitamente reconhecidos.
+          </p>
+        </aside>
+        <div class="module-story reveal">
+          <p>
+            Uma rede soberana não nasce conectando tudo. Nasce estabelecendo
+            identidade, limites e confiança.
+          </p>
+          <p>
+            Mycelium implementa hoje a menor coluna útil de uma malha
+            distribuída: um descritor para o nó Hypha local, um registro
+            persistente de pares conhecidos e contratos de saúde, versão e
+            capacidades.
+          </p>
+          <p>
+            A descoberta automática, a sincronização e a replicação permanecem
+            futuras. Essa contenção permite projetar a rede sem assumir que todo
+            dispositivo local é automaticamente confiável.
+          </p>
+          <a
+            class="button primary"
+            href="https://github.com/Syzygy-Alpha/syzygy/tree/main/mycelium"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Explorar código fonte ↗</a
+          >
+        </div>
+      </section>
+      <section class="capabilities section">
+        <div class="capabilities-heading reveal">
+          <div>
+            <p class="kicker"><span></span> Capacidade atual</p>
+            <h2>A primeira camada<br />da malha.</h2>
+          </div>
+          <p>
+            O MVP torna nós e pares legíveis antes de introduzir protocolos
+            distribuídos de maior complexidade.
+          </p>
+        </div>
+        <div class="capability-grid">
+          <article class="capability-card reveal">
+            <span>01 / IDENTIDADE</span>
+            <h3>Nó Hypha</h3>
+            <p>
+              Identificador, nome, capacidades e estado local reunidos em um
+              descritor estável.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>02 / PARES</span>
+            <h3>Registro persistente</h3>
+            <p>
+              Pares conhecidos armazenados localmente com endereço e capacidades
+              declaradas.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>03 / CONTROLE</span>
+            <h3>Descoberta manual</h3>
+            <p>
+              A entrada explícita de pares evita antecipar uma política
+              automática de confiança.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>04 / CONTRATOS</span>
+            <h3>API legível</h3>
+            <p>
+              Health, versão, capacidades, nó local e peers disponíveis por
+              endpoints simples.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>05 / INTEGRAÇÃO</span>
+            <h3>Registro no Foundation</h3>
+            <p>
+              Participação opcional no catálogo de módulos e no estado
+              compartilhado.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>06 / SOBERANIA</span>
+            <h3>Local por padrão</h3>
+            <p>
+              Identidade e relações permanecem sob armazenamento controlado pelo
+              usuário.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="module-contract section">
+        <div class="contract-copy reveal">
+          <p class="kicker light"><span></span> Nós explícitos</p>
+          <h2>Uma rede começa<br /><em>com identidade.</em></h2>
+          <p>
+            O contrato atual descreve o nó local e seus pares conhecidos.
+            Protocolos de transporte e sincronização podem evoluir por trás
+            dessa fronteira.
+          </p>
+        </div>
+        <div class="contract-panel reveal">
+          <div class="contract-panel-header">
+            <span>MYCELIUM / HTTP</span><span>127.0.0.1:8030</span>
+          </div>
+          <div class="contract-list">
+            <div><strong>GET</strong><span>/health</span></div>
+            <div><strong>GET</strong><span>/version</span></div>
+            <div><strong>GET</strong><span>/capabilities</span></div>
+            <div><strong>GET</strong><span>/node</span></div>
+            <div><strong>GET</strong><span>/peers</span></div>
+            <div><strong>POST</strong><span>/peers</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="ecosystem-flow section">
+        <div class="flow-heading reveal">
+          <p class="kicker"><span></span> Posição no ecossistema</p>
+          <h2>Dispositivos distintos.<br />Uma topologia comum.</h2>
+        </div>
+        <div class="flow-map reveal">
+          <div class="flow-node">
+            <strong>DISPOSITIVOS</strong><span>desktop · notebook · NAS</span>
+          </div>
+          <span class="flow-link"></span>
+          <div class="flow-node active">
+            <strong>MYCELIUM</strong><span>identidade · pares · malha</span>
+          </div>
+          <span class="flow-link"></span>
+          <div class="flow-node">
+            <strong>FOUNDATION</strong><span>registro e lifecycle</span>
+          </div>
+        </div>
+      </section>
+      <section class="horizon section">
+        <div class="horizon-heading reveal">
+          <p class="kicker"><span></span> Próximos incrementos</p>
+          <h2>Da identidade<br />à continuidade.</h2>
+        </div>
+        <div class="horizon-grid">
+          <article class="reveal">
+            <span>PRESENÇA</span>
+            <h3>Status de pares</h3>
+            <p>
+              Atualizar alcance e estado antes de experimentar descoberta
+              automática.
+            </p>
+          </article>
+          <article class="reveal">
+            <span>DESCOBERTA</span>
+            <h3>Nós na rede</h3>
+            <p>
+              Encontrar dispositivos autorizados com contratos e fronteiras de
+              confiança explícitos.
+            </p>
+          </article>
+          <article class="reveal">
+            <span>SINCRONIZAÇÃO</span>
+            <h3>Dados em movimento</h3>
+            <p>
+              Evoluir para replicação, backup e configuração compartilhada de
+              forma incremental.
+            </p>
+          </article>
+        </div>
+      </section>
+      <nav class="module-pagination" aria-label="Navegação entre módulos">
+        <a href="./forge.html"
+          ><span>MÓDULO ANTERIOR</span><strong>← Forge</strong></a
+        ><a href="./observatory.html"
+          ><span>PRÓXIMO MÓDULO</span><strong>Observatory →</strong></a
+        >
+      </nav>
+    </main>
+    <footer>
+      <a class="wordmark" href="../index.html"
+        ><span class="mark" aria-hidden="true"></span>SYZYGY</a
+      >
+      <div class="footer-links">
+        <a href="../index.html#architecture">Arquitetura</a
+        ><a href="../index.html#modules">Módulos</a
+        ><a href="../index.html#roadmap">Roadmap</a>
+      </div>
+      <p>© <span id="current-year">2026</span> · Mycelium</p>
+    </footer>
+    <script src="../site.js" defer></script>
+  </body>
+</html>

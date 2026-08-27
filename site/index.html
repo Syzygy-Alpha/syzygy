@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="SYZYGY é uma plataforma pessoal distribuída, modular e local-first para integrar dispositivos, projetos, conhecimento e operações sob o controle do usuário."
+    />
+    <meta name="theme-color" content="#f2f0e9" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="SYZYGY — Plataforma pessoal digital" />
+    <meta
+      property="og:description"
+      content="Um ecossistema modular para dispositivos, conhecimento, aplicações e automações — local primeiro, sob seu controle."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SYZYGY" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:url" content="https://syzygy-alpha.github.io/syzygy/" />
+    <meta name="twitter:card" content="summary" />
+    <title>SYZYGY — Plataforma pessoal digital</title>
+    <link rel="canonical" href="https://syzygy-alpha.github.io/syzygy/" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./site.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Ir para o conteúdo</a>
+    <div class="reading-progress" aria-hidden="true"><span></span></div>
+    <nav class="nav" aria-label="Navegação principal">
+      <a class="wordmark" href="#top" aria-label="SYZYGY, início"
+        ><span class="mark" aria-hidden="true"></span>SYZYGY</a
+      >
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <span></span><span></span><span></span
+        ><span class="sr-only">Abrir menu</span>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="#vision">Visão</a>
+        <a href="#platform">Plataforma</a>
+        <a href="#modules">Módulos</a>
+        <a href="#roadmap">Roadmap</a>
+        <a
+          class="nav-console"
+          href="https://github.com/Syzygy-Alpha/syzygy"
+          target="_blank"
+          rel="noopener noreferrer"
+          >GitHub <span aria-hidden="true">↗</span></a
+        >
+      </div>
+    </nav>
+
+    <main id="content">
+      <section class="hero" id="top">
+        <canvas id="hero-particles" aria-hidden="true"></canvas>
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="hero-content">
+          <p class="kicker"><span></span> Plataforma pessoal distribuída</p>
+          <h1>Seu mundo digital.<br /><em>Em alinhamento.</em></h1>
+          <p class="hero-lead">
+            Uma base modular para conectar dispositivos, projetos, conhecimento,
+            aplicações e automações — local primeiro, sempre sob o seu controle.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#platform">Conheça a plataforma</a>
+            <a
+              class="button quiet"
+              href="https://github.com/Syzygy-Alpha/syzygy"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Explorar o código <span aria-hidden="true">↗</span></a
+            >
+          </div>
+        </div>
+        <div class="hero-facts" aria-label="Características principais">
+          <span><strong>05</strong> módulos funcionais</span>
+          <span><strong>LOCAL</strong> por princípio</span>
+          <span><strong>MODULAR</strong> por arquitetura</span>
+        </div>
+        <a
+          class="scroll-cue"
+          href="#vision"
+          aria-label="Ir para a próxima seção"
+          ><span></span
+        ></a>
+      </section>
+
+      <section class="manifest section" id="vision">
+        <div class="manifest-heading reveal">
+          <p class="kicker"><span></span> Uma plataforma, não mais uma nuvem</p>
+          <h2>Seu ecossistema deve<br />trabalhar para você.</h2>
+        </div>
+        <div class="manifest-grid">
+          <article class="manifest-lead reveal">
+            <p>
+              Hoje, a vida digital está fragmentada entre dispositivos,
+              assinaturas, formatos e serviços que não conversam. O SYZYGY
+              propõe outra direção: uma infraestrutura pessoal que cresce com
+              você sem entregar o controle a terceiros.
+            </p>
+            <a
+              class="text-link"
+              href="https://github.com/Syzygy-Alpha/syzygy/blob/main/docs/vision.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Ler a visão completa <span>↗</span></a
+            >
+          </article>
+          <div class="manifest-points">
+            <article class="reveal">
+              <span>01</span>
+              <h3>Continuidade</h3>
+              <p>
+                Desktop, notebook, telefone, servidor e NAS como partes de um
+                mesmo ambiente.
+              </p>
+            </article>
+            <article class="reveal">
+              <span>02</span>
+              <h3>Controle</h3>
+              <p>
+                Dados locais, formatos abertos e serviços substituíveis desde a
+                fundação.
+              </p>
+            </article>
+            <article class="reveal">
+              <span>03</span>
+              <h3>Evolução</h3>
+              <p>
+                Capacidades independentes que podem crescer sem reconstruir todo
+                o sistema.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="platform section" id="platform">
+        <div class="section-copy reveal">
+          <p class="kicker"><span></span> Arquitetura modular</p>
+          <h2>Peças independentes.<br />Uma só direção.</h2>
+          <p>
+            Cada módulo resolve um domínio específico e se integra por contratos
+            explícitos. O resultado é um sistema que permanece compreensível,
+            testável e substituível enquanto evolui.
+          </p>
+        </div>
+        <div class="module-lab reveal">
+          <canvas id="module-particles" aria-hidden="true"></canvas>
+          <div class="module-stage" aria-live="polite">
+            <span class="module-stage-label">ECOSSISTEMA MODULAR</span>
+            <strong id="active-module">SYZYGY</strong>
+            <p id="active-module-description">
+              Uma arquitetura comum para capacidades que evoluem de forma
+              independente.
+            </p>
+          </div>
+          <div class="module-list" aria-label="Módulos funcionais do SYZYGY">
+            <a
+              href="./modules/foundation.html"
+              data-symbol="foundation"
+              data-description="Configuração, identidade, autenticação, eventos e ciclo de vida compartilhados."
+              ><span>01</span>FOUNDATION</a
+            >
+            <a
+              href="./modules/forge.html"
+              data-symbol="forge"
+              data-description="Projetos, Git, comandos declarados e automação de engenharia local."
+              ><span>02</span>FORGE</a
+            >
+            <a
+              href="./modules/mycelium.html"
+              data-symbol="mycelium"
+              data-description="Identidade de nós e a base para descoberta, sincronização e replicação."
+              ><span>03</span>MYCELIUM</a
+            >
+            <a
+              href="./modules/observatory.html"
+              data-symbol="observatory"
+              data-description="Saúde, tendências e visibilidade operacional do ecossistema."
+              ><span>04</span>OBSERVATORY</a
+            >
+            <a
+              href="./modules/nerv.html"
+              data-symbol="nerv"
+              data-description="Uma superfície operacional para compreender e conduzir os módulos."
+              ><span>05</span>NERV</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <section class="mycelium section" id="mycelium">
+        <canvas id="mycelium-particles" aria-hidden="true"></canvas>
+        <div class="mycelium-cursor" aria-hidden="true"><span></span></div>
+        <div class="mycelium-copy reveal">
+          <p class="kicker light"><span></span> Mycelium / malha distribuída</p>
+          <h2>Uma rede que<br />cresce com o seu<br /><em>ecossistema.</em></h2>
+          <p>
+            Mycelium representa a camada de conexão entre nós controlados pelo
+            usuário. Sua evolução parte de identidades e pares locais para, no
+            futuro, sustentar descoberta, sincronização, replicação e backup.
+          </p>
+          <div class="network-status">
+            <i></i><span id="field-state">TOPOLOGIA VIVA</span
+            ><strong id="node-count">MYCELIUM</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="value section">
+        <div class="value-heading reveal">
+          <p class="kicker"><span></span> Valor duradouro</p>
+          <h2>Infraestrutura pessoal<br />sem aprisionamento.</h2>
+        </div>
+        <div class="principle-grid">
+          <article class="reveal">
+            <span>01</span>
+            <h3>Local-first</h3>
+            <p>
+              O núcleo funciona perto dos seus dados. A nuvem pode ampliar o
+              sistema, nunca defini-lo.
+            </p>
+          </article>
+          <article class="reveal">
+            <span>02</span>
+            <h3>Componível</h3>
+            <p>
+              Módulos, APIs e eventos permitem substituir partes sem comprometer
+              o todo.
+            </p>
+          </article>
+          <article class="reveal">
+            <span>03</span>
+            <h3>Soberano</h3>
+            <p>
+              Formatos abertos, infraestrutura auditável e decisões técnicas
+              reversíveis.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="architecture section" id="architecture">
+        <div class="architecture-copy reveal">
+          <p class="kicker"><span></span> Contratos antes de acoplamento</p>
+          <h2>Uma base clara<br />para crescer.</h2>
+          <p>
+            Foundation fornece os contratos compartilhados. Os demais módulos
+            preservam suas responsabilidades e comunicam estado por APIs,
+            eventos, mensagens e esquemas explícitos.
+          </p>
+          <a
+            class="text-link"
+            href="https://github.com/Syzygy-Alpha/syzygy/blob/main/docs/architecture.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Explorar a arquitetura <span>↗</span></a
+          >
+        </div>
+        <div
+          class="architecture-map reveal"
+          aria-label="Relação conceitual entre módulos"
+        >
+          <div class="arch-node future">
+            ELRIC <small>contexto pessoal</small>
+          </div>
+          <span class="arch-line"></span>
+          <div class="arch-node current">NERV <small>operação</small></div>
+          <span class="arch-line"></span>
+          <div class="arch-node core-node">
+            FOUNDATION <small>núcleo compartilhado</small>
+          </div>
+          <div class="arch-branches">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="arch-row">
+            <div class="arch-node current">MYCELIUM <small>malha</small></div>
+            <div class="arch-node current">FORGE <small>engenharia</small></div>
+            <div class="arch-node current">
+              OBSERVATORY <small>visibilidade</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="modules section" id="modules">
+        <div class="modules-heading reveal">
+          <div>
+            <p class="kicker"><span></span> Portfólio da plataforma</p>
+            <h2>O que existe hoje.</h2>
+          </div>
+          <p>
+            O SYZYGY cresce por incrementos funcionais. Cinco módulos já possuem
+            uma coluna local testável; os demais permanecem declarados como
+            direção, não como promessa pronta.
+          </p>
+        </div>
+        <div class="module-cards current-modules">
+          <a class="module-card reveal" href="./modules/foundation.html"
+            ><span class="module-status live">FUNCIONAL · v0.1</span>
+            <h3>Foundation</h3>
+            <p>
+              Configuração, autenticação, SQLite, eventos, scheduler e registro
+              de módulos.
+            </p>
+            <strong>Conhecer o módulo <span>→</span></strong></a
+          >
+          <a class="module-card reveal" href="./modules/forge.html"
+            ><span class="module-status live">FUNCIONAL · v0.1</span>
+            <h3>Forge</h3>
+            <p>
+              Projetos, templates, comandos seguros, histórico, outbox de
+              eventos e Git local.
+            </p>
+            <strong>Conhecer o módulo <span>→</span></strong></a
+          >
+          <a class="module-card reveal" href="./modules/mycelium.html"
+            ><span class="module-status live">FUNCIONAL · v0.1</span>
+            <h3>Mycelium</h3>
+            <p>
+              Identidade Hypha, registro local de pares e integração opcional ao
+              Foundation.
+            </p>
+            <strong>Conhecer o módulo <span>→</span></strong></a
+          >
+          <a class="module-card reveal" href="./modules/observatory.html"
+            ><span class="module-status live">FUNCIONAL · v0.1</span>
+            <h3>Observatory</h3>
+            <p>
+              Observações de saúde, resumos, tendências e ingestão de estado do
+              Foundation.
+            </p>
+            <strong>Conhecer o módulo <span>→</span></strong></a
+          >
+          <a class="module-card reveal" href="./modules/nerv.html"
+            ><span class="module-status live">FUNCIONAL · v0.1</span>
+            <h3>NERV</h3>
+            <p>
+              Dashboard local, catálogo, ações rápidas, supervisão e workbench
+              do Forge.
+            </p>
+            <strong>Conhecer o módulo <span>→</span></strong></a
+          >
+        </div>
+        <div class="future-heading reveal">
+          <p class="kicker"><span></span> Horizonte declarado</p>
+          <h3>Próximas capacidades</h3>
+        </div>
+        <div class="future-grid reveal">
+          <a href="./modules/tungsten.html"
+            ><strong>Tungsten</strong><span>confiança e segurança</span></a
+          >
+          <a href="./modules/coppermind.html"
+            ><strong>Coppermind</strong><span>memória permanente</span></a
+          >
+          <a href="./modules/magi.html"
+            ><strong>MAGI</strong><span>inteligência especializada</span></a
+          >
+          <a href="./modules/balance.html"
+            ><strong>Balance</strong><span>governança e decisão</span></a
+          >
+          <a href="./modules/elric.html"
+            ><strong>Elric</strong><span>representação do usuário</span></a
+          >
+          <a href="./modules/imrryr.html"
+            ><strong>Imrryr</strong><span>aplicações próprias</span></a
+          >
+          <a href="./modules/bastion.html"
+            ><strong>Bastion</strong><span>laboratório isolado</span></a
+          >
+        </div>
+      </section>
+
+      <section class="roadmap section" id="roadmap">
+        <div class="roadmap-heading reveal">
+          <p class="kicker light"><span></span> Evolução responsável</p>
+          <h2>Visão longa.<br /><em>Passos concretos.</em></h2>
+          <p>
+            O roadmap separa capacidade presente de direção futura. Cada avanço
+            deve entregar um incremento local, documentado e testável.
+          </p>
+        </div>
+        <div class="roadmap-columns">
+          <article class="reveal">
+            <span>AGORA</span>
+            <h3>Estabilizar a base</h3>
+            <ul>
+              <li>Contratos do Foundation</li>
+              <li>Qualidade dos módulos v0.1</li>
+              <li>Integração pelo registro</li>
+              <li>Operação local reproduzível</li>
+            </ul>
+          </article>
+          <article class="reveal">
+            <span>PRÓXIMO</span>
+            <h3>Conectar o sistema</h3>
+            <ul>
+              <li>Atualização de pares Mycelium</li>
+              <li>Eventos de estado Observatory</li>
+              <li>Retry do outbox Forge</li>
+              <li>Superfícies internas no NERV</li>
+            </ul>
+          </article>
+          <article class="reveal">
+            <span>DEPOIS</span>
+            <h3>Expandir capacidades</h3>
+            <ul>
+              <li>Descoberta e sincronização</li>
+              <li>Confiança com Tungsten</li>
+              <li>Memória com Coppermind</li>
+              <li>Inteligência e governança</li>
+            </ul>
+          </article>
+        </div>
+        <a
+          class="text-link light-link"
+          href="https://github.com/Syzygy-Alpha/syzygy/blob/main/docs/roadmap.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Acompanhar o roadmap técnico <span>↗</span></a
+        >
+      </section>
+
+      <section class="faq section">
+        <div class="faq-heading reveal">
+          <p class="kicker"><span></span> Essencial</p>
+          <h2>Perguntas importantes.</h2>
+        </div>
+        <div class="faq-list reveal">
+          <details>
+            <summary>O SYZYGY já é um produto pronto?</summary>
+            <p>
+              Ainda não. É uma plataforma em construção incremental. Foundation,
+              Forge, Mycelium, Observatory e NERV possuem MVPs locais;
+              capacidades distribuídas avançadas permanecem no roadmap.
+            </p>
+          </details>
+          <details>
+            <summary>O sistema depende de serviços em nuvem?</summary>
+            <p>
+              Não como requisito fundamental. O princípio local-first exige que
+              o núcleo funcione localmente sempre que possível. Serviços
+              externos podem ser extensões substituíveis.
+            </p>
+          </details>
+          <details>
+            <summary>Como os módulos se comunicam?</summary>
+            <p>
+              Por contratos explícitos: APIs, eventos, mensagens, esquemas e
+              protocolos. O acesso direto às implementações internas é evitado
+              para preservar baixo acoplamento.
+            </p>
+          </details>
+          <details>
+            <summary>Qual é a stack atual?</summary>
+            <p>
+              Os módulos funcionais usam principalmente Python, FastAPI e
+              SQLite. Foundation também oferece execução com Docker e um
+              adaptador NATS opcional. O site institucional é estático e não
+              depende dessas tecnologias para funcionar.
+            </p>
+          </details>
+          <details>
+            <summary>Como acompanhar ou contribuir?</summary>
+            <p>
+              O código, os ADRs, o roadmap e os registros de atividade vivem no
+              GitHub. Mudanças seguem Conventional Commits e incrementos
+              significativos são documentados.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section class="closing section reveal">
+        <p class="kicker"><span></span> Uma plataforma para permanecer</p>
+        <h2>Construa localmente.<br /><em>Evolua sem limites.</em></h2>
+        <p>
+          Conheça o código, as decisões arquiteturais e o caminho de evolução do
+          SYZYGY.
+        </p>
+        <div class="hero-actions">
+          <a
+            class="button primary"
+            href="https://github.com/Syzygy-Alpha/syzygy"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Acessar o GitHub</a
+          ><a
+            class="button quiet"
+            href="https://github.com/Syzygy-Alpha/syzygy/blob/main/CONTRIBUTING.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Como contribuir</a
+          >
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <a class="wordmark" href="#top"
+        ><span class="mark" aria-hidden="true"></span>SYZYGY</a
+      >
+      <div class="footer-links">
+        <a
+          href="https://github.com/Syzygy-Alpha/syzygy/blob/main/docs/vision.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Visão</a
+        ><a
+          href="https://github.com/Syzygy-Alpha/syzygy/blob/main/docs/architecture.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Arquitetura</a
+        ><a
+          href="https://github.com/Syzygy-Alpha/syzygy/blob/main/docs/roadmap.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Roadmap</a
+        ><a
+          href="https://github.com/Syzygy-Alpha/syzygy"
+          target="_blank"
+          rel="noopener noreferrer"
+          >GitHub</a
+        >
+      </div>
+      <p>
+        © <span id="current-year">2026</span> · Local-first · Modular ·
+        Evolutivo
+      </p>
+    </footer>
+    <script src="./site.js" defer></script>
+  </body>
+</html>

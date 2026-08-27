@@ -1,0 +1,15 @@
+{
+  "name": "@syzygy/institutional-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Dependency-free institutional site for the SYZYGY platform.",
+  "type": "module",
+  "scripts": {
+    "build": "node ./scripts/build.mjs",
+    "check": "node --check ./site.js && node --check ./scripts/build.mjs && node --check ./scripts/serve.mjs && node --test ./tests/site.test.mjs",
+    "preview": "node ./scripts/build.mjs && node ./scripts/serve.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

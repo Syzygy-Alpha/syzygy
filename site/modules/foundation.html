@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Foundation é o núcleo técnico compartilhado do SYZYGY: configuração, identidade, autenticação, eventos, persistência e ciclo de vida."
+    />
+    <meta name="theme-color" content="#0f1716" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Foundation — SYZYGY" />
+    <meta
+      property="og:description"
+      content="Núcleo técnico compartilhado para configuração, identidade, eventos, persistência e lifecycle."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SYZYGY" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta
+      property="og:url"
+      content="https://syzygy-alpha.github.io/syzygy/modules/foundation.html"
+    />
+    <title>Foundation — SYZYGY</title>
+    <link
+      rel="canonical"
+      href="https://syzygy-alpha.github.io/syzygy/modules/foundation.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../site.css" />
+    <link rel="stylesheet" href="../module-page.css" />
+  </head>
+  <body class="module-page foundation-page">
+    <a class="skip-link" href="#content">Ir para o conteúdo</a>
+    <div class="reading-progress" aria-hidden="true"><span></span></div>
+    <nav class="nav" aria-label="Navegação principal">
+      <a class="wordmark" href="../index.html"
+        ><span class="mark" aria-hidden="true"></span>SYZYGY</a
+      ><button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <span></span><span></span><span></span
+        ><span class="sr-only">Abrir menu</span>
+      </button>
+      <div class="nav-links" id="nav-links">
+        <a href="../index.html#vision">Visão</a
+        ><a href="../index.html#platform">Plataforma</a
+        ><a href="../index.html#modules">Módulos</a
+        ><a href="../index.html#roadmap">Roadmap</a
+        ><a
+          class="nav-console"
+          href="https://github.com/Syzygy-Alpha/syzygy/tree/main/foundation"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Código <span>↗</span></a
+        >
+      </div>
+    </nav>
+    <main id="content">
+      <section class="module-detail-hero">
+        <canvas id="hero-particles" aria-hidden="true"></canvas>
+        <div class="module-hero-content">
+          <div class="breadcrumb">
+            <a href="../index.html">SYZYGY</a><span>/</span
+            ><a href="../index.html#modules">Módulos</a><span>/</span>Foundation
+          </div>
+          <div class="module-badge"><i></i> FUNCIONAL · v0.1</div>
+          <h1>Foundation<em>A base que mantém tudo coerente.</em></h1>
+          <p class="module-tagline">
+            O núcleo técnico compartilhado do SYZYGY concentra contratos
+            fundamentais sem absorver as responsabilidades dos módulos que
+            crescem sobre ele.
+          </p>
+          <div class="module-hero-meta">
+            <div><span>FUNÇÃO</span><strong>Núcleo compartilhado</strong></div>
+            <div><span>RUNTIME</span><strong>Python · FastAPI</strong></div>
+            <div><span>PERSISTÊNCIA</span><strong>SQLite</strong></div>
+            <div><span>PORTA LOCAL</span><strong>8000</strong></div>
+          </div>
+          <div
+            class="module-identity"
+            data-identity="foundation"
+            role="button"
+            tabindex="0"
+            aria-label="Núcleo interativo de contratos em camadas"
+          >
+            <canvas class="module-identity-canvas" aria-hidden="true"></canvas>
+            <div class="identity-caption">
+              <span>CAMPO 01</span><strong>NÚCLEO / CONTRATOS ESTÁVEIS</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="module-overview section">
+        <aside class="module-aside reveal">
+          <span class="module-number">01</span>
+          <h2>O ponto de estabilidade.</h2>
+          <p>
+            Foundation oferece os contratos comuns para que o restante da
+            plataforma não precise reinventar configuração, identidade ou
+            lifecycle.
+          </p>
+        </aside>
+        <div class="module-story reveal">
+          <p>
+            Uma plataforma modular só permanece modular quando sua fundação é
+            pequena, explícita e confiável.
+          </p>
+          <p>
+            Foundation reúne configuração tipada, autenticação básica,
+            persistência local, eventos, agendamento e registro de módulos. Ele
+            conhece os contratos do ecossistema, mas não invade as
+            implementações internas de Forge, Mycelium, Observatory ou NERV.
+          </p>
+          <p>
+            Essa separação reduz dependências circulares e permite que cada
+            capacidade evolua no próprio ritmo.
+          </p>
+          <a
+            class="button primary"
+            href="https://github.com/Syzygy-Alpha/syzygy/tree/main/foundation"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Explorar código fonte ↗</a
+          >
+        </div>
+      </section>
+      <section class="capabilities section">
+        <div class="capabilities-heading reveal">
+          <div>
+            <p class="kicker"><span></span> Capacidade atual</p>
+            <h2>Infraestrutura<br />essencial.</h2>
+          </div>
+          <p>
+            O MVP já oferece uma coluna funcional local para identidade, estado,
+            persistência e integração entre módulos.
+          </p>
+        </div>
+        <div class="capability-grid">
+          <article class="capability-card reveal">
+            <span>01 / CONFIGURAÇÃO</span>
+            <h3>Configuração tipada</h3>
+            <p>
+              Configurações explícitas por ambiente, com validação antes do
+              serviço entrar em operação.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>02 / IDENTIDADE</span>
+            <h3>Autenticação JWT</h3>
+            <p>
+              Credenciais básicas, emissão de token e identidade autenticada
+              para contratos internos.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>03 / PERSISTÊNCIA</span>
+            <h3>Estado local</h3>
+            <p>
+              Abstração de persistência SQLite adequada ao estágio local-first
+              do projeto.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>04 / EVENTOS</span>
+            <h3>EventBus</h3>
+            <p>
+              Interface de eventos com adaptador NATS para comunicação
+              desacoplada quando habilitada.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>05 / TEMPO</span>
+            <h3>Scheduler</h3>
+            <p>
+              Contrato de agendamento para rotinas internas sem espalhar
+              mecanismos de tempo pelo ecossistema.
+            </p>
+          </article>
+          <article class="capability-card reveal">
+            <span>06 / LIFECYCLE</span>
+            <h3>Registro de módulos</h3>
+            <p>
+              Descritores, capacidades, status e saúde reunidos em um catálogo
+              autenticado.
+            </p>
+          </article>
+        </div>
+      </section>
+      <section class="module-contract section">
+        <div class="contract-copy reveal">
+          <p class="kicker light"><span></span> Contrato observável</p>
+          <h2>Uma API pequena.<br /><em>Uma base legível.</em></h2>
+          <p>
+            Health, versão, autenticação e lifecycle ficam disponíveis por
+            contratos HTTP diretos. Outros módulos integram-se sem acessar
+            detalhes internos.
+          </p>
+        </div>
+        <div class="contract-panel reveal">
+          <div class="contract-panel-header">
+            <span>FOUNDATION / HTTP</span><span>127.0.0.1:8000</span>
+          </div>
+          <div class="contract-list">
+            <div><strong>GET</strong><span>/health</span></div>
+            <div><strong>GET</strong><span>/version</span></div>
+            <div><strong>POST</strong><span>/auth/token</span></div>
+            <div><strong>GET</strong><span>/auth/me</span></div>
+            <div><strong>POST</strong><span>/modules/register</span></div>
+            <div><strong>PATCH</strong><span>/modules/{name}/health</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="ecosystem-flow section">
+        <div class="flow-heading reveal">
+          <p class="kicker"><span></span> Posição no ecossistema</p>
+          <h2>O contrato no centro.<br />Os domínios nas bordas.</h2>
+        </div>
+        <div class="flow-map reveal">
+          <div class="flow-node">
+            <strong>MÓDULOS</strong><span>descritores e eventos</span>
+          </div>
+          <span class="flow-link"></span>
+          <div class="flow-node active">
+            <strong>FOUNDATION</strong
+            ><span>identidade · lifecycle · contratos</span>
+          </div>
+          <span class="flow-link"></span>
+          <div class="flow-node">
+            <strong>NERV</strong><span>estado operacional</span>
+          </div>
+        </div>
+      </section>
+      <section class="horizon section">
+        <div class="horizon-heading reveal">
+          <p class="kicker"><span></span> Próximos incrementos</p>
+          <h2>Estabilidade antes<br />de expansão.</h2>
+        </div>
+        <div class="horizon-grid">
+          <article class="reveal">
+            <span>CONTRATOS</span>
+            <h3>Eventos de configuração</h3>
+            <p>
+              Comunicar mudanças de estado por eventos explícitos e versionados.
+            </p>
+          </article>
+          <article class="reveal">
+            <span>QUALIDADE</span>
+            <h3>Hardening do MVP</h3>
+            <p>
+              Preservar compatibilidade enquanto os primeiros consumidores
+              amadurecem.
+            </p>
+          </article>
+          <article class="reveal">
+            <span>INTEGRAÇÃO</span>
+            <h3>Base para Tungsten</h3>
+            <p>
+              Preparar limites claros para confiança e segurança sem antecipar o
+              vault.
+            </p>
+          </article>
+        </div>
+      </section>
+      <nav class="module-pagination" aria-label="Navegação entre módulos">
+        <a href="../index.html#modules"
+          ><span>VISÃO GERAL</span><strong>Todos os módulos</strong></a
+        ><a href="./forge.html"
+          ><span>PRÓXIMO MÓDULO</span><strong>Forge →</strong></a
+        >
+      </nav>
+    </main>
+    <footer>
+      <a class="wordmark" href="../index.html"
+        ><span class="mark" aria-hidden="true"></span>SYZYGY</a
+      >
+      <div class="footer-links">
+        <a href="../index.html#architecture">Arquitetura</a
+        ><a href="../index.html#modules">Módulos</a
+        ><a href="../index.html#roadmap">Roadmap</a>
+      </div>
+      <p>© <span id="current-year">2026</span> · Foundation</p>
+    </footer>
+    <script src="../site.js" defer></script>
+  </body>
+</html>

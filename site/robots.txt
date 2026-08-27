@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://syzygy-alpha.github.io/syzygy/sitemap.xml
