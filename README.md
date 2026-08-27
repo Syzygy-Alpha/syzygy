@@ -43,3 +43,4 @@ The operational center phase now includes NERV:
 Project activity is tracked in:
 
 - [Activity Log](docs/activity-log/README.md)
+
