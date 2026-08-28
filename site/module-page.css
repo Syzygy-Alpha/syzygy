@@ -869,6 +869,9 @@
   background: rgba(6, 24, 17, 0.76);
   backdrop-filter: blur(10px);
 }
+html.performance-lite .scope-metrics {
+  backdrop-filter: none;
+}
 .scope-metrics div {
   display: grid;
   gap: 5px;

@@ -3,25 +3,42 @@ if (requestedTheme === "clean")
   document.documentElement.classList.add("theme-clean");
 if (requestedTheme === "orbital")
   document.documentElement.classList.add("theme-orbital");
+const requestedQuality = new URLSearchParams(location.search).get("quality");
+const deviceMemory = Number(navigator.deviceMemory) || Infinity;
+const hardwareConcurrency = Number(navigator.hardwareConcurrency) || Infinity;
+const constrainedHardware = deviceMemory <= 4 || hardwareConcurrency <= 4;
+const performanceLite =
+  requestedQuality === "low" ||
+  (requestedQuality !== "high" && constrainedHardware);
+if (performanceLite)
+  document.documentElement.classList.add("performance-lite");
 const reducedMotion = window.matchMedia(
   "(prefers-reduced-motion: reduce)",
 ).matches;
+const animationFrameInterval = performanceLite ? 1000 / 30 : 0;
 
 function animateWhenVisible(element, draw) {
   let frameId = null;
   let visible = false;
+  let lastDraw = 0;
 
   function stop() {
     if (frameId !== null) cancelAnimationFrame(frameId);
     frameId = null;
   }
 
-  function frame() {
+  function frame(timestamp) {
     if (!visible || document.hidden || reducedMotion) {
       stop();
       return;
     }
-    draw();
+    if (
+      animationFrameInterval === 0 ||
+      timestamp - lastDraw >= animationFrameInterval - 1
+    ) {
+      draw(timestamp);
+      lastDraw = timestamp;
+    }
     frameId = requestAnimationFrame(frame);
   }
 
@@ -59,7 +76,10 @@ function themeColor(name, fallback, element = document.documentElement) {
 
 function sizeCanvas(canvas) {
   const rect = canvas.getBoundingClientRect();
-  const scale = Math.min(window.devicePixelRatio || 1, 1.5);
+  const scale = Math.min(
+    window.devicePixelRatio || 1,
+    performanceLite ? 1 : 1.5,
+  );
   canvas.width = Math.round(rect.width * scale);
   canvas.height = Math.round(rect.height * scale);
   const context = canvas.getContext("2d");
@@ -83,7 +103,10 @@ function createHeroField() {
 
   function reset() {
     field = sizeCanvas(canvas);
-    const count = Math.min(140, Math.floor(field.width / 10));
+    const idealCount = Math.min(140, Math.floor(field.width / 10));
+    const count = performanceLite
+      ? Math.max(36, Math.floor(idealCount * 0.5))
+      : idealCount;
     dots = Array.from({ length: count }, () => {
       const x = Math.random() * field.width,
         y = Math.random() * field.height;
@@ -428,7 +451,9 @@ function createModuleField() {
   }
   function reset() {
     field = sizeCanvas(canvas);
-    const count = Math.min(360, Math.max(260, Math.floor(field.width / 3)));
+    const count = performanceLite
+      ? Math.min(170, Math.max(120, Math.floor(field.width / 6)))
+      : Math.min(360, Math.max(260, Math.floor(field.width / 3)));
     particles = Array.from({ length: count }, () => {
       const point = newScatterTarget();
       return {
@@ -602,7 +627,9 @@ function createMyceliumField() {
   }
   function reset() {
     field = sizeCanvas(canvas);
-    const count = Math.min(170, Math.max(110, Math.floor(field.width / 7)));
+    const count = performanceLite
+      ? Math.min(85, Math.max(52, Math.floor(field.width / 14)))
+      : Math.min(170, Math.max(110, Math.floor(field.width / 7)));
     particles = Array.from({ length: count }, () => ({
       x: Math.random() * field.width,
       y: Math.random() * field.height,
@@ -705,12 +732,16 @@ function createMyceliumField() {
       context.fillStyle = index % 17 === 0 ? particleRare : particleMain;
       context.fill();
     });
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
+    const linkStride = performanceLite ? 2 : 1;
+    for (let i = 0; i < particles.length; i += linkStride) {
+      for (let j = i + linkStride; j < particles.length; j += linkStride) {
         const a = particles[i],
           b = particles[j],
-          gap = distance(a, b);
-        if (gap < 68) {
+          dx = a.x - b.x,
+          dy = a.y - b.y,
+          gapSquared = dx * dx + dy * dy;
+        if (gapSquared < 68 * 68) {
+          const gap = Math.sqrt(gapSquared);
           context.beginPath();
           context.moveTo(a.x, a.y);
           context.lineTo(b.x, b.y);

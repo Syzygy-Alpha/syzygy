@@ -70,6 +70,17 @@ available without changing stored state:
 
 All themes use local system fonts and respect `prefers-reduced-motion`.
 
+## Adaptive rendering
+
+Canvas animations automatically use a lighter profile on devices reporting up
+to 4 GB of memory or up to four logical processors. The lighter profile caps
+animation at 30 FPS, renders canvases at 1x pixel density, reduces particle
+counts, and samples fewer Mycelium links. Off-screen and background-tab
+animations remain paused.
+
+Use `?quality=low` to force the lighter profile or `?quality=high` to override
+the hardware heuristic when comparing rendering quality.
+
 ## GitHub Pages
 
 The path-scoped workflow in `.github/workflows/site-pages.yml` performs the

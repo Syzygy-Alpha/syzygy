@@ -454,6 +454,16 @@ h2 {
     background 0.2s,
     color 0.2s;
 }
+
+html.performance-lite .nav,
+html.performance-lite .module-list {
+  backdrop-filter: none;
+}
+
+html.performance-lite .hero-glow {
+  filter: none;
+  opacity: 0.72;
+}
 .module-list a:last-child {
   border-bottom: 0;
 }
