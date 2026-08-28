@@ -83,11 +83,45 @@ Off-screen and background-tab animations remain paused.
 Use `?quality=low` to force the lighter profile or `?quality=high` to override
 the hardware heuristic when comparing rendering quality.
 
+## Ecosystem terrain
+
+The home page includes a dependency-free topographic view of the twelve
+official modules. Module labels remain native HTML buttons for keyboard,
+screen-reader, and touch access; `terrain.js` renders only the contour field on
+Canvas 2D. The map redraws on layer changes, module selection, and debounced
+viewport resize. It has no continuous animation loop.
+
+The three public layers have deliberately narrow meanings:
+
+- **Architecture** uses documented conceptual centrality to shape the terrain.
+  Proximity is explanatory and does not declare a direct runtime dependency.
+- **State** gives functional v0.1 modules a high field weight and declared
+  future modules a low weight. It does not infer health or readiness.
+- **Commits** counts commits that touched each module's top-level directory in
+  the 90 days preceding the artifact revision. Counts use logarithmic
+  normalization so one active directory does not flatten every other contour.
+
+The build writes `ecosystem-snapshot.json` from local Git history. It publishes
+only the revision hash, revision date, time-window size, and aggregate count per
+official module; author identities, e-mail addresses, commit messages, file
+paths, and working-tree state are not included. If Git history is unavailable,
+the artifact explicitly marks the activity layer unavailable instead of
+inventing data. The Pages checkout uses full history and rebuilds after every
+push to `main`, keeping the deployed snapshot aligned with the repository.
+
+Contour lines use a deterministic scalar field sampled at 12 CSS pixels, or 18
+pixels in the lighter hardware profile, and eight Marching Squares thresholds.
+This is an institutional visualization, not a new official module. A future
+live version may become a NERV view backed by explicit module and event
+contracts; no operational polling, WebSocket connection, or NERV dependency is
+introduced here.
+
 ## GitHub Pages
 
-The path-scoped workflow in `.github/workflows/site-pages.yml` performs the
-same checks and build on pull requests. Pushes to `main` package `site/dist/`
-and deploy it through the protected `github-pages` environment.
+The workflow in `.github/workflows/site-pages.yml` performs the same checks and
+build for site-related pull requests. Every push to `main` refreshes the Git
+snapshot, packages `site/dist/`, and deploys it through the protected
+`github-pages` environment.
 
 One repository setting must be enabled by an administrator before the first
 deployment:

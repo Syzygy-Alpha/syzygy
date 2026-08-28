@@ -272,6 +272,59 @@ test("home page and sitemap enumerate the complete module portfolio", async () =
   assert.deepEqual(locations, expected);
 });
 
+test("ecosystem terrain preserves modules, layers, and static data boundary", async () => {
+  const home = htmlByFile.get(path.join(siteRoot, "index.html"));
+  const layerControls = [
+    ...home.matchAll(
+      /<button\b(?=[^>]*data-terrain-layer="([^"]+)")[^>]*>/gs,
+    ),
+  ];
+  const layers = layerControls.map((match) => match[1]);
+  assert.deepEqual(layers, ["architecture", "state", "activity"]);
+  assert.equal(
+    layerControls.filter((match) => match[0].includes('aria-pressed="true"'))
+      .length,
+    1,
+    "terrain: expected one initially selected layer",
+  );
+
+  const moduleControls = [
+    ...home.matchAll(
+      /<button\b(?=[^>]*data-terrain-module="([^"]+)")[^>]*>/gs,
+    ),
+  ];
+  const terrainModules = moduleControls.map((match) => match[1]);
+  assert.deepEqual(
+    terrainModules.sort(),
+    [...officialModules].sort(),
+    "terrain: module controls must match the official portfolio",
+  );
+  assert.equal(
+    moduleControls.filter((match) => match[0].includes('aria-pressed="true"'))
+      .length,
+    1,
+    "terrain: expected one initially selected module",
+  );
+  assert.match(
+    home,
+    /dados operacionais em tempo real continuam pertencendo ao NERV/,
+    "terrain: missing institutional/NERV boundary",
+  );
+
+  const terrainScript = await readFile(path.join(siteRoot, "terrain.js"), "utf8");
+  assert.match(terrainScript, /function createTerrainMap\(\)/);
+  assert.match(terrainScript, /new Float32Array\(/);
+  assert.match(terrainScript, /fetch\("\.\/ecosystem-snapshot\.json"/);
+  assert.match(terrainScript, /button\.setAttribute\("aria-pressed"/);
+
+  const buildScript = await readFile(
+    path.join(siteRoot, "scripts", "build.mjs"),
+    "utf8",
+  );
+  assert.match(buildScript, /"terrain\.js"/);
+  assert.match(buildScript, /"ecosystem-snapshot\.json"/);
+});
+
 test("generated browser state is not part of the source tree", async () => {
   async function inspect(directory, relative = "") {
     for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -305,6 +358,7 @@ test("public source stays inside the static performance budget", async () => {
     "robots.txt",
     "site.css",
     "site.js",
+    "terrain.js",
     "sitemap.xml",
     "syzygy-theme-bold.css",
     "syzygy-theme.css",

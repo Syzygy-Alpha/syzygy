@@ -43,6 +43,7 @@
       <div class="nav-links" id="nav-links">
         <a href="#vision">Visão</a>
         <a href="#platform">Plataforma</a>
+        <a href="#terrain">Mapa</a>
         <a href="#modules">Módulos</a>
         <a href="#roadmap">Roadmap</a>
         <a
@@ -287,6 +288,214 @@
             </div>
           </div>
         </div>
+      </section>
+
+      <section class="terrain section" id="terrain">
+        <div class="terrain-heading reveal">
+          <div>
+            <p class="kicker light"><span></span> Cartografia do ecossistema</p>
+            <h2 id="terrain-title">O projeto como<br /><em>território vivo.</em></h2>
+          </div>
+          <div class="terrain-intro">
+            <p>
+              As curvas transformam relações, estado e atividade do repositório
+              em relevo. Este mapa é uma leitura pública e estática do SYZYGY;
+              dados operacionais em tempo real continuam pertencendo ao NERV.
+            </p>
+            <div
+              class="terrain-layers"
+              role="group"
+              aria-label="Camadas do mapa"
+            >
+              <button
+                type="button"
+                class="active"
+                data-terrain-layer="architecture"
+                aria-pressed="true"
+                aria-controls="terrain-panel"
+              >
+                Arquitetura
+              </button>
+              <button
+                type="button"
+                data-terrain-layer="state"
+                aria-pressed="false"
+                aria-controls="terrain-panel"
+              >
+                Estado
+              </button>
+              <button
+                type="button"
+                data-terrain-layer="activity"
+                aria-pressed="false"
+                aria-controls="terrain-panel"
+              >
+                Commits
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="terrain-shell reveal">
+          <div
+            class="terrain-map"
+            id="terrain-panel"
+            role="region"
+            aria-labelledby="terrain-title"
+            aria-describedby="terrain-layer-summary"
+          >
+            <canvas id="ecosystem-terrain" aria-hidden="true"></canvas>
+            <div class="terrain-coordinates" aria-hidden="true">
+              <span>00 / ECOSYSTEM</span><span>LOCAL STATIC SNAPSHOT</span>
+            </div>
+            <div class="terrain-nodes">
+              <button
+                type="button"
+                class="current active"
+                data-terrain-module="foundation"
+                aria-pressed="true"
+                style="--terrain-x: 50%; --terrain-y: 47%"
+              >
+                Foundation<small>núcleo</small>
+              </button>
+              <button
+                type="button"
+                class="current"
+                data-terrain-module="forge"
+                aria-pressed="false"
+                style="--terrain-x: 31%; --terrain-y: 42%"
+              >
+                Forge<small>engenharia</small>
+              </button>
+              <button
+                type="button"
+                class="current"
+                data-terrain-module="mycelium"
+                aria-pressed="false"
+                style="--terrain-x: 18%; --terrain-y: 61%"
+              >
+                Mycelium<small>malha</small>
+              </button>
+              <button
+                type="button"
+                class="current"
+                data-terrain-module="observatory"
+                aria-pressed="false"
+                style="--terrain-x: 70%; --terrain-y: 39%"
+              >
+                Observatory<small>visibilidade</small>
+              </button>
+              <button
+                type="button"
+                class="current"
+                data-terrain-module="nerv"
+                aria-pressed="false"
+                style="--terrain-x: 51%; --terrain-y: 20%"
+              >
+                NERV<small>operação</small>
+              </button>
+              <button
+                type="button"
+                class="future"
+                data-terrain-module="tungsten"
+                aria-pressed="false"
+                style="--terrain-x: 35%; --terrain-y: 67%"
+              >
+                Tungsten<small>futuro</small>
+              </button>
+              <button
+                type="button"
+                class="future"
+                data-terrain-module="coppermind"
+                aria-pressed="false"
+                style="--terrain-x: 51%; --terrain-y: 79%"
+              >
+                Coppermind<small>futuro</small>
+              </button>
+              <button
+                type="button"
+                class="future"
+                data-terrain-module="magi"
+                aria-pressed="false"
+                style="--terrain-x: 66%; --terrain-y: 78%"
+              >
+                MAGI<small>futuro</small>
+              </button>
+              <button
+                type="button"
+                class="future"
+                data-terrain-module="balance"
+                aria-pressed="false"
+                style="--terrain-x: 81%; --terrain-y: 68%"
+              >
+                Balance<small>futuro</small>
+              </button>
+              <button
+                type="button"
+                class="future"
+                data-terrain-module="elric"
+                aria-pressed="false"
+                style="--terrain-x: 32%; --terrain-y: 17%"
+              >
+                Elric<small>futuro</small>
+              </button>
+              <button
+                type="button"
+                class="future"
+                data-terrain-module="imrryr"
+                aria-pressed="false"
+                style="--terrain-x: 84%; --terrain-y: 30%"
+              >
+                Imrryr<small>futuro</small>
+              </button>
+              <button
+                type="button"
+                class="future"
+                data-terrain-module="bastion"
+                aria-pressed="false"
+                style="--terrain-x: 17%; --terrain-y: 83%"
+              >
+                Bastion<small>futuro</small>
+              </button>
+            </div>
+          </div>
+          <div class="terrain-readout">
+            <div>
+              <span class="terrain-readout-label">PONTO SELECIONADO</span>
+              <strong id="terrain-active-module">Foundation</strong>
+            </div>
+            <div>
+              <span class="terrain-readout-label">LEITURA</span>
+              <strong id="terrain-active-value">Núcleo compartilhado</strong>
+            </div>
+            <p id="terrain-active-description">
+              Configuração, identidade, contratos e ciclo de vida comuns ao
+              ecossistema.
+            </p>
+            <a id="terrain-module-link" href="./modules/foundation.html"
+              >Abrir módulo <span aria-hidden="true">→</span></a
+            >
+          </div>
+          <div class="terrain-caption">
+            <p id="terrain-layer-summary">
+              A altura representa centralidade conceitual; proximidade não
+              implica chamadas diretas entre módulos.
+            </p>
+            <span id="terrain-data-source">DADOS · DOCUMENTAÇÃO OFICIAL</span>
+          </div>
+          <p
+            class="sr-only"
+            id="terrain-announcement"
+            role="status"
+            aria-live="polite"
+          ></p>
+        </div>
+        <noscript>
+          <p class="terrain-noscript">
+            Ative JavaScript para alternar camadas e explorar os módulos neste
+            mapa. O restante do conteúdo do site permanece disponível.
+          </p>
+        </noscript>
       </section>
 
       <section class="modules section" id="modules">
@@ -535,5 +744,6 @@
       </p>
     </footer>
     <script src="./site.js" defer></script>
+    <script src="./terrain.js" defer></script>
   </body>
 </html>
