@@ -230,7 +230,8 @@ function createModuleField() {
   const description = document.getElementById("active-module-description");
   let field = sizeCanvas(canvas),
     active = null,
-    particles = [];
+    particles = [],
+    lastDrawTime = performance.now();
 
   function addLine(points, from, to, count) {
     for (let i = 0; i < count; i++) {
@@ -451,9 +452,7 @@ function createModuleField() {
   }
   function reset() {
     field = sizeCanvas(canvas);
-    const count = performanceLite
-      ? Math.min(170, Math.max(120, Math.floor(field.width / 6)))
-      : Math.min(360, Math.max(260, Math.floor(field.width / 3)));
+    const count = Math.min(360, Math.max(260, Math.floor(field.width / 3)));
     particles = Array.from({ length: count }, () => {
       const point = newScatterTarget();
       return {
@@ -508,12 +507,13 @@ function createModuleField() {
     button.addEventListener("blur", deactivateModule);
   });
 
-  function draw() {
+  function draw(time = performance.now()) {
     const { context } = field;
     context.clearRect(0, 0, field.width, field.height);
-    const time = performance.now();
-    particles.forEach((particle, index) => {
-      particle.delay = Math.max(0, particle.delay - 0.016);
+    const elapsedSeconds = Math.min(0.05, (time - lastDrawTime) / 1000);
+    lastDrawTime = time;
+    particles.forEach((particle) => {
+      particle.delay = Math.max(0, particle.delay - elapsedSeconds);
       const forming = active && particle.shapeTarget && particle.delay === 0;
       const target = forming ? particle.shapeTarget : particle.scatter;
       const drift = forming ? 4.5 : 0,
@@ -526,17 +526,25 @@ function createModuleField() {
         Math.hypot(target.x - particle.x, target.y - particle.y) < 8
       )
         particle.scatter = newScatterTarget();
-      context.beginPath();
-      context.arc(
-        particle.x,
-        particle.y,
-        index % 19 === 0 ? 2.9 : 1.25,
-        0,
-        Math.PI * 2,
-      );
-      context.fillStyle = index % 19 === 0 ? particleRare : particleMain;
-      context.fill();
     });
+
+    context.beginPath();
+    particles.forEach((particle, index) => {
+      if (index % 19 === 0) return;
+      context.moveTo(particle.x + 1.25, particle.y);
+      context.arc(particle.x, particle.y, 1.25, 0, Math.PI * 2);
+    });
+    context.fillStyle = particleMain;
+    context.fill();
+
+    context.beginPath();
+    for (let index = 0; index < particles.length; index += 19) {
+      const particle = particles[index];
+      context.moveTo(particle.x + 2.9, particle.y);
+      context.arc(particle.x, particle.y, 2.9, 0, Math.PI * 2);
+    }
+    context.fillStyle = particleRare;
+    context.fill();
   }
   reset();
   animateWhenVisible(canvas, draw);
