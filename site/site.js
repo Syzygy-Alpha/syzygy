@@ -351,57 +351,58 @@ function createModuleField() {
         42,
       );
     } else if (name === "mycelium") {
-      addCurve(
-        points,
-        [cx - size, cy - size * 0.18],
-        [cx - size * 0.52, cy - size],
-        [cx, cy - size * 0.9],
-        52,
-      );
-      addCurve(
-        points,
-        [cx, cy - size * 0.9],
-        [cx + size * 0.52, cy - size],
-        [cx + size, cy - size * 0.18],
-        52,
-      );
-      addCurve(
-        points,
-        [cx - size, cy - size * 0.18],
-        [cx, cy + size * 0.06],
-        [cx + size, cy - size * 0.18],
-        50,
-      );
-      addCurve(
-        points,
-        [cx - size * 0.2, cy - size * 0.08],
-        [cx - size * 0.28, cy + size * 0.42],
-        [cx - size * 0.18, cy + size * 0.62],
-        34,
-      );
-      addCurve(
-        points,
-        [cx + size * 0.2, cy - size * 0.08],
-        [cx + size * 0.28, cy + size * 0.42],
-        [cx + size * 0.18, cy + size * 0.62],
-        34,
-      );
-      const root = [cx, cy + size * 0.58],
-        ends = [
-          [cx - size * 0.75, cy + size],
-          [cx - size * 0.34, cy + size * 0.9],
-          [cx, cy + size],
-          [cx + size * 0.34, cy + size * 0.9],
-          [cx + size * 0.75, cy + size],
-        ];
-      ends.forEach((end, index) =>
+      const meshNodes = [
+        [cx - size * 0.68, cy - size * 0.58],
+        [cx, cy - size * 0.82],
+        [cx + size * 0.72, cy - size * 0.54],
+        [cx - size * 0.86, cy],
+        [cx - size * 0.08, cy - size * 0.02],
+        [cx + size * 0.82, cy + size * 0.05],
+        [cx - size * 0.62, cy + size * 0.65],
+        [cx + size * 0.12, cy + size * 0.82],
+        [cx + size * 0.72, cy + size * 0.58],
+      ];
+      const meshEdges = [
+        [0, 1],
+        [0, 3],
+        [0, 4],
+        [1, 2],
+        [1, 4],
+        [2, 4],
+        [2, 5],
+        [3, 4],
+        [3, 6],
+        [4, 5],
+        [4, 6],
+        [4, 7],
+        [5, 7],
+        [5, 8],
+        [6, 7],
+        [7, 8],
+      ];
+      meshEdges.forEach(([fromIndex, toIndex], index) => {
+        const from = meshNodes[fromIndex],
+          to = meshNodes[toIndex],
+          dx = to[0] - from[0],
+          dy = to[1] - from[1],
+          length = Math.max(Math.hypot(dx, dy), 1),
+          bend =
+            (index % 2 ? 1 : -1) *
+            size *
+            (0.045 + (index % 3) * 0.012);
         addCurve(
           points,
-          root,
-          [cx + (index - 2) * size * 0.16, cy + size * 0.78],
-          end,
-          20,
-        ),
+          from,
+          [
+            (from[0] + to[0]) / 2 - (dy / length) * bend,
+            (from[1] + to[1]) / 2 + (dx / length) * bend,
+          ],
+          to,
+          22,
+        );
+      });
+      meshNodes.forEach(([x, y]) =>
+        addEllipse(points, x, y, size * 0.075, size * 0.075, 18),
       );
     } else if (name === "observatory") {
       addCurve(
@@ -438,8 +439,8 @@ function createModuleField() {
     return Array.from({ length: count }, (_, index) => {
       const point = points[index % points.length];
       return {
-        x: point.x + (Math.random() - 0.5) * 6,
-        y: point.y + (Math.random() - 0.5) * 6,
+        x: point.x + (Math.random() - 0.5) * 2,
+        y: point.y + (Math.random() - 0.5) * 2,
       };
     });
   }
@@ -452,7 +453,7 @@ function createModuleField() {
   }
   function reset() {
     field = sizeCanvas(canvas);
-    const count = Math.min(360, Math.max(260, Math.floor(field.width / 3)));
+    const count = Math.min(560, Math.max(420, Math.floor(field.width / 2.4)));
     particles = Array.from({ length: count }, () => {
       const point = newScatterTarget();
       return {
@@ -474,11 +475,11 @@ function createModuleField() {
   }
   function assignSymbol(name) {
     const shuffled = [...particles].sort(() => Math.random() - 0.5),
-      formingCount = Math.floor(particles.length * 0.74),
+      formingCount = Math.floor(particles.length * 0.88),
       shape = symbolPoints(name, formingCount);
     particles.forEach((particle) => {
       particle.shapeTarget = null;
-      particle.delay = Math.random() * 0.65;
+      particle.delay = Math.random() * 0.4;
     });
     shuffled.slice(0, formingCount).forEach((particle, index) => {
       particle.shapeTarget = shape[index];
@@ -516,7 +517,7 @@ function createModuleField() {
       particle.delay = Math.max(0, particle.delay - elapsedSeconds);
       const forming = active && particle.shapeTarget && particle.delay === 0;
       const target = forming ? particle.shapeTarget : particle.scatter;
-      const drift = forming ? 4.5 : 0,
+      const drift = forming ? 1.8 : 0,
         tx = target.x + Math.cos(time * 0.0007 + particle.phase) * drift,
         ty = target.y + Math.sin(time * 0.0009 + particle.phase) * drift;
       particle.x += (tx - particle.x) * particle.ease;

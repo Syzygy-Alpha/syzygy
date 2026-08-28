@@ -76,9 +76,9 @@ Canvas animations automatically use a lighter profile on devices reporting up
 to 4 GB of memory or up to four logical processors. The lighter profile caps
 animation at 30 FPS, renders canvases at 1x pixel density, reduces ambient Hero
 and Mycelium particle counts, and samples fewer Mycelium links. The module-logo
-field preserves its full particle density and batches Canvas drawing operations
-so every symbol remains complete. Off-screen and background-tab animations
-remain paused.
+field preserves a higher particle density, uses tighter shape targets, and
+batches Canvas drawing operations so every symbol remains complete and crisp.
+Off-screen and background-tab animations remain paused.
 
 Use `?quality=low` to force the lighter profile or `?quality=high` to override
 the hardware heuristic when comparing rendering quality.
