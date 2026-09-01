@@ -73,32 +73,37 @@ All themes use local system fonts and respect `prefers-reduced-motion`.
 
 ## Adaptive rendering
 
-Canvas and Medusae animations automatically use a lighter profile on devices
-reporting up to 4 GB of memory or up to four logical processors. The lighter
-profile caps animation at 30 FPS, renders canvases at 1x pixel density, reduces
-ambient Hero and Mycelium particle counts, samples fewer Mycelium links, and
-uses a smaller Medusae field. The module-logo field preserves a higher particle
-density, uses tighter shape targets, and batches Canvas drawing operations so
-every symbol remains complete and crisp. Off-screen and background-tab
-animations remain paused.
+Canvas animations automatically use a lighter profile on devices reporting up
+to 4 GB of memory or up to four logical processors. The lighter profile caps
+animation at 30 FPS, renders canvases at 1x pixel density, reduces ambient Hero
+and Mycelium particle counts, samples fewer Mycelium links, and uses a smaller
+Medusae field. Medusae is capped at 30 FPS on every profile because its WebGL
+field is intentionally dense. The module-logo field preserves a higher
+particle density, uses tighter shape targets, and batches Canvas drawing
+operations so every symbol remains complete and crisp. Off-screen and
+background-tab animations remain paused.
 
 Use `?quality=low` to force the lighter profile or `?quality=high` to override
 the hardware heuristic when comparing rendering quality.
 
 ## Ecosystem terrain
 
-The home page uses a dependency-free isometric topographic view of the twelve
-official modules. `terrain.js` renders a documented implementation-state field
-on Canvas 2D and redraws only on a debounced viewport resize. It has no
-continuous animation, Git fetch, operational call, or runtime dependency.
+The home page uses the reviewed `site2.zip` isometric topography: the same 18 x
+18 mesh, sector coordinates, projection, elevation model, markers, rotation,
+and zoom controls. `topography.js` is the shared Canvas 2D renderer;
+`terrain.js` supplies the latest privacy-preserving aggregate snapshot when it
+is available and otherwise keeps the documented implementation-state field.
+The transition converges and stops instead of maintaining an idle animation
+loop. The map has no operational call or runtime dependency.
 
 Functional v0.1 modules have a high field weight and declared future modules a
 low field weight. This is an explanatory status view: proximity does not declare
 a direct runtime dependency, and elevation does not infer health or readiness.
 
-The historical layers and charts intentionally remain on Chronoscape. The home
-map is therefore always available, including when a historical snapshot cannot
-be generated.
+Timeline navigation, alternate historical layers, readouts, and charts remain
+on Chronoscape. The home contains only the concise map and a link to that deeper
+surface. The map remains available when a historical snapshot cannot be
+generated.
 
 
 ## Chronoscape
@@ -119,7 +124,7 @@ and labels the missing snapshot instead of inferring data.
 
 The home terrain remains the concise ecosystem overview. Chronoscape is linked
 from that section when a visitor needs a deeper historical reading. Both views
-are static: they make no operational calls and do not claim live health.
+share `topography.js`, make no operational calls, and do not claim live health.
 
 ## GitHub Pages
 

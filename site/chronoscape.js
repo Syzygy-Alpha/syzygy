@@ -1,3 +1,5 @@
+import { TOPOGRAPHY_LAYERS, createTopography } from "./topography.js";
+
 const officialModules = [
   "foundation",
   "forge",
@@ -189,6 +191,8 @@ const elements = {
   heroCommits: document.getElementById("hero-commits"),
   heroDays: document.getElementById("hero-days"),
   heroSectors: document.getElementById("hero-sectors"),
+  terrainMode: document.getElementById("chrono-terrain-mode"),
+  viewLabel: document.getElementById("chrono-view-label"),
   rotateLeft: document.getElementById("rotate-left"),
   rotateRight: document.getElementById("rotate-right"),
   zoomIn: document.getElementById("zoom-in"),
@@ -200,12 +204,24 @@ const state = {
   layer: "commits",
   activeSector: "foundation",
   index: 0,
-  rotation: -0.18,
-  zoom: 1,
   snapshot: null,
   metrics: [],
   historyAvailable: false,
 };
+
+const topography = createTopography({
+  canvas: elements.terrain,
+  viewport: elements.terrain.closest(".terrain-stage"),
+  onSectorSelect: (sectorId) => {
+    if (!sectorById.has(sectorId)) return;
+    state.activeSector = sectorId;
+    elements.sectorPicker.value = sectorId;
+    render();
+  },
+  onViewChange: ({ rotation, zoom }) => {
+    elements.viewLabel.textContent = `R${rotation} · Z${Math.round(zoom * 100)}`;
+  },
+});
 
 function formatNumber(value) {
   return formatter.format(Math.max(0, Number(value) || 0));
@@ -285,17 +301,6 @@ function valueForSector(sector) {
   return metricAtIndex()[state.layer]?.[sector.id] ?? 0;
 }
 
-function normalizedSectorValues() {
-  const raw = sectors.map((sector) => valueForSector(sector));
-  const maximum = Math.max(...raw, 0);
-  return new Map(
-    sectors.map((sector, index) => [
-      sector.id,
-      maximum > 0 ? raw[index] / maximum : 0,
-    ]),
-  );
-}
-
 function resizeCanvas(canvas) {
   const bounds = canvas.getBoundingClientRect();
   const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -306,165 +311,18 @@ function resizeCanvas(canvas) {
   return { context, width: bounds.width, height: bounds.height };
 }
 
-function drawGrid(context, width, height) {
-  context.save();
-  context.strokeStyle = "rgba(241,237,242,.055)";
-  context.lineWidth = 1;
-  for (let x = 0; x <= width; x += 38) {
-    context.beginPath();
-    context.moveTo(x, 0);
-    context.lineTo(x, height);
-    context.stroke();
-  }
-  for (let y = 0; y <= height; y += 38) {
-    context.beginPath();
-    context.moveTo(0, y);
-    context.lineTo(width, y);
-    context.stroke();
-  }
-  context.restore();
-}
-
-function projectPoint(point, elevation, width, height) {
-  const cos = Math.cos(state.rotation);
-  const sin = Math.sin(state.rotation);
-  const rotatedX = point.x * cos - point.y * sin;
-  const rotatedY = point.x * sin + point.y * cos;
-  const scale = Math.min(width * 0.34, height * 0.45) * state.zoom;
-  return {
-    x: width / 2 + (rotatedX - rotatedY) * scale,
-    y: height * 0.57 + (rotatedX + rotatedY) * scale * 0.48 - elevation * scale * 0.82,
-    depth: rotatedX + rotatedY,
-  };
-}
-
-function terrainHeight(x, y, values) {
-  let result = 0;
-  for (const sector of sectors) {
-    const sectorX = sector.x * 2 - 1;
-    const sectorY = sector.y * 2 - 1;
-    const distanceX = x - sectorX;
-    const distanceY = y - sectorY;
-    const influence = Math.exp(-(distanceX * distanceX + distanceY * distanceY) * 3.6);
-    result += (values.get(sector.id) ?? 0) * influence;
-  }
-  return Math.min(1.25, result);
-}
-
-function colorForHeight(value, alpha = 1) {
-  if (state.layer === "churn") return `rgba(255,95,115,${0.16 + value * 0.68 * alpha})`;
-  if (state.layer === "footprint") return `rgba(112,214,236,${0.16 + value * 0.68 * alpha})`;
-  if (state.layer === "state") return `rgba(157,66,209,${0.14 + value * 0.7 * alpha})`;
-  return `rgba(204,255,69,${0.13 + value * 0.72 * alpha})`;
-}
-
-function polygon(context, points, fill, stroke) {
-  context.beginPath();
-  context.moveTo(points[0].x, points[0].y);
-  for (const point of points.slice(1)) context.lineTo(point.x, point.y);
-  context.closePath();
-  if (fill) {
-    context.fillStyle = fill;
-    context.fill();
-  }
-  if (stroke) {
-    context.strokeStyle = stroke;
-    context.stroke();
-  }
-}
-
 function drawTerrain() {
-  const { context, width, height } = resizeCanvas(elements.terrain);
-  context.clearRect(0, 0, width, height);
-  drawGrid(context, width, height);
-  const values = normalizedSectorValues();
-  const detail = width < 520 ? 11 : 16;
-  const step = 2 / detail;
-  const cells = [];
-
-  for (let row = 0; row < detail; row += 1) {
-    for (let column = 0; column < detail; column += 1) {
-      const x = -1 + column * step;
-      const y = -1 + row * step;
-      const vertices = [
-        { x, y },
-        { x: x + step, y },
-        { x: x + step, y: y + step },
-        { x, y: y + step },
-      ];
-      const heights = vertices.map((vertex) => terrainHeight(vertex.x, vertex.y, values));
-      const center = projectPoint(
-        { x: x + step / 2, y: y + step / 2 },
-        Math.max(...heights),
-        width,
-        height,
-      );
-      cells.push({ vertices, heights, depth: center.depth });
-    }
-  }
-
-  cells.sort((left, right) => left.depth - right.depth);
-  context.lineWidth = 0.65;
-  for (const cell of cells) {
-    const top = cell.vertices.map((vertex, index) =>
-      projectPoint(vertex, cell.heights[index], width, height),
-    );
-    const ground = cell.vertices.map((vertex) => projectPoint(vertex, 0, width, height));
-    const average = cell.heights.reduce((sum, value) => sum + value, 0) / cell.heights.length;
-    polygon(context, top, colorForHeight(average), "rgba(241,237,242,.09)");
-    polygon(
-      context,
-      [top[2], top[3], ground[3], ground[2]],
-      colorForHeight(average, 0.38),
-      "rgba(241,237,242,.05)",
-    );
-    polygon(
-      context,
-      [top[1], top[2], ground[2], ground[1]],
-      colorForHeight(average, 0.23),
-      "rgba(241,237,242,.04)",
-    );
-  }
-
-  const plottedSectors = sectors
-    .map((sector) => {
-      const point = projectPoint(
-        { x: sector.x * 2 - 1, y: sector.y * 2 - 1 },
-        terrainHeight(sector.x * 2 - 1, sector.y * 2 - 1, values) + 0.035,
-        width,
-        height,
-      );
-      return { sector, point };
-    })
-    .sort((left, right) => left.point.depth - right.point.depth);
-
-  for (const { sector, point } of plottedSectors) {
-    const selected = state.activeSector === sector.id;
-    const color = selected
-      ? "#ccff45"
-      : sector.status === "functional"
-        ? "#f1edf2"
-        : sector.status === "future"
-          ? "#9d42d1"
-          : "#a39baa";
-    context.save();
-    context.translate(point.x, point.y);
-    context.rotate(Math.PI / 4);
-    context.fillStyle = color;
-    context.fillRect(selected ? -6 : -3, selected ? -6 : -3, selected ? 12 : 6, selected ? 12 : 6);
-    context.restore();
-    if (selected || width > 680) {
-      context.fillStyle = selected ? "#f1edf2" : "rgba(241,237,242,.7)";
-      context.font = `${selected ? "700" : "500"} ${width < 520 ? "9" : "10"}px var(--chrono-mono)`;
-      context.textAlign = "center";
-      context.fillText(sector.shortLabel, point.x, point.y - 12);
-    }
-  }
-
-  context.fillStyle = "rgba(241,237,242,.48)";
-  context.font = "10px var(--chrono-mono)";
-  context.textAlign = "left";
-  context.fillText(`${state.layer.toUpperCase()} / ACUMULADO`, 18, 24);
+  const values = Object.fromEntries(
+    sectors.map((sector) => [sector.id, valueForSector(sector)]),
+  );
+  topography?.update({
+    layer: state.layer,
+    values,
+    touchedSectors: Object.keys(currentCommit()?.sectors ?? {}),
+    activeSector: state.activeSector,
+    animate: state.historyAvailable,
+  });
+  elements.terrainMode.textContent = TOPOGRAPHY_LAYERS[state.layer].label;
 }
 
 function groupedDays() {
@@ -724,27 +582,11 @@ function attachInteractions() {
     state.activeSector = elements.sectorPicker.value;
     render();
   });
-  elements.rotateLeft.addEventListener("click", () => {
-    state.rotation -= Math.PI / 12;
-    drawTerrain();
-  });
-  elements.rotateRight.addEventListener("click", () => {
-    state.rotation += Math.PI / 12;
-    drawTerrain();
-  });
-  elements.zoomIn.addEventListener("click", () => {
-    state.zoom = Math.min(1.5, state.zoom + 0.12);
-    drawTerrain();
-  });
-  elements.zoomOut.addEventListener("click", () => {
-    state.zoom = Math.max(0.7, state.zoom - 0.12);
-    drawTerrain();
-  });
-  elements.resetView.addEventListener("click", () => {
-    state.rotation = -0.18;
-    state.zoom = 1;
-    drawTerrain();
-  });
+  elements.rotateLeft.addEventListener("click", topography.rotateLeft);
+  elements.rotateRight.addEventListener("click", topography.rotateRight);
+  elements.zoomIn.addEventListener("click", topography.zoomIn);
+  elements.zoomOut.addEventListener("click", topography.zoomOut);
+  elements.resetView.addEventListener("click", topography.resetView);
   let resizeFrame;
   window.addEventListener("resize", () => {
     cancelAnimationFrame(resizeFrame);

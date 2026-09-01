@@ -897,20 +897,70 @@ html.performance-lite .hero-glow {
   height: clamp(430px, 48vw, 680px);
   overflow: hidden;
   background:
-    linear-gradient(rgba(242, 240, 233, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(242, 240, 233, 0.035) 1px, transparent 1px);
-  background-size: 54px 54px;
+    linear-gradient(rgba(238, 238, 240, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(238, 238, 240, 0.025) 1px, transparent 1px),
+    radial-gradient(circle at 50% 44%, rgba(99, 37, 139, 0.22), transparent 45%),
+    #080709;
+  background-size: 38px 38px, 38px 38px, auto, auto;
+  cursor: pointer;
+}
+.terrain-map::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 3px,
+    rgba(0, 0, 0, 0.13) 3px 4px
+  );
+  pointer-events: none;
 }
 #ecosystem-topography {
-  display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
+}
+.terrain-corners {
+  position: absolute;
+  z-index: 2;
+  inset: 14px;
   pointer-events: none;
+}
+.terrain-corners i {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+}
+.terrain-corners i:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top: 2px solid #9d42d1;
+  border-left: 2px solid #9d42d1;
+}
+.terrain-corners i:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top: 2px solid #9d42d1;
+  border-right: 2px solid #9d42d1;
+}
+.terrain-corners i:nth-child(3) {
+  right: 0;
+  bottom: 0;
+  border-right: 2px solid #ff304f;
+  border-bottom: 2px solid #ff304f;
+}
+.terrain-corners i:nth-child(4) {
+  bottom: 0;
+  left: 0;
+  border-bottom: 2px solid #ff304f;
+  border-left: 2px solid #ff304f;
 }
 .terrain-coordinates {
   position: absolute;
-  z-index: 1;
-  inset: 18px 20px auto;
+  z-index: 2;
+  inset: 25px 27px auto;
   display: flex;
   justify-content: space-between;
   color: rgba(242, 240, 233, 0.38);
@@ -919,11 +969,11 @@ html.performance-lite .hero-glow {
 }
 .terrain-key {
   position: absolute;
-  z-index: 1;
-  right: 20px;
-  bottom: 18px;
+  z-index: 2;
+  bottom: 24px;
+  left: 27px;
   display: flex;
-  gap: 14px;
+  gap: 15px;
   color: rgba(242, 240, 233, 0.58);
   font-size: 0.5rem;
   letter-spacing: 0.12em;
@@ -935,16 +985,46 @@ html.performance-lite .hero-glow {
   align-items: center;
 }
 .terrain-key i {
-  width: 7px;
-  height: 7px;
-  transform: rotate(45deg);
+  width: 8px;
+  height: 8px;
 }
 .terrain-key .functional {
-  background: var(--lime);
-  box-shadow: 0 0 10px rgba(201, 255, 69, 0.65);
+  border: 1px solid var(--paper);
 }
 .terrain-key .future {
-  background: #9d42d1;
+  border: 1px dashed rgba(242, 240, 233, 0.58);
+}
+.terrain-key .changed {
+  background: #ff304f;
+  box-shadow: 0 0 9px rgba(255, 48, 79, 0.72);
+}
+.terrain-view-controls {
+  position: absolute;
+  z-index: 4;
+  right: 24px;
+  bottom: 20px;
+  display: flex;
+  gap: 5px;
+}
+.terrain-view-controls button {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  color: var(--paper);
+  border: 1px solid rgba(242, 240, 233, 0.2);
+  background: rgba(7, 6, 8, 0.8);
+  font-size: 0.55rem;
+}
+.terrain-view-controls button:hover,
+.terrain-view-controls button:focus-visible {
+  color: var(--ink);
+  border-color: var(--lime);
+  background: var(--lime);
+  outline: none;
+}
+.terrain-view-controls button:last-child {
+  color: rgba(242, 240, 233, 0.58);
+  font-size: 0.48rem;
 }
 .terrain-caption {
   display: flex;
@@ -1510,16 +1590,24 @@ footer p {
     min-width: 160px;
   }
   .terrain-map {
-    height: 420px;
-  }
-  .terrain-coordinates span:last-child {
-    display: none;
+    height: 520px;
   }
   .terrain-key {
-    right: 16px;
-    bottom: 15px;
-    display: grid;
-    gap: 8px;
+    right: 18px;
+    bottom: 16px;
+    left: 18px;
+    justify-content: space-between;
+    gap: 5px;
+    font-size: 0.4rem;
+  }
+  .terrain-view-controls {
+    right: 18px;
+    bottom: 50px;
+  }
+  .terrain-view-controls button {
+    min-width: 34px;
+    height: 34px;
+    padding: 0 8px;
   }
   .terrain-caption {
     padding: 15px 20px;

@@ -118,12 +118,37 @@ main { max-width: 1600px; margin: 0 auto; }
 .layer-controls button:first-child { border-left: 0; }
 .layer-controls button { padding: 0 10px; color: var(--chrono-muted); }
 .layer-controls button:hover, .layer-controls button:focus-visible, .layer-controls button.active { color: var(--chrono-black); background: var(--chrono-lime); outline: none; }
-.terrain-stage { position: relative; height: clamp(390px, 47vw, 630px); overflow: hidden; background: radial-gradient(circle at 50% 50%, rgba(157, 66, 209, 0.16), transparent 48%), #08070c; }
+.terrain-stage {
+  position: relative;
+  height: clamp(390px, 47vw, 630px);
+  overflow: hidden;
+  background:
+    linear-gradient(rgba(241, 237, 242, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(241, 237, 242, 0.025) 1px, transparent 1px),
+    radial-gradient(circle at 50% 44%, rgba(99, 37, 139, 0.22), transparent 45%),
+    #080709;
+  background-size: 38px 38px, 38px 38px, auto, auto;
+  cursor: pointer;
+}
+.terrain-stage::before { position: absolute; z-index: 1; inset: 0; content: ""; background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(0, 0, 0, 0.13) 3px 4px); pointer-events: none; }
 .terrain-stage canvas, .metric-card canvas { display: block; width: 100%; height: 100%; }
-.terrain-status { position: absolute; z-index: 2; right: 14px; bottom: 13px; max-width: min(440px, calc(100% - 120px)); margin: 0; padding: 8px 10px; color: var(--chrono-muted); border: 1px solid rgba(241, 237, 242, 0.14); background: rgba(10, 9, 16, 0.78); font-family: var(--chrono-mono); font-size: 0.52rem; letter-spacing: 0.07em; line-height: 1.5; text-align: right; }
-.view-controls { position: absolute; right: 18px; bottom: 17px; display: flex; border: 1px solid var(--chrono-line); }
-.view-controls button { min-width: 36px; padding: 0 9px; color: var(--chrono-paper); }
-.view-controls button + button { border-left: 1px solid var(--chrono-line); }
+#chronoscape-terrain { position: absolute; inset: 0; }
+.chrono-terrain-corners { position: absolute; z-index: 2; inset: 14px; pointer-events: none; }
+.chrono-terrain-corners i { position: absolute; width: 25px; height: 25px; }
+.chrono-terrain-corners i:nth-child(1) { top: 0; left: 0; border-top: 2px solid var(--chrono-violet); border-left: 2px solid var(--chrono-violet); }
+.chrono-terrain-corners i:nth-child(2) { top: 0; right: 0; border-top: 2px solid var(--chrono-violet); border-right: 2px solid var(--chrono-violet); }
+.chrono-terrain-corners i:nth-child(3) { right: 0; bottom: 0; border-right: 2px solid var(--chrono-red); border-bottom: 2px solid var(--chrono-red); }
+.chrono-terrain-corners i:nth-child(4) { bottom: 0; left: 0; border-bottom: 2px solid var(--chrono-red); border-left: 2px solid var(--chrono-red); }
+.chrono-terrain-meta { position: absolute; z-index: 2; top: 25px; right: 27px; left: 27px; display: flex; justify-content: space-between; color: rgba(241, 237, 242, 0.34); font-family: var(--chrono-mono); font-size: 0.43rem; letter-spacing: 0.09em; pointer-events: none; }
+.chrono-terrain-legend { position: absolute; z-index: 2; bottom: 24px; left: 27px; display: flex; gap: 15px; color: var(--chrono-muted); font-family: var(--chrono-mono); font-size: 0.42rem; letter-spacing: 0.07em; text-transform: uppercase; pointer-events: none; }
+.chrono-terrain-legend span { display: flex; align-items: center; gap: 6px; }
+.chrono-terrain-legend i { display: inline-block; width: 8px; height: 8px; }
+.chrono-terrain-legend .live { border: 1px solid var(--chrono-paper); }
+.chrono-terrain-legend .future { border: 1px dashed var(--chrono-muted); }
+.chrono-terrain-legend .changed { background: var(--chrono-red); box-shadow: 0 0 9px rgba(255, 48, 79, 0.72); }
+.terrain-status { position: absolute; z-index: 3; top: 48px; left: 50%; max-width: min(440px, calc(100% - 40px)); margin: 0; padding: 8px 10px; color: var(--chrono-muted); border: 1px solid rgba(241, 237, 242, 0.14); background: rgba(10, 9, 16, 0.78); font-family: var(--chrono-mono); font-size: 0.52rem; letter-spacing: 0.07em; line-height: 1.5; text-align: center; transform: translateX(-50%); }
+.view-controls { position: absolute; z-index: 4; right: 24px; bottom: 20px; display: flex; gap: 5px; }
+.view-controls button { min-width: 38px; height: 38px; padding: 0 10px; color: var(--chrono-paper); border: 1px solid var(--chrono-line); background: rgba(7, 6, 8, 0.8); }
 .view-controls button:last-child { color: var(--chrono-muted); font-size: 0.42rem; }
 .view-controls button:hover, .view-controls button:focus-visible { color: var(--chrono-black); background: var(--chrono-lime); outline: none; }
 .terrain-readout { display: grid; grid-template-columns: 0.7fr 0.8fr 1.6fr; gap: 22px; align-items: center; min-height: 104px; padding: 19px 21px; background: linear-gradient(90deg, rgba(157, 66, 209, 0.19), transparent); }
@@ -208,6 +233,9 @@ main { max-width: 1600px; margin: 0 auto; }
   .layer-controls { margin-top: 14px; grid-template-columns: repeat(4, 1fr); }
   .layer-controls button { min-width: 0; padding-inline: 4px; font-size: 0.43rem; }
   .terrain-stage { height: 410px; }
+  .chrono-terrain-meta { right: 18px; left: 18px; }
+  .chrono-terrain-legend { right: 18px; left: 18px; justify-content: space-between; }
+  .view-controls { right: 18px; bottom: 54px; }
   .terrain-readout { min-height: 180px; display: block; padding: 18px; }
   .terrain-readout > div { margin-bottom: 13px; }
   .timeline-card { grid-template-columns: 1fr; gap: 16px; padding: 18px; }

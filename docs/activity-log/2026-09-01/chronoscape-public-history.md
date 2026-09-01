@@ -19,19 +19,25 @@ an Observatory dashboard.
 
 ## Changed
 
-- Added a responsive Canvas 2D isometric terrain with commits, churn, reach,
-  and documented-state layers.
+- Added a shared Canvas 2D renderer faithful to the offline prototype's 18 x 18
+  terrain, sector coordinates, projection, elevation model, labels, rotation,
+  and zoom controls.
+- Kept only the concise topographic map on the home page; commits, churn,
+  reach, timeline navigation, readouts, and charts remain on Chronoscape.
 - Added anonymous historical stratum selection, aggregate charts, rotation,
   and zoom controls.
 - Extended the site build to generate a privacy-preserving 365-day snapshot,
   capped at 120 strata.
-- Replaced the former home Canvas 2D contour map and Git activity layer with a
-  static isometric implementation-state map. Historical readings and graphs
-  route to Chronoscape.
+- Replaced the former home Canvas 2D contour map with the reviewed isometric
+  map. It uses the latest anonymous aggregate snapshot when available and the
+  documented implementation state as its fallback.
 - Made Chronoscape retain its implementation-state terrain when a historical
   snapshot is unavailable, while disabling the historical controls.
 - Restored the reviewed Medusae particle field only on the home Vision surface
   and Coppermind, MAGI, and Bastion overview surfaces.
+- Removed the prototype's perpetual touched-sector repaint. Terrain transitions
+  now converge and stop, off-screen maps pause, pixel density is bounded, and
+  both Medusae renderers are capped at 30 FPS.
 - Added checks for the public-page metadata, static assets, and the
   non-identifying historical data boundary.
 
@@ -44,13 +50,13 @@ an Observatory dashboard.
 - Chronoscape does not inspect services, devices, events, health, or runtime
   state. Those concerns remain with the appropriate module contracts.
 - Medusae is decorative only, uses local WebGL with a Canvas 2D fallback, and
-  respects the existing reduced-motion, visibility, and lower-hardware rules.
+  respects reduced-motion and visibility while remaining capped at 30 FPS.
 - The prototype's per-file manifest is not adopted. The home map contains no
-  Git-derived data, and Chronoscape contains aggregate history only.
+  identifying Git data, and Chronoscape contains aggregate history only.
 
 ## Validation
 
 - `npm --prefix site run check`
 - `npm --prefix site run build`
-- built snapshot availability and public-schema check (`available: true`, 50
-  strata, commit fields limited to `date`, `stats`, and `sectors`)
+- built snapshot availability and public-schema check (`available: true`, with
+  commit fields limited to `date`, `stats`, and `sectors`)

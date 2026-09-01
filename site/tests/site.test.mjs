@@ -275,7 +275,7 @@ test("home page and sitemap enumerate the complete module portfolio", async () =
   assert.deepEqual(locations, expected);
 });
 
-test("home terrain is a static isometric map with Chronoscape as the historical surface", async () => {
+test("home and Chronoscape share the reviewed site2 topography", async () => {
   const home = htmlByFile.get(path.join(siteRoot, "index.html"));
   assert.match(
     home,
@@ -290,19 +290,36 @@ test("home terrain is a static isometric map with Chronoscape as the historical 
   assert.doesNotMatch(home, /data-terrain-layer|data-terrain-module|ecosystem-terrain/);
 
   const terrainScript = await readFile(path.join(siteRoot, "terrain.js"), "utf8");
+  const topographyScript = await readFile(
+    path.join(siteRoot, "topography.js"),
+    "utf8",
+  );
   assert.match(terrainScript, /function createTerrainMap\(\)/);
-  assert.match(terrainScript, /function projectPoint\(/);
-  assert.match(terrainScript, /function terrainHeight\(/);
+  assert.match(terrainScript, /from "\.\/topography\.js"/);
+  assert.match(terrainScript, /fetch\("\.\/chronoscape-snapshot\.json"/);
+  assert.match(topographyScript, /const GRID_SIZE = 18/);
+  assert.match(topographyScript, /x: 8\.7, z: 8\.5/);
+  assert.match(topographyScript, /x: 16\.5, z: 16\.1/);
+  assert.match(topographyScript, /function project\(x, z, height = 0\)/);
+  assert.match(topographyScript, /function drawTerrainMesh\(\)/);
+  assert.match(topographyScript, /function drawMarkers\(\)/);
+  assert.match(topographyScript, /if \(moving\) requestMap\(\);/);
+  assert.doesNotMatch(
+    topographyScript,
+    /touchedSectors\(\)\.length\)\s*requestMap/,
+    "topography must stop rendering after its transition converges",
+  );
   for (const module of officialModules) {
-    assert.match(terrainScript, new RegExp(`id: "${module}"`));
+    assert.match(topographyScript, new RegExp(`id: "${module}"`));
   }
-  assert.doesNotMatch(terrainScript, /fetch\(|ecosystem-snapshot|animateWhenVisible/);
+  assert.doesNotMatch(terrainScript, /ecosystem-snapshot|animateWhenVisible/);
 
   const buildScript = await readFile(
     path.join(siteRoot, "scripts", "build.mjs"),
     "utf8",
   );
   assert.match(buildScript, /"terrain\.js"/);
+  assert.match(buildScript, /"topography\.js"/);
   assert.doesNotMatch(buildScript, /ecosystem-snapshot/);
 });
 
@@ -327,6 +344,10 @@ test("Medusae stays isolated to the reviewed visual surfaces", async () => {
   assert.match(source, /getContext\("webgl"/);
   assert.match(source, /function createMedusaeFallback\(canvas\)/);
   assert.match(source, /createHeroField\(\);\s*createMedusaeField\(\);/);
+  assert.ok(
+    [...source.matchAll(/animateWhenVisible\(canvas, draw, 30\)/g)].length >= 2,
+    "Medusae WebGL and fallback must be capped at 30 FPS",
+  );
   assert.doesNotMatch(source, /https?:\/\//);
 });
 
@@ -351,6 +372,8 @@ test("Chronoscape remains an aggregated historical site page", async () => {
     "distribution-chart",
     "chrono-range",
     "chrono-sector",
+    "chrono-terrain-mode",
+    "chrono-view-label",
   ]) {
     assert.match(
       chronoscape,
@@ -364,6 +387,7 @@ test("Chronoscape remains an aggregated historical site page", async () => {
     "Chronoscape: missing public data boundary",
   );
   assert.match(script, /function drawTerrain\(\)/);
+  assert.match(script, /from "\.\/topography\.js"/);
   assert.match(script, /fetch\("\.\/chronoscape-snapshot\.json"/);
   assert.match(script, /function setHistoryAvailability\(available\)/);
   assert.match(script, /state\.layer = "state"/);
@@ -417,6 +441,7 @@ test("public source stays inside the static performance budget", async () => {
     "site.css",
     "site.js",
     "terrain.js",
+    "topography.js",
     "sitemap.xml",
     "syzygy-theme-bold.css",
     "syzygy-theme.css",

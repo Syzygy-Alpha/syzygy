@@ -17,10 +17,14 @@ const reducedMotion = window.matchMedia(
 ).matches;
 const animationFrameInterval = performanceLite ? 1000 / 30 : 0;
 
-function animateWhenVisible(element, draw) {
+function animateWhenVisible(element, draw, maximumFramesPerSecond = 0) {
   let frameId = null;
   let visible = false;
   let lastDraw = 0;
+  const frameInterval = Math.max(
+    animationFrameInterval,
+    maximumFramesPerSecond > 0 ? 1000 / maximumFramesPerSecond : 0,
+  );
 
   function stop() {
     if (frameId !== null) cancelAnimationFrame(frameId);
@@ -33,8 +37,8 @@ function animateWhenVisible(element, draw) {
       return;
     }
     if (
-      animationFrameInterval === 0 ||
-      timestamp - lastDraw >= animationFrameInterval - 1
+      frameInterval === 0 ||
+      timestamp - lastDraw >= frameInterval - 1
     ) {
       draw(timestamp);
       lastDraw = timestamp;
@@ -262,7 +266,7 @@ function createMedusaeFallback(canvas) {
     });
   }
 
-  animateWhenVisible(canvas, draw);
+  animateWhenVisible(canvas, draw, 30);
   window.addEventListener("resize", () => {
     field = sizeCanvas(canvas);
   });
@@ -486,7 +490,7 @@ function createMedusaeField() {
     gl.drawArrays(gl.POINTS, 0, count);
   }
 
-  animateWhenVisible(canvas, draw);
+  animateWhenVisible(canvas, draw, 30);
   window.addEventListener("resize", resize);
 }
 

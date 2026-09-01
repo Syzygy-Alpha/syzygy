@@ -39,6 +39,7 @@ const publicEntries = [
   "site.css",
   "site.js",
   "terrain.js",
+  "topography.js",
   "sitemap.xml",
   "syzygy-theme-bold.css",
   "syzygy-theme.css",
