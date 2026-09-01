@@ -6,9 +6,9 @@ An offline prototype introduced Chronoscape: an isometric reading of SYZYGY's
 Git history. Its central visual idea is useful for the institutional site, but
 the prototype carried full commit details, including author names, subjects,
 hashes, and changed-file paths. Those details conflict with the existing public
-site boundary for Git-derived data. A complete follow-up review also identified
-the Medusae particle field and the intended role of the new terrain on the home
-page.
+site boundary for Git-derived data. A complete follow-up review also evaluated
+the experimental Medusae particle field and the intended role of the new
+terrain on the home page.
 
 ## Decision
 
@@ -33,11 +33,11 @@ an Observatory dashboard.
   documented implementation state as its fallback.
 - Made Chronoscape retain its implementation-state terrain when a historical
   snapshot is unavailable, while disabling the historical controls.
-- Restored the reviewed Medusae particle field only on the home Vision surface
-  and Coppermind, MAGI, and Bastion overview surfaces.
+- Removed the Medusae WebGL and Canvas renderers, their four canvases, styles,
+  and initialization after runtime review showed that the decorative effect
+  remained too expensive for the institutional site.
 - Removed the prototype's perpetual touched-sector repaint. Terrain transitions
-  now converge and stop, off-screen maps pause, pixel density is bounded, and
-  both Medusae renderers are capped at 30 FPS.
+  now converge and stop, off-screen maps pause, and pixel density is bounded.
 - Added checks for the public-page metadata, static assets, and the
   non-identifying historical data boundary.
 
@@ -49,8 +49,7 @@ an Observatory dashboard.
   official SYZYGY modules.
 - Chronoscape does not inspect services, devices, events, health, or runtime
   state. Those concerns remain with the appropriate module contracts.
-- Medusae is decorative only, uses local WebGL with a Canvas 2D fallback, and
-  respects reduced-motion and visibility while remaining capped at 30 FPS.
+- Medusae remains prototype-only and is not part of the public artifact.
 - The prototype's per-file manifest is not adopted. The home map contains no
   identifying Git data, and Chronoscape contains aggregate history only.
 

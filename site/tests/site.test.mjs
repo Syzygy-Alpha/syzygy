@@ -323,31 +323,18 @@ test("home and Chronoscape share the reviewed site2 topography", async () => {
   assert.doesNotMatch(buildScript, /ecosystem-snapshot/);
 });
 
-test("Medusae stays isolated to the reviewed visual surfaces", async () => {
-  const home = htmlByFile.get(path.join(siteRoot, "index.html"));
-  assert.match(
-    home,
-    /<section class="manifest section" id="vision">\s*<canvas id="medusae-particles"/,
-  );
-  for (const module of ["coppermind", "magi", "bastion"]) {
-    const modulePage = htmlByFile.get(
-      path.join(siteRoot, "modules", `${module}.html`),
-    );
-    assert.match(
-      modulePage,
-      /<section class="module-overview section">\s*<canvas id="medusae-particles"/,
-      `${module}: missing Medusae surface`,
+test("continuous Medusae rendering is absent from public pages", async () => {
+  for (const [file, source] of htmlByFile) {
+    assert.doesNotMatch(
+      source,
+      /medusae|medusa/i,
+      `${path.relative(siteRoot, file)}: contains a Medusae surface`,
     );
   }
   const source = await readFile(path.join(siteRoot, "site.js"), "utf8");
-  assert.match(source, /function createMedusaeField\(\)/);
-  assert.match(source, /getContext\("webgl"/);
-  assert.match(source, /function createMedusaeFallback\(canvas\)/);
-  assert.match(source, /createHeroField\(\);\s*createMedusaeField\(\);/);
-  assert.ok(
-    [...source.matchAll(/animateWhenVisible\(canvas, draw, 30\)/g)].length >= 2,
-    "Medusae WebGL and fallback must be capped at 30 FPS",
-  );
+  const styles = await readFile(path.join(siteRoot, "site.css"), "utf8");
+  assert.doesNotMatch(source, /medusae|medusa|getContext\("webgl"/i);
+  assert.doesNotMatch(styles, /medusae|medusa/i);
   assert.doesNotMatch(source, /https?:\/\//);
 });
 

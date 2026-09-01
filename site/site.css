@@ -723,39 +723,6 @@ html.performance-lite .hero-glow {
   font-size: 0.88rem;
   line-height: 1.65;
 }
-.manifest {
-  position: relative;
-  overflow: hidden;
-}
-.manifest > #medusae-particles,
-.module-overview > #medusae-particles {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-.manifest > #medusae-particles {
-  opacity: 0.78;
-  filter: saturate(1.12);
-  mix-blend-mode: multiply;
-}
-.manifest > .manifest-heading,
-.manifest > .manifest-grid,
-.module-overview > .module-aside,
-.module-overview > .module-story {
-  position: relative;
-  z-index: 1;
-}
-.module-overview {
-  position: relative;
-}
-.module-overview > #medusae-particles {
-  opacity: 0.62;
-  filter: saturate(1.2) contrast(1.04);
-  mix-blend-mode: multiply;
-}
 .value {
   min-height: auto;
 }
