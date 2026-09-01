@@ -116,6 +116,25 @@ live version may become a NERV view backed by explicit module and event
 contracts; no operational polling, WebSocket connection, or NERV dependency is
 introduced here.
 
+## Chronoscape
+
+`chronoscape.html` is a separate public reading of repository evolution. It is
+an institutional page, not a NERV dashboard, an Observatory surface, or a new
+official module. It renders a dependency-free Canvas 2D isometric terrain,
+aggregate charts, and a documented implementation-state layer.
+
+The build derives `chronoscape-snapshot.json` from up to 120 commits in the
+365 days preceding the artifact revision. Each stratum includes only its date,
+aggregate additions, removals, file count, and aggregate totals per official
+module or repository support sector (`site`, `docs`, and `root`). It never
+publishes authors, e-mail addresses, commit messages, hashes, parent links,
+file paths, or working-tree state. If Git history is unavailable, the page
+labels the historical snapshot as unavailable instead of inferring data.
+
+The home terrain remains the concise ecosystem overview. Chronoscape is linked
+from that section when a visitor needs a deeper historical reading. Both views
+are static: they make no operational calls and do not claim live health.
+
 ## GitHub Pages
 
 The workflow in `.github/workflows/site-pages.yml` performs the same checks and

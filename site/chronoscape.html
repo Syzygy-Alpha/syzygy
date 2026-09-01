@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Leitura histórica, estática e agregada da evolução do repositório SYZYGY."
+    />
+    <meta name="theme-color" content="#0a0910" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="SYZYGY — Chronoscape" />
+    <meta
+      property="og:description"
+      content="Uma leitura histórica agregada do ecossistema SYZYGY em relevo."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SYZYGY" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta
+      property="og:url"
+      content="https://syzygy-alpha.github.io/syzygy/chronoscape.html"
+    />
+    <meta name="twitter:card" content="summary" />
+    <title>SYZYGY — Chronoscape</title>
+    <link
+      rel="canonical"
+      href="https://syzygy-alpha.github.io/syzygy/chronoscape.html"
+    />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./chronoscape.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#chronoscape">Ir para o mapa histórico</a>
+
+    <header class="chrono-header">
+      <a class="chrono-brand" href="./index.html" aria-label="SYZYGY, início">
+        <span class="chrono-mark" aria-hidden="true"><i></i><i></i></span>
+        <span><strong>SYZYGY</strong><small>CHRONOSCAPE</small></span>
+      </a>
+      <p>LEITURA HISTÓRICA · ESTÁTICA</p>
+      <a class="chrono-home" href="./index.html#terrain">Mapa institucional</a>
+    </header>
+
+    <main id="content">
+      <section class="chrono-hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> Repositório como terreno</p>
+          <h1 id="page-title">História<br />em<br /><em>relevo.</em></h1>
+          <p>
+            Chronoscape transforma mudanças agregadas do repositório em uma
+            leitura espacial da evolução do SYZYGY.
+          </p>
+        </div>
+        <dl class="hero-stats" aria-label="Resumo do histórico selecionado">
+          <div><dt>ESTRATOS</dt><dd id="hero-commits">—</dd></div>
+          <div><dt>DIAS</dt><dd id="hero-days">—</dd></div>
+          <div><dt>SETORES</dt><dd id="hero-sectors">15</dd></div>
+        </dl>
+        <p class="boundary-note">
+          <strong>LIMITE / 001</strong> Histórico Git agregado — não é
+          telemetria, saúde ou uma superfície operacional do NERV.
+        </p>
+      </section>
+
+      <section class="chrono-section" id="chronoscape" aria-labelledby="map-title">
+        <header class="section-heading">
+          <div>
+            <p class="eyebrow"><span></span> Chronoscape</p>
+            <h2 id="map-title">Mapa da evolução</h2>
+          </div>
+          <p>
+            Cada camada acumula apenas contagens por setor. O artefato público
+            não inclui autoria, mensagens de commit, hashes ou caminhos de arquivos.
+          </p>
+        </header>
+
+        <div class="chrono-dashboard">
+          <article class="terrain-card">
+            <header class="card-header">
+              <div>
+                <span>01 / MATRIZ DE TERRENO</span>
+                <h3>Ecossistema em transformação</h3>
+              </div>
+              <div class="layer-controls" role="group" aria-label="Camada do mapa">
+                <button type="button" class="active" data-chrono-layer="commits" aria-pressed="true">Commits</button>
+                <button type="button" data-chrono-layer="churn" aria-pressed="false">Churn</button>
+                <button type="button" data-chrono-layer="footprint" aria-pressed="false">Alcance</button>
+                <button type="button" data-chrono-layer="state" aria-pressed="false">Estado</button>
+              </div>
+            </header>
+
+            <div class="terrain-stage">
+              <canvas
+                id="chronoscape-terrain"
+                role="img"
+                aria-label="Mapa isométrico agregado da evolução do ecossistema"
+              ></canvas>
+              <p class="terrain-empty" id="terrain-empty" hidden>
+                O snapshot histórico não está disponível neste artefato.
+              </p>
+              <div class="view-controls" role="group" aria-label="Visualização do terreno">
+                <button type="button" id="rotate-left" aria-label="Girar mapa para a esquerda">↶</button>
+                <button type="button" id="rotate-right" aria-label="Girar mapa para a direita">↷</button>
+                <button type="button" id="zoom-out" aria-label="Reduzir zoom">−</button>
+                <button type="button" id="zoom-in" aria-label="Aumentar zoom">+</button>
+                <button type="button" id="reset-view">Redefinir</button>
+              </div>
+            </div>
+
+            <div class="terrain-readout">
+              <div>
+                <span>SETOR EM FOCO</span>
+                <strong id="sector-name">Foundation</strong>
+              </div>
+              <div>
+                <span>LEITURA</span>
+                <strong id="sector-value">—</strong>
+              </div>
+              <p id="sector-description">
+                Núcleo técnico compartilhado e primeiro módulo funcional.
+              </p>
+            </div>
+          </article>
+
+          <aside class="stratum-card" aria-labelledby="stratum-title">
+            <header class="card-header">
+              <div>
+                <span>02 / ESTRATO ATIVO</span>
+                <h3 id="stratum-title">Registro agregado</h3>
+              </div>
+              <strong id="stratum-position">— / —</strong>
+            </header>
+            <div class="stratum-body">
+              <time id="stratum-date">Snapshot indisponível</time>
+              <p class="stratum-kind" id="stratum-kind">HISTÓRICO AGREGADO</p>
+              <h4 id="stratum-title-copy">Aguardando dados locais</h4>
+              <dl class="stratum-stats">
+                <div><dt>ARQUIVOS</dt><dd id="stratum-files">—</dd></div>
+                <div><dt>ADIÇÕES</dt><dd id="stratum-additions">—</dd></div>
+                <div><dt>REMOÇÕES</dt><dd id="stratum-deletions">—</dd></div>
+              </dl>
+              <div class="sector-breakdown">
+                <span>SETORES ALCANÇADOS</span>
+                <ul id="stratum-sectors"></ul>
+              </div>
+            </div>
+          </aside>
+
+          <article class="timeline-card" aria-labelledby="timeline-title">
+            <header class="card-header">
+              <div>
+                <span>03 / NAVEGAÇÃO TEMPORAL</span>
+                <h3 id="timeline-title">Percorrer estratos</h3>
+              </div>
+              <output id="timeline-label" for="chrono-range">—</output>
+            </header>
+            <div class="timeline-controls">
+              <button type="button" id="previous-stratum">Anterior</button>
+              <input id="chrono-range" type="range" min="0" max="0" value="0" aria-label="Estrato histórico" />
+              <button type="button" id="next-stratum">Próximo</button>
+            </div>
+            <div class="sector-picker">
+              <label for="chrono-sector">Foco do terreno</label>
+              <select id="chrono-sector"></select>
+            </div>
+          </article>
+        </div>
+
+        <div class="metric-grid" id="metrics" aria-label="Leituras históricas">
+          <article class="metric-card">
+            <header><span>04 / VELOCIDADE</span><h3>Mudanças por dia</h3></header>
+            <canvas id="velocity-chart" role="img" aria-label="Gráfico de mudanças por dia"></canvas>
+            <p id="velocity-summary">—</p>
+          </article>
+          <article class="metric-card">
+            <header><span>05 / CHURN</span><h3>Massa de mudança</h3></header>
+            <canvas id="churn-chart" role="img" aria-label="Gráfico de adições e remoções"></canvas>
+            <p id="churn-summary">—</p>
+          </article>
+          <article class="metric-card distribution-card">
+            <header><span>06 / DISTRIBUIÇÃO</span><h3>Territórios alcançados</h3></header>
+            <div class="distribution-layout">
+              <canvas id="distribution-chart" role="img" aria-label="Distribuição de mudanças por setor"></canvas>
+              <ul id="distribution-list"></ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="chrono-boundary" aria-labelledby="boundary-title">
+        <p class="eyebrow"><span></span> Limite de interpretação</p>
+        <h2 id="boundary-title">Contexto não é operação.</h2>
+        <p>
+          O mapa explica evolução registrada no Git. Estado de serviços,
+          dispositivos, eventos e decisões continuam sujeitos aos contratos dos
+          módulos e pertencem às superfícies apropriadas do ecossistema.
+        </p>
+        <a href="./index.html#terrain">Voltar ao mapa institucional</a>
+      </section>
+    </main>
+
+    <footer class="chrono-footer">
+      <span>SYZYGY / CHRONOSCAPE</span>
+      <span>LOCAL-FIRST · STATIC · AGGREGATED</span>
+    </footer>
+
+    <noscript>
+      <p class="noscript">Chronoscape requer JavaScript para interpretar o snapshot estático do repositório.</p>
+    </noscript>
+    <script type="module" src="./chronoscape.js"></script>
+  </body>
+</html>

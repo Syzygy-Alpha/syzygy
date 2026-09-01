@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "node ./scripts/build.mjs",
-    "check": "node --check ./site.js && node --check ./terrain.js && node --check ./scripts/build.mjs && node --check ./scripts/serve.mjs && node --test ./tests/site.test.mjs",
+    "check": "node --check ./site.js && node --check ./terrain.js && node --check ./chronoscape.js && node --check ./scripts/build.mjs && node --check ./scripts/serve.mjs && node --test ./tests/site.test.mjs",
     "preview": "node ./scripts/build.mjs && node ./scripts/serve.mjs"
   },
   "engines": {

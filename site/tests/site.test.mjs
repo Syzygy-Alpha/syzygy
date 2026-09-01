@@ -26,6 +26,7 @@ const futureModules = [
 const officialModules = [...functionalModules, ...futureModules];
 const contentFiles = [
   path.join(siteRoot, "index.html"),
+  path.join(siteRoot, "chronoscape.html"),
   ...officialModules.map((name) =>
     path.join(siteRoot, "modules", `${name}.html`),
   ),
@@ -239,6 +240,7 @@ test("all local HTML and CSS references resolve within the site", async () => {
   }
 
   const cssFiles = [
+    "chronoscape.css",
     "site.css",
     "module-page.css",
     "syzygy-theme.css",
@@ -267,6 +269,7 @@ test("home page and sitemap enumerate the complete module portfolio", async () =
     .sort();
   const expected = [
     baseUrl,
+    `${baseUrl}chronoscape.html`,
     ...officialModules.map((name) => `${baseUrl}modules/${name}.html`),
   ].sort();
   assert.deepEqual(locations, expected);
@@ -325,6 +328,50 @@ test("ecosystem terrain preserves modules, layers, and static data boundary", as
   assert.match(buildScript, /"ecosystem-snapshot\.json"/);
 });
 
+test("Chronoscape remains an aggregated historical site page", async () => {
+  const chronoscape = htmlByFile.get(path.join(siteRoot, "chronoscape.html"));
+  const script = await readFile(path.join(siteRoot, "chronoscape.js"), "utf8");
+  const buildScript = await readFile(
+    path.join(siteRoot, "scripts", "build.mjs"),
+    "utf8",
+  );
+  for (const layer of ["commits", "churn", "footprint", "state"]) {
+    assert.match(
+      chronoscape,
+      new RegExp(`data-chrono-layer="${layer}"`),
+      `Chronoscape: missing ${layer} layer`,
+    );
+  }
+  for (const identifier of [
+    "chronoscape-terrain",
+    "velocity-chart",
+    "churn-chart",
+    "distribution-chart",
+    "chrono-range",
+    "chrono-sector",
+  ]) {
+    assert.match(
+      chronoscape,
+      new RegExp(`id="${identifier}"`),
+      `Chronoscape: missing ${identifier}`,
+    );
+  }
+  assert.match(
+    chronoscape,
+    /não inclui autoria, mensagens de commit, hashes ou caminhos de arquivos/,
+    "Chronoscape: missing public data boundary",
+  );
+  assert.match(script, /function drawTerrain\(\)/);
+  assert.match(script, /fetch\("\.\/chronoscape-snapshot\.json"/);
+  assert.doesNotMatch(script, /commit\.(?:author|subject|hash|shortHash|files)/);
+  assert.match(buildScript, /"chronoscape\.html"/);
+  assert.match(buildScript, /"chronoscape-snapshot\.json"/);
+  assert.match(buildScript, /chronoscapeMaximumCommits = 120/);
+  assert.doesNotMatch(buildScript, /author:\s/);
+  assert.doesNotMatch(buildScript, /subject:\s/);
+  assert.doesNotMatch(buildScript, /path:\s/);
+});
+
 test("generated browser state is not part of the source tree", async () => {
   async function inspect(directory, relative = "") {
     for (const entry of await readdir(directory, { withFileTypes: true })) {
@@ -352,6 +399,9 @@ test("public source stays inside the static performance budget", async () => {
   const publicFiles = [
     ".nojekyll",
     "404.html",
+    "chronoscape.css",
+    "chronoscape.html",
+    "chronoscape.js",
     "favicon.svg",
     "index.html",
     "module-page.css",
