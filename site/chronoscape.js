@@ -204,6 +204,7 @@ const state = {
   zoom: 1,
   snapshot: null,
   metrics: [],
+  historyAvailable: false,
 };
 
 function formatNumber(value) {
@@ -670,6 +671,7 @@ function render() {
 
 function selectLayer(layer) {
   if (!Object.hasOwn({ commits: true, churn: true, footprint: true, state: true }, layer)) return;
+  if (!state.historyAvailable && layer !== "state") return;
   state.layer = layer;
   elements.layerButtons.forEach((button) => {
     const selected = button.dataset.chronoLayer === layer;
@@ -677,6 +679,20 @@ function selectLayer(layer) {
     button.setAttribute("aria-pressed", String(selected));
   });
   render();
+}
+
+function setHistoryAvailability(available) {
+  state.historyAvailable = available;
+  elements.layerButtons.forEach((button) => {
+    const historicalLayer = button.dataset.chronoLayer !== "state";
+    const selected = button.dataset.chronoLayer === state.layer;
+    button.disabled = !available && historicalLayer;
+    button.classList.toggle("active", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+  elements.range.disabled = !available;
+  elements.previous.disabled = !available;
+  elements.next.disabled = !available;
 }
 
 function selectIndex(index) {
@@ -751,10 +767,20 @@ async function loadSnapshot() {
     state.index = snapshot.commits.length - 1;
     elements.range.max = String(state.index);
     elements.range.value = String(state.index);
+    setHistoryAvailability(true);
     elements.terrainEmpty.hidden = true;
   } catch {
-    state.snapshot = { commits: [], range: { dayCount: 0 } };
+    state.snapshot = {
+      available: false,
+      commits: [],
+      range: { dayCount: 0, commitCount: 0 },
+    };
     state.metrics = [];
+    state.index = 0;
+    state.layer = "state";
+    elements.range.max = "0";
+    elements.range.value = "0";
+    setHistoryAvailability(false);
     elements.terrainEmpty.hidden = false;
   }
 }

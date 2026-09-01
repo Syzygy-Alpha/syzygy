@@ -216,6 +216,280 @@ function createHeroField() {
   window.addEventListener("resize", reset);
 }
 
+function colorVector(value, fallback) {
+  const hex = value.match(/^#([\da-f]{3}|[\da-f]{6})$/i);
+  if (hex) {
+    const normalized =
+      hex[1].length === 3
+        ? hex[1]
+            .split("")
+            .map((part) => part + part)
+            .join("")
+        : hex[1];
+    return [0, 2, 4].map(
+      (index) => Number.parseInt(normalized.slice(index, index + 2), 16) / 255,
+    );
+  }
+  const rgb = value.match(/rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)/i);
+  return rgb
+    ? [Number(rgb[1]) / 255, Number(rgb[2]) / 255, Number(rgb[3]) / 255]
+    : fallback;
+}
+
+function createMedusaeFallback(canvas) {
+  const context = canvas.getContext("2d");
+  if (!context) return;
+  let field = sizeCanvas(canvas);
+  const dots = Array.from({ length: performanceLite ? 42 : 84 }, () => ({
+    x: Math.random(),
+    y: Math.random(),
+    phase: Math.random() * Math.PI * 2,
+  }));
+
+  function draw(time = performance.now()) {
+    context.clearRect(0, 0, field.width, field.height);
+    dots.forEach((dot, index) => {
+      const x =
+        (dot.x + Math.cos(time * 0.00025 + dot.phase) * 0.018) * field.width;
+      const y =
+        (dot.y + Math.sin(time * 0.00021 + dot.phase) * 0.018) * field.height;
+      context.beginPath();
+      context.arc(x, y, index % 11 ? 1.1 : 2.3, 0, Math.PI * 2);
+      context.fillStyle = index % 11
+        ? "rgba(24,26,24,.2)"
+        : "rgba(118,144,112,.65)";
+      context.fill();
+    });
+  }
+
+  animateWhenVisible(canvas, draw);
+  window.addEventListener("resize", () => {
+    field = sizeCanvas(canvas);
+  });
+}
+
+function createMedusaeField() {
+  const canvas = document.getElementById("medusae-particles");
+  if (!canvas) return;
+  const surface =
+    canvas.closest(".manifest, .module-overview") || canvas.parentElement;
+  const gl = canvas.getContext("webgl", {
+    alpha: true,
+    antialias: false,
+    powerPreference: "low-power",
+  });
+  if (!gl) {
+    createMedusaeFallback(canvas);
+    return;
+  }
+
+  const vertexSource = `
+    precision mediump float;
+    attribute vec2 aOffset;
+    attribute float aRandom;
+    uniform float uTime;
+    uniform vec2 uMouse;
+    uniform vec2 uResolution;
+    uniform float uRadiusBase;
+    uniform float uRadiusAmplitude;
+    uniform float uShapeAmplitude;
+    uniform float uRimWidth;
+    uniform float uScaleX;
+    uniform float uScaleY;
+    uniform float uBaseSize;
+    uniform float uActiveSize;
+    varying float vHalo;
+    varying vec2 vPosition;
+    float hash(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+    float noise(vec2 p) {
+      vec2 i = floor(p), f = fract(p);
+      f = f * f * (3.0 - 2.0 * f);
+      return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
+    }
+    void main() {
+      vec2 pos = aOffset;
+      float drift = uTime * .15;
+      pos.x += (sin(drift + pos.y * .5) + sin(drift * .5 + pos.y * 2.0)) * .25;
+      pos.y += (cos(drift + pos.x * .5) + cos(drift * .5 + pos.x * 2.0)) * .25;
+      vec2 relative = pos - uMouse;
+      vec2 scale = max(vec2(uScaleX, uScaleY), vec2(.0001));
+      float distanceToMouse = length(relative / scale);
+      vec2 direction = normalize(relative + vec2(.0001, 0.0));
+      float shape = noise(direction * 2.0 + vec2(0.0, uTime * .1));
+      float breath = sin(uTime * .8);
+      float baseRadius = uRadiusBase + breath * uRadiusAmplitude;
+      float currentRadius = baseRadius + shape * uShapeAmplitude;
+      float rim = smoothstep(uRimWidth, 0.0, abs(distanceToMouse - currentRadius));
+      pos += direction * ((breath * .5 + .5) * .5) * rim;
+      float outer = smoothstep(baseRadius + .4, baseRadius + 2.2, distanceToMouse);
+      pos += direction * sin(uTime * 2.6 + pos.x * .6 + pos.y * .6) * .76 * outer;
+      float oscillation = .5 + .5 * sin(uTime * .6 + aRandom * 6.283185);
+      float size = mix(uBaseSize, uActiveSize, rim) * (.92 + oscillation * .12);
+      float aspect = uResolution.x / max(uResolution.y, 1.0);
+      vec2 bounds = aspect < 1.818 ? vec2(11.0 * aspect, 11.0) : vec2(20.0, 20.0 / aspect);
+      gl_PointSize = size;
+      gl_Position = vec4(pos / bounds, 0.0, 1.0);
+      vHalo = rim;
+      vPosition = pos;
+    }
+  `;
+  const fragmentSource = `
+    precision mediump float;
+    uniform float uTime;
+    uniform vec3 uColorBase;
+    uniform vec3 uColorOne;
+    uniform vec3 uColorTwo;
+    uniform vec3 uColorThree;
+    varying float vHalo;
+    varying vec2 vPosition;
+    void main() {
+      float distanceFromCenter = length(gl_PointCoord - vec2(.5)) * 2.0;
+      float alpha = 1.0 - smoothstep(.72, 1.0, distanceFromCenter);
+      if (alpha < .01) discard;
+      float wave = sin(vPosition.x * .8 + uTime * 1.2) * .5 + .5;
+      float secondary = sin(vPosition.y * .8 + uTime * .96 + wave) * .5 + .5;
+      vec3 active = mix(uColorOne, uColorTwo, wave);
+      active = mix(active, uColorThree, secondary);
+      vec3 color = mix(uColorBase, active, smoothstep(.1, .8, vHalo));
+      gl_FragColor = vec4(color, alpha * mix(.4, .95, vHalo));
+    }
+  `;
+  const compile = (type, source) => {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
+  };
+  const vertexShader = compile(gl.VERTEX_SHADER, vertexSource);
+  const fragmentShader = compile(gl.FRAGMENT_SHADER, fragmentSource);
+  if (!vertexShader || !fragmentShader) return;
+
+  const program = gl.createProgram();
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
+  gl.linkProgram(program);
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
+
+  const columns = performanceLite ? 70 : 100;
+  const rows = performanceLite ? 40 : 55;
+  const count = columns * rows;
+  const offsets = new Float32Array(count * 2);
+  const randoms = new Float32Array(count);
+  let index = 0;
+  for (let y = 0; y < rows; y += 1) {
+    for (let x = 0; x < columns; x += 1) {
+      offsets[index * 2] = (x / (columns - 1) - 0.5) * 40;
+      offsets[index * 2 + 1] = (y / (rows - 1) - 0.5) * 22;
+      randoms[index] = Math.random();
+      index += 1;
+    }
+  }
+
+  const buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  gl.bufferData(gl.ARRAY_BUFFER, offsets, gl.STATIC_DRAW);
+  const randomBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, randomBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, randoms, gl.STATIC_DRAW);
+  gl.useProgram(program);
+
+  const attributeOffset = gl.getAttribLocation(program, "aOffset");
+  const attributeRandom = gl.getAttribLocation(program, "aRandom");
+  const uniforms = Object.fromEntries(
+    [
+      "uTime",
+      "uMouse",
+      "uResolution",
+      "uRadiusBase",
+      "uRadiusAmplitude",
+      "uShapeAmplitude",
+      "uRimWidth",
+      "uScaleX",
+      "uScaleY",
+      "uBaseSize",
+      "uActiveSize",
+      "uColorBase",
+      "uColorOne",
+      "uColorTwo",
+      "uColorThree",
+    ].map((name) => [name, gl.getUniformLocation(program, name)]),
+  );
+  const moduleAccentValue = themeColor("--module-accent", "", surface);
+  const hasModulePalette = Boolean(moduleAccentValue);
+  const baseColor = hasModulePalette
+    ? colorVector(themeColor("--ink", "#171914", surface), [0.1, 0.1, 0.1])
+    : colorVector(themeColor("--hero-particle-base", "rgba(24,26,24,.25)"), [0.1, 0.1, 0.1]);
+  const activeColor = hasModulePalette
+    ? colorVector(moduleAccentValue, [0.45, 0.6, 0.4])
+    : colorVector(themeColor("--hero-particle-active", "rgba(118,144,112,.86)"), [0.45, 0.6, 0.4]);
+  const accentColor = hasModulePalette
+    ? activeColor.map((channel, colorIndex) =>
+        Math.min(1, channel * 0.72 + [0.16, 0.1, 0.18][colorIndex]),
+      )
+    : colorVector(themeColor("--copper", "#b9684c"), [0.7, 0.3, 0.2]);
+  let targetMouse = [0, 0];
+  let currentMouse = [0, 0];
+
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    const scale = Math.min(window.devicePixelRatio || 1, performanceLite ? 1 : 1.5);
+    canvas.width = Math.round(rect.width * scale);
+    canvas.height = Math.round(rect.height * scale);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2f(uniforms.uResolution, rect.width, rect.height);
+  }
+
+  function setPointer(event) {
+    const rect = canvas.getBoundingClientRect();
+    targetMouse = [
+      ((event.clientX - rect.left) / rect.width - 0.5) * 40,
+      (0.5 - (event.clientY - rect.top) / rect.height) * 22,
+    ];
+  }
+
+  surface.addEventListener("pointerenter", setPointer);
+  surface.addEventListener("pointermove", setPointer);
+  surface.addEventListener("pointerleave", () => {
+    targetMouse = [0, 0];
+  });
+  resize();
+  gl.clearColor(0, 0, 0, 0);
+  gl.disable(gl.DEPTH_TEST);
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.uniform1f(uniforms.uRadiusBase, 3.6);
+  gl.uniform1f(uniforms.uRadiusAmplitude, 0.7);
+  gl.uniform1f(uniforms.uShapeAmplitude, 1);
+  gl.uniform1f(uniforms.uRimWidth, 2);
+  gl.uniform1f(uniforms.uScaleX, 1.8);
+  gl.uniform1f(uniforms.uScaleY, 1.25);
+  gl.uniform1f(uniforms.uBaseSize, performanceLite ? 2.5 : 3.1);
+  gl.uniform1f(uniforms.uActiveSize, performanceLite ? 6.8 : 8.6);
+  gl.uniform3fv(uniforms.uColorBase, baseColor);
+  gl.uniform3fv(uniforms.uColorOne, activeColor);
+  gl.uniform3fv(uniforms.uColorTwo, accentColor);
+  gl.uniform3fv(uniforms.uColorThree, [0.84, 0.72, 0.24]);
+
+  function draw(time = performance.now()) {
+    currentMouse[0] += (targetMouse[0] - currentMouse[0]) * 0.015;
+    currentMouse[1] += (targetMouse[1] - currentMouse[1]) * 0.015;
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(program);
+    gl.uniform1f(uniforms.uTime, reducedMotion ? 0 : time * 0.001);
+    gl.uniform2f(uniforms.uMouse, currentMouse[0], currentMouse[1]);
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.enableVertexAttribArray(attributeOffset);
+    gl.vertexAttribPointer(attributeOffset, 2, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, randomBuffer);
+    gl.enableVertexAttribArray(attributeRandom);
+    gl.vertexAttribPointer(attributeRandom, 1, gl.FLOAT, false, 0, 0);
+    gl.drawArrays(gl.POINTS, 0, count);
+  }
+
+  animateWhenVisible(canvas, draw);
+  window.addEventListener("resize", resize);
+}
+
 function createModuleField() {
   const canvas = document.getElementById("module-particles");
   if (!canvas) return;
@@ -2496,6 +2770,7 @@ function addNavigation() {
 }
 
 createHeroField();
+createMedusaeField();
 createModuleField();
 createMyceliumField();
 createModuleIdentity();

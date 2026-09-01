@@ -9,7 +9,6 @@ const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const siteRoot = path.resolve(scriptDirectory, "..");
 const repositoryRoot = path.resolve(siteRoot, "..");
 const outputRoot = path.resolve(siteRoot, "dist");
-const activityWindowDays = 90;
 const chronoscapeWindowDays = 365;
 const chronoscapeMaximumCommits = 120;
 const officialModules = [
@@ -73,54 +72,6 @@ async function git(argumentsList) {
     windowsHide: true,
   });
   return stdout.trim();
-}
-
-async function createEcosystemSnapshot() {
-  const unavailable = {
-    schemaVersion: 1,
-    available: false,
-    windowDays: activityWindowDays,
-    revision: null,
-    revisionAt: null,
-    modules: Object.fromEntries(officialModules.map((name) => [name, null])),
-  };
-  try {
-    const [revision, revisionAt] = await Promise.all([
-      git(["rev-parse", "--short=12", "HEAD"]),
-      git(["log", "-1", "--format=%cI", "HEAD"]),
-    ]);
-    if (!revision || !revisionAt) return unavailable;
-    const windowStart = new Date(
-      new Date(revisionAt).getTime() - activityWindowDays * 24 * 60 * 60 * 1000,
-    ).toISOString();
-    const counts = await Promise.all(
-      officialModules.map(async (name) => {
-        const output = await git([
-          "rev-list",
-          "--count",
-          `--since=${windowStart}`,
-          "HEAD",
-          "--",
-          name,
-        ]);
-        const count = Number.parseInt(output, 10);
-        return [name, Number.isInteger(count) && count >= 0 ? count : 0];
-      }),
-    );
-    return {
-      schemaVersion: 1,
-      available: true,
-      windowDays: activityWindowDays,
-      revision,
-      revisionAt,
-      modules: Object.fromEntries(counts),
-    };
-  } catch {
-    console.warn(
-      "Git history is unavailable; building the terrain map without commit activity.",
-    );
-    return unavailable;
-  }
 }
 
 function chronoscapeSectorForPath(filePath) {
@@ -238,13 +189,6 @@ async function createChronoscapeSnapshot() {
     return unavailable;
   }
 }
-
-const ecosystemSnapshot = await createEcosystemSnapshot();
-await writeFile(
-  path.join(outputRoot, "ecosystem-snapshot.json"),
-  `${JSON.stringify(ecosystemSnapshot, null, 2)}\n`,
-  "utf8",
-);
 
 const chronoscapeSnapshot = await createChronoscapeSnapshot();
 await writeFile(

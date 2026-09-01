@@ -120,7 +120,7 @@ main { max-width: 1600px; margin: 0 auto; }
 .layer-controls button:hover, .layer-controls button:focus-visible, .layer-controls button.active { color: var(--chrono-black); background: var(--chrono-lime); outline: none; }
 .terrain-stage { position: relative; height: clamp(390px, 47vw, 630px); overflow: hidden; background: radial-gradient(circle at 50% 50%, rgba(157, 66, 209, 0.16), transparent 48%), #08070c; }
 .terrain-stage canvas, .metric-card canvas { display: block; width: 100%; height: 100%; }
-.terrain-empty { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 30px; color: var(--chrono-muted); text-align: center; background: rgba(10, 9, 16, 0.9); }
+.terrain-status { position: absolute; z-index: 2; right: 14px; bottom: 13px; max-width: min(440px, calc(100% - 120px)); margin: 0; padding: 8px 10px; color: var(--chrono-muted); border: 1px solid rgba(241, 237, 242, 0.14); background: rgba(10, 9, 16, 0.78); font-family: var(--chrono-mono); font-size: 0.52rem; letter-spacing: 0.07em; line-height: 1.5; text-align: right; }
 .view-controls { position: absolute; right: 18px; bottom: 17px; display: flex; border: 1px solid var(--chrono-line); }
 .view-controls button { min-width: 36px; padding: 0 9px; color: var(--chrono-paper); }
 .view-controls button + button { border-left: 1px solid var(--chrono-line); }

@@ -92,6 +92,7 @@
       </section>
 
       <section class="manifest section" id="vision">
+        <canvas id="medusae-particles" aria-hidden="true"></canvas>
         <div class="manifest-heading reveal">
           <p class="kicker"><span></span> Uma plataforma, não mais uma nuvem</p>
           <h2>Seu ecossistema deve<br />trabalhar para você.</h2>
@@ -214,7 +215,7 @@
         </div>
       </section>
 
-      <section class="value section">
+      <section class="value section" id="value">
         <div class="value-heading reveal">
           <p class="kicker"><span></span> Valor duradouro</p>
           <h2>Infraestrutura pessoal<br />sem aprisionamento.</h2>
@@ -298,44 +299,13 @@
           </div>
           <div class="terrain-intro">
             <p>
-              As curvas transformam relações, estado e atividade do repositório
-              em relevo. Este mapa é uma leitura pública e estática do SYZYGY;
-              dados operacionais em tempo real continuam pertencendo ao NERV.
+              Uma leitura isométrica dos doze módulos oficiais. A altura mostra
+              o estado de implementação documentado, não dependências de
+              execução, saúde operacional ou telemetria em tempo real.
             </p>
             <a class="text-link" href="./chronoscape.html"
-              >Explorar a leitura histórica <span>→</span></a
+              >Explorar evolução e gráficos <span>→</span></a
             >
-            <div
-              class="terrain-layers"
-              role="group"
-              aria-label="Camadas do mapa"
-            >
-              <button
-                type="button"
-                class="active"
-                data-terrain-layer="architecture"
-                aria-pressed="true"
-                aria-controls="terrain-panel"
-              >
-                Arquitetura
-              </button>
-              <button
-                type="button"
-                data-terrain-layer="state"
-                aria-pressed="false"
-                aria-controls="terrain-panel"
-              >
-                Estado
-              </button>
-              <button
-                type="button"
-                data-terrain-layer="activity"
-                aria-pressed="false"
-                aria-controls="terrain-panel"
-              >
-                Commits
-              </button>
-            </div>
           </div>
         </div>
 
@@ -345,158 +315,48 @@
             id="terrain-panel"
             role="region"
             aria-labelledby="terrain-title"
-            aria-describedby="terrain-layer-summary"
+            aria-describedby="terrain-summary"
           >
-            <canvas id="ecosystem-terrain" aria-hidden="true"></canvas>
+            <canvas
+              id="ecosystem-topography"
+              role="img"
+              aria-label="Mapa isométrico dos doze módulos oficiais do ecossistema SYZYGY. Módulos funcionais têm relevo elevado; módulos futuros aparecem como relevo de base."
+            ></canvas>
             <div class="terrain-coordinates" aria-hidden="true">
-              <span>00 / ECOSYSTEM</span><span>LOCAL STATIC SNAPSHOT</span>
+              <span>00 / ECOSYSTEM</span><span>MAPA CONCEITUAL ESTÁTICO</span>
             </div>
-            <div class="terrain-nodes">
-              <button
-                type="button"
-                class="current active"
-                data-terrain-module="foundation"
-                aria-pressed="true"
-                style="--terrain-x: 50%; --terrain-y: 47%"
-              >
-                Foundation<small>núcleo</small>
-              </button>
-              <button
-                type="button"
-                class="current"
-                data-terrain-module="forge"
-                aria-pressed="false"
-                style="--terrain-x: 31%; --terrain-y: 42%"
-              >
-                Forge<small>engenharia</small>
-              </button>
-              <button
-                type="button"
-                class="current"
-                data-terrain-module="mycelium"
-                aria-pressed="false"
-                style="--terrain-x: 18%; --terrain-y: 61%"
-              >
-                Mycelium<small>malha</small>
-              </button>
-              <button
-                type="button"
-                class="current"
-                data-terrain-module="observatory"
-                aria-pressed="false"
-                style="--terrain-x: 70%; --terrain-y: 39%"
-              >
-                Observatory<small>visibilidade</small>
-              </button>
-              <button
-                type="button"
-                class="current"
-                data-terrain-module="nerv"
-                aria-pressed="false"
-                style="--terrain-x: 51%; --terrain-y: 20%"
-              >
-                NERV<small>operação</small>
-              </button>
-              <button
-                type="button"
-                class="future"
-                data-terrain-module="tungsten"
-                aria-pressed="false"
-                style="--terrain-x: 35%; --terrain-y: 67%"
-              >
-                Tungsten<small>futuro</small>
-              </button>
-              <button
-                type="button"
-                class="future"
-                data-terrain-module="coppermind"
-                aria-pressed="false"
-                style="--terrain-x: 51%; --terrain-y: 79%"
-              >
-                Coppermind<small>futuro</small>
-              </button>
-              <button
-                type="button"
-                class="future"
-                data-terrain-module="magi"
-                aria-pressed="false"
-                style="--terrain-x: 66%; --terrain-y: 78%"
-              >
-                MAGI<small>futuro</small>
-              </button>
-              <button
-                type="button"
-                class="future"
-                data-terrain-module="balance"
-                aria-pressed="false"
-                style="--terrain-x: 81%; --terrain-y: 68%"
-              >
-                Balance<small>futuro</small>
-              </button>
-              <button
-                type="button"
-                class="future"
-                data-terrain-module="elric"
-                aria-pressed="false"
-                style="--terrain-x: 32%; --terrain-y: 17%"
-              >
-                Elric<small>futuro</small>
-              </button>
-              <button
-                type="button"
-                class="future"
-                data-terrain-module="imrryr"
-                aria-pressed="false"
-                style="--terrain-x: 84%; --terrain-y: 30%"
-              >
-                Imrryr<small>futuro</small>
-              </button>
-              <button
-                type="button"
-                class="future"
-                data-terrain-module="bastion"
-                aria-pressed="false"
-                style="--terrain-x: 17%; --terrain-y: 83%"
-              >
-                Bastion<small>futuro</small>
-              </button>
+            <div class="terrain-key" aria-hidden="true">
+              <span><i class="functional"></i> Funcional · v0.1</span>
+              <span><i class="future"></i> Conceito · futuro</span>
             </div>
           </div>
-          <div class="terrain-readout">
-            <div>
-              <span class="terrain-readout-label">PONTO SELECIONADO</span>
-              <strong id="terrain-active-module">Foundation</strong>
-            </div>
-            <div>
-              <span class="terrain-readout-label">LEITURA</span>
-              <strong id="terrain-active-value">Núcleo compartilhado</strong>
-            </div>
-            <p id="terrain-active-description">
-              Configuração, identidade, contratos e ciclo de vida comuns ao
-              ecossistema.
+          <div class="terrain-caption" id="terrain-summary">
+            <p>
+              A proximidade é conceitual e não declara chamadas diretas entre
+              módulos. A leitura histórica, camadas de mudança e gráficos ficam
+              no Chronoscape.
             </p>
-            <a id="terrain-module-link" href="./modules/foundation.html"
-              >Abrir módulo <span aria-hidden="true">→</span></a
-            >
+            <a href="./chronoscape.html">Abrir Chronoscape <span aria-hidden="true">→</span></a>
           </div>
-          <div class="terrain-caption">
-            <p id="terrain-layer-summary">
-              A altura representa centralidade conceitual; proximidade não
-              implica chamadas diretas entre módulos.
-            </p>
-            <span id="terrain-data-source">DADOS · DOCUMENTAÇÃO OFICIAL</span>
-          </div>
-          <p
-            class="sr-only"
-            id="terrain-announcement"
-            role="status"
-            aria-live="polite"
-          ></p>
+          <nav class="sr-only" aria-label="Páginas dos módulos no mapa">
+            <a href="./modules/foundation.html">Foundation</a>
+            <a href="./modules/forge.html">Forge</a>
+            <a href="./modules/mycelium.html">Mycelium</a>
+            <a href="./modules/observatory.html">Observatory</a>
+            <a href="./modules/nerv.html">NERV</a>
+            <a href="./modules/tungsten.html">Tungsten</a>
+            <a href="./modules/coppermind.html">Coppermind</a>
+            <a href="./modules/magi.html">MAGI</a>
+            <a href="./modules/balance.html">Balance</a>
+            <a href="./modules/elric.html">Elric</a>
+            <a href="./modules/imrryr.html">Imrryr</a>
+            <a href="./modules/bastion.html">Bastion</a>
+          </nav>
         </div>
         <noscript>
           <p class="terrain-noscript">
-            Ative JavaScript para alternar camadas e explorar os módulos neste
-            mapa. O restante do conteúdo do site permanece disponível.
+            Ative JavaScript para exibir o mapa topográfico. O restante do
+            conteúdo do site permanece disponível.
           </p>
         </noscript>
       </section>

@@ -275,57 +275,59 @@ test("home page and sitemap enumerate the complete module portfolio", async () =
   assert.deepEqual(locations, expected);
 });
 
-test("ecosystem terrain preserves modules, layers, and static data boundary", async () => {
+test("home terrain is a static isometric map with Chronoscape as the historical surface", async () => {
   const home = htmlByFile.get(path.join(siteRoot, "index.html"));
-  const layerControls = [
-    ...home.matchAll(
-      /<button\b(?=[^>]*data-terrain-layer="([^"]+)")[^>]*>/gs,
-    ),
-  ];
-  const layers = layerControls.map((match) => match[1]);
-  assert.deepEqual(layers, ["architecture", "state", "activity"]);
-  assert.equal(
-    layerControls.filter((match) => match[0].includes('aria-pressed="true"'))
-      .length,
-    1,
-    "terrain: expected one initially selected layer",
-  );
-
-  const moduleControls = [
-    ...home.matchAll(
-      /<button\b(?=[^>]*data-terrain-module="([^"]+)")[^>]*>/gs,
-    ),
-  ];
-  const terrainModules = moduleControls.map((match) => match[1]);
-  assert.deepEqual(
-    terrainModules.sort(),
-    [...officialModules].sort(),
-    "terrain: module controls must match the official portfolio",
-  );
-  assert.equal(
-    moduleControls.filter((match) => match[0].includes('aria-pressed="true"'))
-      .length,
-    1,
-    "terrain: expected one initially selected module",
+  assert.match(
+    home,
+    /id="ecosystem-topography"/,
+    "terrain: missing isometric canvas",
   );
   assert.match(
     home,
-    /dados operacionais em tempo real continuam pertencendo ao NERV/,
-    "terrain: missing institutional/NERV boundary",
+    /href="\.\/chronoscape\.html"/,
+    "terrain: missing Chronoscape route",
   );
+  assert.doesNotMatch(home, /data-terrain-layer|data-terrain-module|ecosystem-terrain/);
 
   const terrainScript = await readFile(path.join(siteRoot, "terrain.js"), "utf8");
   assert.match(terrainScript, /function createTerrainMap\(\)/);
-  assert.match(terrainScript, /new Float32Array\(/);
-  assert.match(terrainScript, /fetch\("\.\/ecosystem-snapshot\.json"/);
-  assert.match(terrainScript, /button\.setAttribute\("aria-pressed"/);
+  assert.match(terrainScript, /function projectPoint\(/);
+  assert.match(terrainScript, /function terrainHeight\(/);
+  for (const module of officialModules) {
+    assert.match(terrainScript, new RegExp(`id: "${module}"`));
+  }
+  assert.doesNotMatch(terrainScript, /fetch\(|ecosystem-snapshot|animateWhenVisible/);
 
   const buildScript = await readFile(
     path.join(siteRoot, "scripts", "build.mjs"),
     "utf8",
   );
   assert.match(buildScript, /"terrain\.js"/);
-  assert.match(buildScript, /"ecosystem-snapshot\.json"/);
+  assert.doesNotMatch(buildScript, /ecosystem-snapshot/);
+});
+
+test("Medusae stays isolated to the reviewed visual surfaces", async () => {
+  const home = htmlByFile.get(path.join(siteRoot, "index.html"));
+  assert.match(
+    home,
+    /<section class="manifest section" id="vision">\s*<canvas id="medusae-particles"/,
+  );
+  for (const module of ["coppermind", "magi", "bastion"]) {
+    const modulePage = htmlByFile.get(
+      path.join(siteRoot, "modules", `${module}.html`),
+    );
+    assert.match(
+      modulePage,
+      /<section class="module-overview section">\s*<canvas id="medusae-particles"/,
+      `${module}: missing Medusae surface`,
+    );
+  }
+  const source = await readFile(path.join(siteRoot, "site.js"), "utf8");
+  assert.match(source, /function createMedusaeField\(\)/);
+  assert.match(source, /getContext\("webgl"/);
+  assert.match(source, /function createMedusaeFallback\(canvas\)/);
+  assert.match(source, /createHeroField\(\);\s*createMedusaeField\(\);/);
+  assert.doesNotMatch(source, /https?:\/\//);
 });
 
 test("Chronoscape remains an aggregated historical site page", async () => {
@@ -363,6 +365,12 @@ test("Chronoscape remains an aggregated historical site page", async () => {
   );
   assert.match(script, /function drawTerrain\(\)/);
   assert.match(script, /fetch\("\.\/chronoscape-snapshot\.json"/);
+  assert.match(script, /function setHistoryAvailability\(available\)/);
+  assert.match(script, /state\.layer = "state"/);
+  assert.match(
+    chronoscape,
+    /Histórico indisponível neste artefato; exibindo o estado documentado/,
+  );
   assert.doesNotMatch(script, /commit\.(?:author|subject|hash|shortHash|files)/);
   assert.match(buildScript, /"chronoscape\.html"/);
   assert.match(buildScript, /"chronoscape-snapshot\.json"/);

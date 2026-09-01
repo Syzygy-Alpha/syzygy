@@ -11,8 +11,9 @@ an optional publishing extension; the source and preview remain fully local.
 
 ## Runtime and privacy
 
-The published site uses semantic HTML, local CSS, Canvas 2D, and vanilla
-JavaScript. It has no frontend framework, analytics, cookies, remote fonts,
+The published site uses semantic HTML, local CSS, Canvas 2D, vanilla
+JavaScript, and an optional local WebGL particle field with a Canvas 2D
+fallback. It has no frontend framework, analytics, cookies, remote fonts,
 CDNs, or runtime API calls. The Node.js scripts are development utilities only:
 the Pages artifact is static and has no server-side runtime.
 
@@ -72,49 +73,33 @@ All themes use local system fonts and respect `prefers-reduced-motion`.
 
 ## Adaptive rendering
 
-Canvas animations automatically use a lighter profile on devices reporting up
-to 4 GB of memory or up to four logical processors. The lighter profile caps
-animation at 30 FPS, renders canvases at 1x pixel density, reduces ambient Hero
-and Mycelium particle counts, and samples fewer Mycelium links. The module-logo
-field preserves a higher particle density, uses tighter shape targets, and
-batches Canvas drawing operations so every symbol remains complete and crisp.
-Off-screen and background-tab animations remain paused.
+Canvas and Medusae animations automatically use a lighter profile on devices
+reporting up to 4 GB of memory or up to four logical processors. The lighter
+profile caps animation at 30 FPS, renders canvases at 1x pixel density, reduces
+ambient Hero and Mycelium particle counts, samples fewer Mycelium links, and
+uses a smaller Medusae field. The module-logo field preserves a higher particle
+density, uses tighter shape targets, and batches Canvas drawing operations so
+every symbol remains complete and crisp. Off-screen and background-tab
+animations remain paused.
 
 Use `?quality=low` to force the lighter profile or `?quality=high` to override
 the hardware heuristic when comparing rendering quality.
 
 ## Ecosystem terrain
 
-The home page includes a dependency-free topographic view of the twelve
-official modules. Module labels remain native HTML buttons for keyboard,
-screen-reader, and touch access; `terrain.js` renders only the contour field on
-Canvas 2D. The map redraws on layer changes, module selection, and debounced
-viewport resize. It has no continuous animation loop.
+The home page uses a dependency-free isometric topographic view of the twelve
+official modules. `terrain.js` renders a documented implementation-state field
+on Canvas 2D and redraws only on a debounced viewport resize. It has no
+continuous animation, Git fetch, operational call, or runtime dependency.
 
-The three public layers have deliberately narrow meanings:
+Functional v0.1 modules have a high field weight and declared future modules a
+low field weight. This is an explanatory status view: proximity does not declare
+a direct runtime dependency, and elevation does not infer health or readiness.
 
-- **Architecture** uses documented conceptual centrality to shape the terrain.
-  Proximity is explanatory and does not declare a direct runtime dependency.
-- **State** gives functional v0.1 modules a high field weight and declared
-  future modules a low weight. It does not infer health or readiness.
-- **Commits** counts commits that touched each module's top-level directory in
-  the 90 days preceding the artifact revision. Counts use logarithmic
-  normalization so one active directory does not flatten every other contour.
+The historical layers and charts intentionally remain on Chronoscape. The home
+map is therefore always available, including when a historical snapshot cannot
+be generated.
 
-The build writes `ecosystem-snapshot.json` from local Git history. It publishes
-only the revision hash, revision date, time-window size, and aggregate count per
-official module; author identities, e-mail addresses, commit messages, file
-paths, and working-tree state are not included. If Git history is unavailable,
-the artifact explicitly marks the activity layer unavailable instead of
-inventing data. The Pages checkout uses full history and rebuilds after every
-push to `main`, keeping the deployed snapshot aligned with the repository.
-
-Contour lines use a deterministic scalar field sampled at 12 CSS pixels, or 18
-pixels in the lighter hardware profile, and eight Marching Squares thresholds.
-This is an institutional visualization, not a new official module. A future
-live version may become a NERV view backed by explicit module and event
-contracts; no operational polling, WebSocket connection, or NERV dependency is
-introduced here.
 
 ## Chronoscape
 
@@ -128,8 +113,9 @@ The build derives `chronoscape-snapshot.json` from up to 120 commits in the
 aggregate additions, removals, file count, and aggregate totals per official
 module or repository support sector (`site`, `docs`, and `root`). It never
 publishes authors, e-mail addresses, commit messages, hashes, parent links,
-file paths, or working-tree state. If Git history is unavailable, the page
-labels the historical snapshot as unavailable instead of inferring data.
+file paths, or working-tree state. If Git history is unavailable, the page keeps
+its static implementation-state terrain visible, disables historical layers,
+and labels the missing snapshot instead of inferring data.
 
 The home terrain remains the concise ecosystem overview. Chronoscape is linked
 from that section when a visitor needs a deeper historical reading. Both views
